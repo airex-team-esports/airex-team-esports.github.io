@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Airex Team - Киберспортивная команда</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* ОБНОВЛЕННАЯ ПАЛИТРА */
+      /* Вместо сплошного красного используем градиент и акценты */
+      --accent-color: #e91e63; /* Более сложный оттенок (можно менять на красный #ff0000) */
+      --accent-glow: rgba(255, 0, 60, 0.6); 
+      
+      --bg-deep: #050505; /* Почти черный */
+      --glass-dark: rgba(10, 10, 10, 0.75); /* Темное стекло */
+      --glass-border: rgba(255, 255, 255, 0.08); /* Тонкая рамка */
+      
+      --text-white: #ffffff;
+      --text-gray: #b0b0b0;
+
+      --font-main: 'Montserrat', sans-serif;
+      --font-tech: 'Orbitron', sans-serif; /* Для ников и заголовков */
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      margin: 0;
+      background-color: var(--bg-deep);
+      font-family: var(--font-main);
+      color: var(--text-white);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-top: 80px; /* Отступ под меню */
+    }
+
+    /* --- ФОНОВЫЙ ЛОГОТИП (Watermark) --- */
+    .bg-logo {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80vw;
+      height: 80vh;
+      background: url('logo.png') center/contain no-repeat;
+      opacity: 0.07; /* Очень прозрачный, чтобы не мешал */
+      z-index: -1;
+      filter: grayscale(100%) brightness(1.5); /* ЧБ стиль для фона */
+      pointer-events: none;
+    }
+    
+    /* Дополнительный шум для текстуры */
+    .bg-noise {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: url('https://grainy-gradients.vercel.app/noise.svg');
+      opacity: 0.05;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* --- НАВИГАЦИЯ --- */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 70px;
+      background: rgba(5, 5, 5, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    /* Логотип в меню */
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-right: 20px;
+    }
+
+    .nav-brand img {
+      height: 40px;
+      width: auto;
+      filter: drop-shadow(0 0 5px var(--accent-glow));
+    }
+
+    .nav-brand h1 {
+      font-family: var(--font-tech);
+      font-size: 18px;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, #fff, #bbb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Скролл меню */
+    .nav-menu {
+      display: flex;
+      gap: 5px;
+      overflow-x: auto;
+      height: 100%;
+      align-items: center;
+      scrollbar-width: none;
+    }
+    .nav-menu::-webkit-scrollbar { display: none; }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-gray);
+      font-family: var(--font-tech);
+      font-size: 12px;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      white-space: nowrap;
+      border-radius: 4px;
+      letter-spacing: 1px;
+    }
+
+    .nav-btn:hover { color: #fff; }
+
+    .nav-btn.active {
+      color: #fff;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+      border-bottom: 2px solid var(--accent-color);
+      text-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    /* --- КОНТЕНТ --- */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    section {
+      display: none;
+      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    section.active { display: block; }
+
+    /* КАРТОЧКИ (Стеклянный эффект) */
+    .card {
+      background: var(--glass-dark);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    /* Эффект свечения сбоку карточки вместо красной рамки */
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 3px; height: 100%;
+      background: linear-gradient(to bottom, var(--accent-color), transparent);
+      opacity: 0.8;
+    }
+
+    h2, h3 {
+      font-family: var(--font-tech);
+      color: #fff;
+      margin-top: 0;
+      letter-spacing: 1px;
+    }
+
+    p {
+      line-height: 1.7;
+      color: var(--text-gray);
+      font-size: 15px;
+    }
+
+    /* --- СЕТКА ИГРОКОВ (Особый стиль) --- */
+    .roster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .player-unit {
+      background: rgba(20, 20, 20, 0.6);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      transition: 0.4s;
+      cursor: pointer;
+      group;
+    }
+
+    .player-unit:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-color);
+      box-shadow: 0 10px 30px rgba(233, 30, 99, 0.15); /* Цветное свечение при наведении */
+    }
+
+    .p-header {
+      padding: 20px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+    }
+
+    .p-nick {
+      font-family: var(--font-tech);
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+      /* Текстовый градиент для красоты ников */
+      background: linear-gradient(135deg, #fff 30%, #bbb 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .p-role {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--accent-color);
+      margin-top: 5px;
+      font-weight: 600;
+      letter-spacing: 2px;
+    }
+
+    /* Скрытая инфа (появляется при клике/ховере) */
+    .p-stats {
+      padding: 0 20px 20px;
+      opacity: 0.5;
+      font-size: 13px;
+      text-align: center;
+      color: #888;
+      transition: 0.3s;
+    }
+    
+    .player-unit:hover .p-stats {
+      opacity: 1;
+      color: #fff;
+    }
+
+    /* --- КНОПКИ --- */
+    .btn-glitch {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 30px;
+      background: transparent;
+      border: 1px solid var(--accent-color);
+      color: #fff;
+      font-family: var(--font-tech);
+      text-transform: uppercase;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 2px;
+      position: relative;
+      overflow: hidden;
+      transition: 0.3s;
+    }
+
+    .btn-glitch:hover {
+      background: var(--accent-color);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    /* --- ПОДВАЛ --- */
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: #444;
+      font-size: 12px;
+      font-family: var(--font-tech);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-logo"></div>
+  <div class="bg-noise"></div>
+
+  <nav class="navbar">
+    <div class="nav-brand">
+      <img src="logo.png" alt="Logo" onerror="this.style.display='none'"> 
+      <h1>Airex Team</h1>
+    </div>
+    
+    <div class="nav-menu">
+      <button class="nav-btn active" onclick="openTab('home', this)">Главная</button>
+      <button class="nav-btn" onclick="openTab('team', this)">Состав</button>
+      <button class="nav-btn" onclick="openTab('about', this)">О нас</button>
+      <button class="nav-btn" onclick="openTab('news', this)">Новости</button>
+      <button class="nav-btn" onclick="openTab('join', this)">Вступить</button>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <section id="home" class="active">
+      <div class="card" style="text-align: center; padding: 60px 20px;">
+        <h2 style="font-size: 32px; margin-bottom: 10px;">AIREX TEAM</h2>
+        <p style="font-size: 16px; margin-bottom: 30px; color: #fff;">
+          Киберспортивная команда по Standoff 2
+        </p>
+        <p>Мы строим экосистему STATEX и побеждаем в Apex Legends.</p>
+        <br>
+        <button class="btn-glitch" onclick="openTab('join', document.querySelectorAll('.nav-btn')[4])">
+          Стать частью команды
+        </button>
+      </div>
+
+      <div class="card">
+        <h3>⚡ Последние результаты</h3>
+        <p>Наши показатели растут. Команда готовится к Major-турниру.</p>
+      </div>
+    </section>
+
+    <section id="team">
+      <h3 style="margin-bottom: 20px; opacity: 0.7;">Main Roster</h3>
+      
+      <div class="roster-grid">
+        <div class="player-unit">
+          <div class="p-header">
+            <h4 class="p-nick">Sn1per</h4>
+            <div class="p-role">Captain / IGL</div>
+          </div>
+          <div class="p-stats">
+            «Хладнокровие — моё оружие»<br>
+            <span style="color:var(--accent-color)">K/D: 2.4</span>
+          </div>
+        </div>
+
+        <div class="player-unit">
+          <div class="p-header">
+            <h4 class="p-nick">Intex</h4>
+            <div class="p-role">Fragger</div>
+          </div>
+          <div class="p-stats">
+            «Я не один, со мной моя команда»<br>
+            <span style="color:var(--accent-color)">K/D: 2.8</span>
+          </div>
+        </div>
+
+        <div class="player-unit">
+          <div class="p-header">
+            <h4 class="p-nick">Softorder17</h4>
+            <div class="p-role">Support</div>
+          </div>
+          <div class="p-stats">
+            «Дисциплина решает»<br>
+            Stats: Hidden
+          </div>
+        </div>
+
+        <div class="player-unit">
+          <div class="p-header">
+            <h4 class="p-nick">nezyyy</h4>
+            <div class="p-role">Flex</div>
+          </div>
+          <div class="p-stats">
+            «Всегда на шаг впереди»
+          </div>
+        </div>
+
+         <div class="player-unit">
+          <div class="p-header">
+            <h4 class="p-nick">Today</h4>
+            <div class="p-role">Sniper</div>
+          </div>
+          <div class="p-stats">
+            «Играю умно»
+          </div>
+        </div>
+      </div>
+
+      <h3 style="margin: 40px 0 20px; opacity: 0.7;">Reserve</h3>
+      <div class="roster-grid">
+        <div class="player-unit" style="opacity: 0.7">
+          <div class="p-header">
+            <h4 class="p-nick">Burn</h4>
+            <div class="p-role">Sub</div>
+          </div>
+        </div>
+        <div class="player-unit" style="opacity: 0.7">
+          <div class="p-header">
+            <h4 class="p-nick">Tatsy</h4>
+            <div class="p-role">Sub</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="card">
+        <h3>Организация</h3>
+        <p>Airex Team Esports — это больше, чем клан. Это платформа для роста.</p>
+        <p>Мы разрабатываем <strong>STATEX</strong> — систему аналитики для игроков.</p>
+      </div>
+    </section>
+
+    <section id="news">
+      <div class="card">
+        <div style="font-size: 10px; color: var(--accent-color); letter-spacing: 2px; margin-bottom: 10px;">ТУРНИРЫ</div>
+        <h3>Победа в Winter Apex Stars</h3>
+        <p>Заняли топ-1, показав невероятную синергию.</p>
+      </div>
+    </section>
+
+    <section id="join">
+      <div class="card" style="text-align: center;">
+        <h3>Join the Legacy</h3>
+        <p>Мы ищем таланты. Если ты уверен в себе — пиши.</p>
+        <br>
+        <a href="https://t.me/kas_off" target="_blank" class="btn-glitch">
+          Telegram: @kas_off
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    © 2026  Airex Team - Киберспортивная команда
+  </footer>
+
+  <script>
+    function openTab(id, btn) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+
+</body>
+</html>
+
