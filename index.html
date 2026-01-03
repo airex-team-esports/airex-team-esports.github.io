@@ -26,6 +26,13 @@
       --font-tech: 'Orbitron', sans-serif;
     }
 
+    /* Исправлено: вынесено из :root */
+    #tg-post-container iframe {
+      width: 100% !important;
+      margin: 0 !important;
+      border: none !important;
+    }
+
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
@@ -257,7 +264,7 @@
     .lightbox-img {
       max-width: 100%; max-height: 80vh; border-radius: 8px;
       box-shadow: 0 0 30px rgba(233, 30, 99, 0.3);
-      user-select: none; touch-action: pan-y; /* Allow vertical scroll, handle horizontal in JS */
+      user-select: none; touch-action: pan-y;
     }
     .lightbox-caption {
       margin-top: 15px; color: #fff; font-family: var(--font-tech);
@@ -279,7 +286,7 @@
     .lb-next { right: 10px; }
 
     @media (max-width: 768px) {
-      .lb-nav { display: none; } /* Hide arrows on mobile, use swipe */
+      .lb-nav { display: none; }
     }
 
     footer {
@@ -292,7 +299,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
     
-    /* Social Icons Styles */
     .social-icon {
       color: #ff0000; font-size: 32px; transition: 0.3s;
       text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
@@ -327,21 +333,117 @@
   <div class="container">
 
     <section id="home" class="active">
-      <div class="card" style="text-align: center; padding: 60px 20px;">
-        <h2 style="font-size: 32px; margin-bottom: 10px;">AIREX TEAM</h2>
-        <p style="font-size: 16px; margin-bottom: 30px; color: #fff;">
+      <div class="card" style="text-align: center; padding: 60px 20px; border-bottom: 2px solid var(--accent-color);">
+        <h2 style="font-size: 32px; margin-bottom: 10px; text-shadow: 0 0 15px var(--accent-glow);">AIREX TEAM</h2>
+        <p style="font-size: 16px; margin-bottom: 30px; color: #fff; letter-spacing: 1px;">
           Киберспортивная команда по Standoff 2
         </p>
-        <p>Идем по пути киберспорта и не думаем останавливаться.</p>
-        <br>
+        <p style="max-width: 500px; margin: 0 auto 25px; opacity: 0.8;">Мы создаем новую историю в мобильном киберспорте. Дисциплина, мощь и воля к победе.</p>
         <button class="btn-glitch" onclick="openTab('join', document.querySelectorAll('.nav-btn')[5])">
           Стать частью команды
         </button>
       </div>
 
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 24px;">
+        <div class="card" style="margin-bottom: 0; padding: 20px; text-align: center; background: rgba(233, 30, 99, 0.05);">
+          <div style="font-family: var(--font-tech); color: var(--accent-color); font-size: 28px; margin-bottom: 5px;">1</div>
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-gray);">Трофеев</div>
+        </div>
+        <div class="card" style="margin-bottom: 0; padding: 20px; text-align: center; background: rgba(233, 30, 99, 0.05);">
+          <div style="font-family: var(--font-tech); color: var(--accent-color); font-size: 28px; margin-bottom: 5px;">1%</div>
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-gray);">Win Rate</div>
+        </div>
+      </div>
+
+      <div class="card" style="border: 1px solid var(--accent-color); box-shadow: inset 0 0 15px rgba(233, 30, 99, 0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <span style="font-size: 10px; color: var(--accent-color); font-family: var(--font-tech); letter-spacing: 2px;">NEXT MATCH</span>
+          <span id="match-status" style="font-size: 10px; color: #00ff88; font-family: var(--font-tech);">COUNTDOWN</span>
+        </div>
+        
+        <div id="countdown" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; font-family: var(--font-tech);">
+          <div style="text-align: center;">
+            <div id="days" style="font-size: 20px; color: #fff;">00</div>
+            <div style="font-size: 8px; color: var(--accent-color);">ДН</div>
+          </div>
+          <div style="font-size: 20px; color: var(--glass-border);">:</div>
+          <div style="text-align: center;">
+            <div id="hours" style="font-size: 20px; color: #fff;">00</div>
+            <div style="font-size: 8px; color: var(--accent-color);">ЧАС</div>
+          </div>
+          <div style="font-size: 20px; color: var(--glass-border);">:</div>
+          <div style="text-align: center;">
+            <div id="minutes" style="font-size: 20px; color: #fff;">00</div>
+            <div style="font-size: 8px; color: var(--accent-color);">МИН</div>
+          </div>
+          <div style="font-size: 20px; color: var(--glass-border);">:</div>
+          <div style="text-align: center;">
+            <div id="seconds" style="font-size: 20px; color: #fff;">00</div>
+            <div style="font-size: 8px; color: var(--accent-color);">СЕК</div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-around; align-items: center; padding: 10px 0; border-top: 1px solid var(--glass-border);">
+          <div style="text-align: center;">
+            <div style="font-family: var(--font-tech); font-size: 18px;">ARXtm</div>
+          </div>
+          <div style="font-family: var(--font-tech); color: var(--accent-color); font-size: 20px; font-weight: bold;">VS</div>
+          <div style="text-align: center;">
+            <div style="font-family: var(--font-tech); font-size: 18px; color: var(--text-gray);">RNFOR</div>
+            <div style="font-size: 9px; color: var(--text-gray);">Rivals</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 15px; border-left: 2px solid #24A1DE;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+          <i class="fab fa-telegram" style="color: #24A1DE; font-size: 20px;"></i>
+          <span style="font-family: var(--font-tech); font-size: 12px; letter-spacing: 1px;">Свежее из канала</span>
+        </div>
+        
+        <div id="tg-post-container" style="width: 100%; overflow: hidden; border-radius: 10px; background: rgba(255,255,255,0.03);">
+          <script async src="https://t.me/Airex_Team/3" 
+                  data-telegram-post="airex_team/10" 
+                  data-width="100%" 
+                  data-userpic="false" 
+                  data-color="E91E63" 
+                  data-dark="1">
+          </script>
+        </div>
+      </div>
+
+      <div class="card" style="text-align: center; border: 1px dashed var(--accent-color); background: rgba(233, 30, 99, 0.03);">
+        <h3 style="font-size: 18px; margin-bottom: 10px;">Поддержать команду</h3>
+        <p style="font-size: 13px; margin-bottom: 20px;">Твоя поддержка помогает нам развиваться, участвовать в новых турнирах и улучшать контент.</p>
+        
+        <a href="https://www.donationalerts.com/r/airex_team" target="_blank" class="btn-glitch" style="width: 100%; gap: 10px; background: var(--accent-color); box-shadow: 0 0 20px var(--accent-glow);">
+          <i class="fas fa-heart"></i> ОТПРАВИТЬ ДОНАТ
+        </a>
+        
+        <div style="margin-top: 15px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px;">
+          Спасибо всем, кто с нами! 
+        </div>
+      </div>
+
       <div class="card">
-        <h3>⚡ Последние результаты</h3>
-        <p>Наши показатели растут. Команда готовится к Major-турниру.</p>
+        <h3 style="font-size: 16px; margin-bottom: 15px;">
+          <i class="fas fa-chart-line" style="color: var(--accent-color); margin-right: 10px;"></i>Последние результаты
+        </h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; justify-content: space-between; font-size: 14px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span>vs Hawke</span>
+            <span style="color: #00ff88; font-weight: bold;">2 : 0</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 14px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span>vs ApxAc</span>
+            <span style="color: #00ff88; font-weight: bold;">2 : 0</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 14px; padding: 5px 0;">
+            <span>vs E0R Esports</span>
+            <span style="color: #e91e63; font-weight: bold;">2 : 3</span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -414,22 +516,22 @@
             <span style="color:var(--accent-color)">K/D: 2.13</span>
           </div>
        </div>
-
-      </div> <h3 style="margin: 40px 0 20px; opacity: 0.7;">Reserve</h3>
+      </div> 
+      
+      <h3 style="margin: 40px 0 20px; opacity: 0.7;">Reserve</h3>
         
-        <div class="roster-grid">
-            <div class="player-unit" style="opacity: 0.7">
-              <div class="p-header">
-                <h4 class="p-nick">Rampage</h4>
-                <div class="p-role">Люркер</div>
-              </div>
-              <div class="p-stats">
-                «Несчастным или счастливым человека делают только его мысли.»<br>
-                <span style="color:var(--accent-color)">K/D: 3.08</span>
-              </div>
+      <div class="roster-grid">
+          <div class="player-unit" style="opacity: 0.7">
+            <div class="p-header">
+              <h4 class="p-nick">Rampage</h4>
+              <div class="p-role">Люркер</div>
             </div>
-        </div>
-
+            <div class="p-stats">
+              «Несчастным или счастливым человека делают только его мысли.»<br>
+              <span style="color:var(--accent-color)">K/D: 3.08</span>
+            </div>
+          </div>
+      </div>
     </section>
 
     <section id="about">
@@ -536,7 +638,7 @@
 
   <section id="join">
       <div class="card" style="text-align: center;">
-        <h3>Join the Legacy</h3>
+        <h3>Join the Airex</h3>
         <p style="margin-bottom: 25px;">Заполни анкету, и мы рассмотрим твою кандидатуру.</p>
         
         <form id="recruitForm" onsubmit="sendToTelegram(event)">
@@ -667,12 +769,12 @@
       lightboxImg.src = src;
       lightboxCaption.textContent = caption;
       lightbox.classList.add('active');
-      document.body.style.overflow = 'hidden'; // Блокируем скролл страницы
+      document.body.style.overflow = 'hidden'; 
     }
 
     function closeLightbox() {
       lightbox.classList.remove('active');
-      document.body.style.overflow = ''; // Возвращаем скролл
+      document.body.style.overflow = ''; 
     }
     
     function showNext() {
@@ -717,18 +819,17 @@
     }, {passive: true});
     
     function handleSwipe() {
-      const threshold = 50; // Минимальное расстояние для свайпа
+      const threshold = 50; 
       if (touchEndX < touchStartX - threshold) {
-        showNext(); // Свайп влево -> След. картинка
+        showNext(); 
       }
       if (touchEndX > touchStartX + threshold) {
-        showPrev(); // Свайп вправо -> Пред. картинка
+        showPrev(); 
       }
     }
 
     // --- Табы (С АВТО-ОСТАНОВКОЙ ВИДЕО) ---
     function openTab(id, btn) {
-      // 1. Стандартное переключение секций
       document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       
@@ -737,11 +838,8 @@
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // 2. Логика для остановки видео
       if (id !== 'media') {
         const vBlock = document.querySelector('.video-wrapper');
-        
-        // Если видео сейчас загружено, удаляем iframe и возвращаем картинку
         if (vBlock.classList.contains('loaded')) {
           vBlock.classList.remove('loaded');
           vBlock.innerHTML = `
@@ -752,7 +850,41 @@
         }
       }
     }
+    
+    // --- ЛОГИКА ТАЙМЕРА ---
+    // Установи дату следующего матча здесь: (Год, Месяц[0-11], День, Час, Минуты)
+    const matchDate = new Date(2026, 0, 7, 18, 0, 0).getTime(); 
+
+    const countdownInterval = setInterval(function() {
+      const now = new Date().getTime();
+      const distance = matchDate - now;
+
+      const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+      const daysEl = document.getElementById("days");
+      const hoursEl = document.getElementById("hours");
+      const minutesEl = document.getElementById("minutes");
+      const secondsEl = document.getElementById("seconds");
+      
+      if(daysEl) daysEl.innerHTML = d.toString().padStart(2, '0');
+      if(hoursEl) hoursEl.innerHTML = h.toString().padStart(2, '0');
+      if(minutesEl) minutesEl.innerHTML = m.toString().padStart(2, '0');
+      if(secondsEl) secondsEl.innerHTML = s.toString().padStart(2, '0');
+
+      if (distance < 0) {
+        clearInterval(countdownInterval);
+        const cdDiv = document.getElementById("countdown");
+        if(cdDiv) cdDiv.innerHTML = "<div style='color:#00ff88; font-size:14px; font-family:var(--font-tech);'>МАТЧ ИДЕТ</div>";
+        const statusDiv = document.getElementById("match-status");
+        if(statusDiv) statusDiv.innerHTML = "LIVE";
+      }
+    }, 1000);
+
   </script>
 
 </body>
 </html>
+
