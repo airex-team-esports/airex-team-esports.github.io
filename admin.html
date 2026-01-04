@@ -64,6 +64,12 @@
 
     <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
     
+   <label>Тип состава</label>
+<select id="rosterType" style="width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 6px;">
+    <option value="roster">Основной состав (Main)</option>
+    <option value="reserve">Запасные (Reserve)</option>
+</select>
+
     <h3>Добавить игрока</h3>
     <input type="text" id="pNick" placeholder="Никнейм (например: Sn1per)">
     <input type="text" id="pRole" placeholder="Роль (например: Captain)">
@@ -83,6 +89,21 @@
     
     <button onclick="addPlayer()">+ Добавить в состав</button>
   </div>
+  
+<div class="panel">
+    <h2>🏆 История матчей</h2>
+    <div id="historyAdminList" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px; border: 1px solid #333; padding: 10px;"></div>
+    <input type="text" id="hEnemy" placeholder="ТЕГ Соперника">
+    <input type="text" id="hTour" placeholder="Название матча? Турнир/Прак">
+    <div style="display:flex; gap:10px;">
+        <input type="number" id="hOur" placeholder="Наш счет">
+        <input type="number" id="hEnemyScore" placeholder="Их счет">
+    </div>
+    <input type="text" id="hScreenshot" placeholder="Ссылка на скриншот">
+    
+    <button onclick="addMatchToHistory()">Добавить в историю</button>
+</div>
+
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
@@ -150,22 +171,36 @@
     });
 
     // 3. ДОБАВЛЕНИЕ ИГРОКА (ПЕРЕПИСАННАЯ ЛОГИКА)
-    window.addPlayer = async () => {
-        const nick = document.getElementById('pNick').value;
-        const role = document.getElementById('pRole').value;
-        
-        if(!nick || !role) { alert("Укажи хотя бы Ник и Роль!"); return; }
+window.addPlayer = async () => {
+    const nick = document.getElementById('pNick').value;
+    const role = document.getElementById('pRole').value;
+    const type = document.getElementById('rosterType').value; // Читаем тип: roster или reserve
+    
+    if(!nick || !role) { alert("Укажи ник и роль!"); return; }
 
-        const newPlayer = {
-            nick: nick,
-            role: role,
-            quote: document.getElementById('pQuote').value || "No quote",
-            img: document.getElementById('pImg').value || "https://via.placeholder.com/200/e91e63/ffffff?text=Player",
-            skill: { 
-                name: document.getElementById('s1Name').value || "SKILL", 
-                val: document.getElementById('s1Val').value || 50 
-            }
-        };
+    const newPlayer = {
+        nick: nick,
+        role: role,
+        quote: document.getElementById('pQuote').value || "No quote",
+        img: document.getElementById('pImg').value || "https://via.placeholder.com/200",
+        skill: { 
+            name: document.getElementById('s1Name').value || "SKILL", 
+            val: document.getElementById('s1Val').value || 50 
+        }
+    };
+
+    try {
+        const docRef = doc(db, "siteData", type); // Сохраняем в выбранный документ
+        const snap = await getDoc(docRef);
+        let currentList = (snap.exists() && snap.data().list) ? snap.data().list : [];
+
+        currentList.push(newPlayer);
+        await setDoc(docRef, { list: currentList });
+        
+        alert(`✅ Добавлен в ${type === 'roster' ? 'основу' : 'резерв'}!`);
+    } catch (e) { alert('Ошибка: ' + e.message); }
+};
+
 
         try {
             const docRef = doc(db, "siteData", "roster");
@@ -213,6 +248,66 @@
             alert('Ошибка при удалении: ' + e.message);
         }
     };
+  
+    // 1. Добавление матча
+window.addMatchToHistory = async () => {
+    const enemy = document.getElementById('hEnemy').value;
+    const tournament = document.getElementById('hTour').value;
+    const ourScore = document.getElementById('hOur').value;
+    const enemyScore = document.getElementById('hEnemyScore').value;
+    const screenshot = document.getElementById('hScreenshot').value; // Новое
+
+    if(!enemy || ourScore === "" || enemyScore === "") return alert("Заполни все поля!");
+
+    const newMatch = {
+        id: Date.now(),
+        enemy,
+        tournament,
+        ourScore: parseInt(ourScore),
+        enemyScore: parseInt(enemyScore),
+        screenshot: screenshot || null // Сохраняем ссылку
+    };
+
+    try {
+        const docRef = doc(db, "siteData", "history");
+        const snap = await getDoc(docRef);
+        let list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        list.push(newMatch);
+        await setDoc(docRef, { list });
+        alert("✅ Матч добавлен!");
+        document.getElementById('hScreenshot').value = '';
+    } catch (e) { alert(e.message); }
+};
+        // Очистка полей
+        document.getElementById('hEnemy').value = '';
+        document.getElementById('hOur').value = '';
+        document.getElementById('hEnemyScore').value = '';
+    } catch (e) { alert(e.message); }
+};
+
+// 2. Отображение списка для удаления в админке
+onSnapshot(doc(db, "siteData", "history"), (docSnap) => {
+    const container = document.getElementById('historyAdminList');
+    if (docSnap.exists() && container) {
+        const matches = docSnap.data().list || [];
+        container.innerHTML = matches.map(m => `
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#222; padding:8px; margin-bottom:5px; border-radius:4px; font-size:12px;">
+                <span>vs ${m.enemy} (${m.ourScore}:${m.enemyScore})</span>
+                <button class="delete" style="padding:2px 8px; width:auto;" onclick="deleteHistoryMatch(${m.id})">Удалить</button>
+            </div>
+        `).join('');
+    }
+});
+
+// 3. Удаление матча
+window.deleteHistoryMatch = async (matchId) => {
+    if(!confirm("Удалить этот матч из истории?")) return;
+    const docRef = doc(db, "siteData", "history");
+    const snap = await getDoc(docRef);
+    const newList = snap.data().list.filter(m => m.id !== matchId);
+    await setDoc(docRef, { list: newList });
+};
+
   </script>
 </body>
 </html>
