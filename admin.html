@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>AX Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { background: #050505; color: #fff; font-family: 'Montserrat', sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+    h1, h2, h3 { font-family: 'Orbitron', sans-serif; color: #e91e63; margin-top: 0; }
+    
+    .panel { 
+        background: #111; 
+        padding: 20px; 
+        border: 1px solid #333; 
+        margin-bottom: 20px; 
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+    
+    label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; display: block; margin-top: 10px; }
+    input { 
+        width: 100%; padding: 12px; margin: 5px 0; 
+        background: #222; border: 1px solid #444; color: #fff; border-radius: 6px; box-sizing: border-box; 
+    }
+    input:focus { border-color: #e91e63; outline: none; }
+    
+    button { 
+        background: #e91e63; color: white; border: none; padding: 12px 20px; 
+        cursor: pointer; font-family: 'Orbitron'; text-transform: uppercase; 
+        width: 100%; border-radius: 6px; margin-top: 10px; font-weight: bold; transition: 0.2s;
+    }
+    button:hover { background: #ff0060; transform: scale(1.02); }
+    button.delete { background: #ff3333; width: auto; padding: 5px 12px; font-size: 10px; margin: 0; }
+
+    .player-item { 
+        display: flex; justify-content: space-between; align-items: center;
+        background: #1a1a1a; padding: 12px; margin-bottom: 8px; border-radius: 6px; border: 1px solid #333; 
+    }
+    .player-info b { color: #fff; font-size: 16px; }
+    .player-info span { color: #888; font-size: 12px; margin-left: 5px; }
+    
+    .loader { text-align: center; color: #e91e63; font-family: 'Orbitron'; display: none; }
+  </style>
+</head>
+<body>
+
+  <h1>AIREX // ADMIN</h1>
+
+  <div class="panel">
+    <h2>⚡ Следующий матч</h2>
+    <label>Имя соперника</label>
+    <input type="text" id="enemyName" placeholder="Например: NAVI">
+    <label>Дата и время</label>
+    <input type="datetime-local" id="matchDate">
+    <button onclick="saveMatch()">Обновить таймер</button>
+  </div>
+
+  <div class="panel">
+    <h2>👥 Состав команды</h2>
+    
+    <div id="loading" class="loader">Загрузка списка...</div>
+    <div id="rosterList"></div> 
+
+    <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
+    
+    <h3>Добавить игрока</h3>
+    <input type="text" id="pNick" placeholder="Никнейм (например: Sn1per)">
+    <input type="text" id="pRole" placeholder="Роль (например: Captain)">
+    <input type="text" id="pQuote" placeholder="Цитата">
+    <input type="text" id="pImg" placeholder="Ссылка на фото (URL)">
+    
+    <div style="display:flex; gap:10px;">
+        <div style="flex:1">
+            <label>Скилл (Название)</label>
+            <input type="text" id="s1Name" placeholder="AIM">
+        </div>
+        <div style="flex:1">
+            <label>Процент %</label>
+            <input type="number" id="s1Val" placeholder="98">
+        </div>
+    </div>
+    
+    <button onclick="addPlayer()">+ Добавить в состав</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, onSnapshot } 
+    from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+    // ТВОЙ КОНФИГ (Я ВЗЯЛ ЕГО ИЗ ТВОЕГО ФАЙЛА)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
+      authDomain: "airexsite.firebaseapp.com",
+      projectId: "airexsite",
+      storageBucket: "airexsite.firebasestorage.app",
+      messagingSenderId: "276640665598",
+      appId: "1:276640665598:web:d7400bd5962995efb43aaf"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 1. СОХРАНЕНИЕ МАТЧА
+    window.saveMatch = async () => {
+      const enemy = document.getElementById('enemyName').value;
+      const date = document.getElementById('matchDate').value;
+      
+      if(!enemy || !date) { alert("Заполни оба поля для матча!"); return; }
+
+      try {
+        await setDoc(doc(db, "siteData", "match"), { enemy, date });
+        alert('✅ Матч обновлен успешно!');
+      } catch (e) { alert('Ошибка: ' + e.message); }
+    };
+
+    // 2. ОТОБРАЖЕНИЕ СПИСКА (СЛУШАТЕЛЬ)
+    const rosterDiv = document.getElementById('rosterList');
+    const loadDiv = document.getElementById('loading');
+    
+    loadDiv.style.display = 'block';
+
+    onSnapshot(doc(db, "siteData", "roster"), (docSnap) => {
+        loadDiv.style.display = 'none';
+        rosterDiv.innerHTML = '';
+        
+        if (docSnap.exists() && docSnap.data().list) {
+            const players = docSnap.data().list;
+            
+            if(players.length === 0) {
+                rosterDiv.innerHTML = '<div style="text-align:center; color:#555">Список пуст</div>';
+                return;
+            }
+
+            players.forEach(p => {
+                const el = document.createElement('div');
+                el.className = 'player-item';
+                el.innerHTML = `
+                    <div class="player-info">
+                        <b>${p.nick}</b> <span>${p.role}</span>
+                    </div>
+                    <button class="delete" onclick="removePlayer('${p.nick}')">УДАЛИТЬ</button>
+                `;
+                rosterDiv.appendChild(el);
+            });
+        } else {
+            rosterDiv.innerHTML = '<div style="text-align:center; color:#555">База данных состава пока пуста. Добавь первого игрока!</div>';
+        }
+    });
+
+    // 3. ДОБАВЛЕНИЕ ИГРОКА (ПЕРЕПИСАННАЯ ЛОГИКА)
+    window.addPlayer = async () => {
+        const nick = document.getElementById('pNick').value;
+        const role = document.getElementById('pRole').value;
+        
+        if(!nick || !role) { alert("Укажи хотя бы Ник и Роль!"); return; }
+
+        const newPlayer = {
+            nick: nick,
+            role: role,
+            quote: document.getElementById('pQuote').value || "No quote",
+            img: document.getElementById('pImg').value || "https://via.placeholder.com/200/e91e63/ffffff?text=Player",
+            skill: { 
+                name: document.getElementById('s1Name').value || "SKILL", 
+                val: document.getElementById('s1Val').value || 50 
+            }
+        };
+
+        try {
+            const docRef = doc(db, "siteData", "roster");
+            const snap = await getDoc(docRef);
+            let currentList = [];
+            
+            if (snap.exists() && snap.data().list) {
+                currentList = snap.data().list;
+            }
+
+            // Добавляем нового в массив
+            currentList.push(newPlayer);
+            
+            // Перезаписываем весь список
+            await setDoc(docRef, { list: currentList });
+            
+            // Очищаем поля
+            document.getElementById('pNick').value = '';
+            document.getElementById('pRole').value = '';
+            document.getElementById('pQuote').value = '';
+            alert(`✅ Игрок ${nick} добавлен!`);
+            
+        } catch (e) {
+            console.error(e);
+            alert('Ошибка при добавлении: ' + e.message);
+        }
+    };
+
+    // 4. УДАЛЕНИЕ ИГРОКА
+    window.removePlayer = async (nickToDelete) => {
+        if(!confirm(`Точно удалить ${nickToDelete}?`)) return;
+
+        try {
+            const docRef = doc(db, "siteData", "roster");
+            const snap = await getDoc(docRef);
+            
+            if (snap.exists()) {
+                let list = snap.data().list;
+                // Фильтруем список: оставляем всех, КРОМЕ того, чей ник удаляем
+                const newList = list.filter(p => p.nick !== nickToDelete);
+                
+                await setDoc(docRef, { list: newList });
+            }
+        } catch (e) {
+            alert('Ошибка при удалении: ' + e.message);
+        }
+    };
+  </script>
+</body>
+</html>
