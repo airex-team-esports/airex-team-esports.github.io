@@ -232,6 +232,34 @@
     footer { text-align: center; padding: 30px 20px; color: #444; font-size: 11px; font-family: var(--font-tech); text-transform: uppercase; }
     
     @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .history-card {
+    background: var(--glass-dark);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+.history-card::before {
+    content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%;
+}
+.history-card.win-border::before { background: #00ff88; box-shadow: 0 0 15px rgba(0,255,136,0.5); }
+.history-card.lose-border::before { background: #e91e63; box-shadow: 0 0 15px rgba(233,30,99,0.5); }
+
+.h-info { display: flex; flex-direction: column; gap: 5px; }
+.h-opponent { font-family: var(--font-tech); font-size: 18px; color: #fff; }
+.h-tour { font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
+
+.h-result { text-align: right; }
+.h-score { font-family: var(--font-tech); font-size: 24px; letter-spacing: 2px; }
+.h-status { font-size: 9px; text-transform: uppercase; font-weight: bold; margin-top: 5px; }
+.text-win { color: #00ff88; }
+.text-lose { color: #e91e63; }
   </style>
 </head>
 <body>
@@ -250,6 +278,7 @@
       <button class="nav-btn" onclick="openTab('about', this)">Инфо</button>
       <button class="nav-btn" onclick="openTab('news', this)">Новости</button>
       <button class="nav-btn" onclick="openTab('media', this)">Медиа</button>
+      <button class="nav-btn" onclick="openTab('history', this)">История матчей</button>
       <button class="nav-btn" onclick="openTab('join', this)">Вступить</button>
     </div>
   </nav>
@@ -333,8 +362,13 @@
       </div>
       
       <div class="roster-grid" id="dynamic-roster">
-  
-   </div>
+    </div>
+<div class="text-center" style="margin-top: 40px; margin-bottom: 20px;">
+  <h3 class="font-tech" style="opacity: 0.7;">RESERVE</h3>
+</div>
+
+<div class="roster-grid" id="reserve-roster">
+  </div>
 
     </section>
 
@@ -394,7 +428,7 @@
         <span class="play-btn">▶</span>
       </div>
       <a href="https://youtube.com/@airex_team.official" target="_blank" class="btn-glitch" style="margin-top: 15px;">Перейти на канал</a>
-    </div>
+    
   </section>
 
   <section id="join">
@@ -443,6 +477,16 @@
     </section>
 
   </div>
+<section id="history">
+  <div class="text-center" style="margin-bottom: 25px;">
+    <h2 class="glitch hero-title" data-text="MATCH HISTORY">MATCH HISTORY</h2>
+    <p style="font-size: 12px; opacity: 0.6;">Хронология наших сражений</p>
+  </div>
+
+  <div id="full-history-container">
+    <div class="text-center" style="padding: 40px; color: var(--text-gray);">Загрузка истории...</div>
+  </div>
+</section>
 
   <footer>© 2026 Airex Team</footer>
 
@@ -625,6 +669,74 @@
           container.innerHTML = html;
       }
   });
+  
+  // Добавьте это в блок <script type="module"> на сайте
+onSnapshot(doc(db, "siteData", "reserve"), (doc) => {
+    if(doc.exists()) {
+        const players = doc.data().list || [];
+        const container = document.getElementById('reserve-roster');
+        if(!container) return;
+        
+        let html = '';
+        players.forEach(p => {
+            html += `
+            <div class="player-wrapper" onclick="flipCard(this)">
+              <div class="player-card-inner">
+                <div class="player-front" style="border-color: rgba(255,255,255,0.1);">
+                  <div>
+                    <h4 class="p-nick">${p.nick}</h4><div class="p-role" style="color: #888;">${p.role}</div>
+                    <div class="p-quote">"${p.quote}"</div>
+                  </div>
+                </div>
+                <div class="player-back">
+                  <img src="${p.img}" alt="${p.nick}" class="p-avatar" style="border-color: #888; box-shadow: none;">
+                </div>
+              </div>
+            </div>`;
+        });
+        container.innerHTML = html;
+    }
+});
+onSnapshot(doc(db, "siteData", "history"), (doc) => {
+    if(doc.exists()) {
+        const matches = doc.data().list || [];
+        const container = document.getElementById('full-history-container');
+        if(!container) return;
+
+        if(matches.length === 0) {
+            container.innerHTML = '<div class="card text-center">История матчей пока пуста</div>';
+            return;
+        }
+
+        let html = '';
+        // Выводим последние матчи первыми
+matches.slice().reverse().forEach(m => {
+    const isWin = m.ourScore > m.enemyScore;
+    const statusText = isWin ? 'VICTORY' : 'DEFEAT';
+    const statusClass = isWin ? 'text-win' : 'text-lose';
+    const borderClass = isWin ? 'win-border' : 'lose-border';
+    
+    // Проверка: если есть скриншот, показываем кнопку
+    const screenshotBtn = m.screenshot 
+        ? `<button onclick="window.open('${m.screenshot}', '_blank')" class="btn-glitch" style="padding: 5px 10px; font-size: 8px; margin-top: 5px; width: auto;">PROOF</button>` 
+        : '';
+
+    html += `
+    <div class="history-card ${borderClass}">
+        <div class="h-info">
+            <span class="h-tour">${m.tournament || 'Турнирный матч'}</span>
+            <span class="h-opponent">vs ${m.enemy}</span>
+            ${screenshotBtn}
+        </div>
+        <div class="h-result">
+            <div class="h-score">${m.ourScore}:${m.enemyScore}</div>
+            <div class="h-status ${statusClass}">${statusText}</div>
+        </div>
+    </div>`;
+            container.innerHTML = html;
+
+});
+
 </script>
 
 </body>
