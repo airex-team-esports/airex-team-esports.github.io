@@ -295,13 +295,14 @@
 
       <div class="stats-row">
         <div class="stat-card">
-          <div class="stat-val">1</div>
+          <div class="stat-val">0</div>
           <div class="stat-lbl">Трофеев</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-val">100%</div>
-          <div class="stat-lbl">Win Rate</div>
+      <div class="stat-card">
+        <div id="win-rate-val" class="stat-val">0%</div>
+        <div class="stat-lbl">Win Rate</div>
         </div>
+
       </div>
 
       <div class="card match-card">
@@ -346,13 +347,14 @@
   <div style="margin-top: 15px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px;">Спасибо всем, кто с нами!</div>
 </div>
 
+<div class="card">
+  <h3><i class="fas fa-chart-line text-accent" style="margin-right: 10px;"></i>Последние игры</h3>
+  <div id="latest-results-container">
+      <p style="text-align:center; color:gray; font-size:12px;">Загрузка...</p>
+  </div>
+  <button class="nav-btn" onclick="openTab('history', document.querySelectorAll('.nav-btn')[5])" style="width:100%; margin-top:10px; border: 1px solid #333;">Посмотреть всю историю</button>
+</div>
 
-      <div class="card">
-        <h3><i class="fas fa-chart-line text-accent" style="margin-right: 10px;"></i>Результаты</h3>
-        <div class="result-row"><span>vs Hawke</span><span class="res-win">2 : 0</span></div>
-        <div class="result-row"><span>vs ApxAc</span><span class="res-win">2 : 0</span></div>
-        <div class="result-row" style="border:none;"><span>vs E0R Esports</span><span class="res-lose">2 : 3</span></div>
-      </div>
     </section>
 
     <section id="team">
@@ -697,45 +699,64 @@ onSnapshot(doc(db, "siteData", "reserve"), (doc) => {
         container.innerHTML = html;
     }
 });
-onSnapshot(doc(db, "siteData", "history"), (doc) => {
-    if(doc.exists()) {
-        const matches = doc.data().list || [];
-        const container = document.getElementById('full-history-container');
-        if(!container) return;
+onSnapshot(doc(db, "siteData", "history"), (docSnap) => {
+    if(docSnap.exists()) {
+        const matches = docSnap.data().list || [];
+        const fullHistoryContainer = document.getElementById('full-history-container');
+        const latestResultsContainer = document.getElementById('latest-results-container');
+        const winRateEl = document.getElementById('win-rate-val'); // Элемент для Win Rate
+        
+        if(matches.length === 0) return;
 
-        if(matches.length === 0) {
-            container.innerHTML = '<div class="card text-center">История матчей пока пуста</div>';
-            return;
+        // --- РАСЧЕТ WIN RATE ---
+        const totalMatches = matches.length;
+        const wins = matches.filter(m => m.ourScore > m.enemyScore).length;
+        const winRate = Math.round((wins / totalMatches) * 100);
+        
+        if(winRateEl) {
+            winRateEl.innerText = winRate + '%';
+        }
+        // -----------------------
+
+        const reversedMatches = matches.slice().reverse();
+
+        // 1. ПОЛНАЯ ИСТОРИЯ
+        if(fullHistoryContainer) {
+            let fullHtml = '';
+            reversedMatches.forEach(m => {
+                const isWin = m.ourScore > m.enemyScore;
+                fullHtml += `
+                <div class="history-card ${isWin ? 'win-border' : 'lose-border'}">
+                    <div class="h-info">
+                        <span class="h-tour">${m.tournament || 'Матч'}</span>
+                        <span class="h-opponent">vs ${m.enemy}</span>
+                        ${m.screenshot ? `<button onclick="window.open('${m.screenshot}', '_blank')" class="btn-glitch" style="padding: 5px 10px; font-size: 8px; margin-top: 5px; width: auto;">PROOF</button>` : ''}
+                    </div>
+                    <div class="h-result">
+                        <div class="h-score">${m.ourScore}:${m.enemyScore}</div>
+                        <div class="h-status ${isWin ? 'text-win' : 'text-lose'}">${isWin ? 'VICTORY' : 'DEFEAT'}</div>
+                    </div>
+                </div>`;
+            });
+            fullHistoryContainer.innerHTML = fullHtml;
         }
 
-        let html = '';
-        // Выводим последние матчи первыми
-matches.slice().reverse().forEach(m => {
-    const isWin = m.ourScore > m.enemyScore;
-    const statusText = isWin ? 'VICTORY' : 'DEFEAT';
-    const statusClass = isWin ? 'text-win' : 'text-lose';
-    const borderClass = isWin ? 'win-border' : 'lose-border';
-    
-    // Проверка: если есть скриншот, показываем кнопку
-    const screenshotBtn = m.screenshot 
-        ? `<button onclick="window.open('${m.screenshot}', '_blank')" class="btn-glitch" style="padding: 5px 10px; font-size: 8px; margin-top: 5px; width: auto;">PROOF</button>` 
-        : '';
-
-    html += `
-    <div class="history-card ${borderClass}">
-        <div class="h-info">
-            <span class="h-tour">${m.tournament || 'Турнирный матч'}</span>
-            <span class="h-opponent">vs ${m.enemy}</span>
-            ${screenshotBtn}
-        </div>
-        <div class="h-result">
-            <div class="h-score">${m.ourScore}:${m.enemyScore}</div>
-            <div class="h-status ${statusClass}">${statusText}</div>
-        </div>
-    </div>`;
-            container.innerHTML = html;
-
+        // 2. ГЛАВНАЯ (Блок "Последние игры")
+        if(latestResultsContainer) {
+            let latestHtml = '';
+            reversedMatches.slice(0, 3).forEach(m => {
+                const isWin = m.ourScore > m.enemyScore;
+                latestHtml += `
+                <div class="result-row">
+                    <span>vs ${m.enemy}</span>
+                    <span class="${isWin ? 'res-win' : 'res-lose'}">${m.ourScore} : ${m.enemyScore}</span>
+                </div>`;
+            });
+            latestResultsContainer.innerHTML = latestHtml;
+        }
+    }
 });
+
 
 </script>
 
