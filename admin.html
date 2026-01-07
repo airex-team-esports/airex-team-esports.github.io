@@ -35,10 +35,17 @@
     <h2>⚡ Следующий матч</h2>
     <label>Имя соперника</label>
     <input type="text" id="enemyName" placeholder="Например: NAVI">
-    <label>Дата и время</label>
-    <input type="datetime-local" id="matchDate">
-    <button onclick="saveMatch()">Обновить таймер</button>
-  </div>
+    
+    <label>Дата и время (Ставьте Московское!)</label>
+    <input type="datetime-local" id="matchDate" step="60">
+    
+    <div id="matchCurrentStatus" style="font-size: 10px; color: #00ff88; margin-bottom: 5px; display:none;">
+        Сейчас установлено: <span id="currentSavedTime"></span>
+    </div>
+
+    <button id="saveMatchBtn" onclick="saveMatch()">Обновить таймер</button>
+</div>
+
 
   <div class="panel">
     <h2>👥 Управление составом</h2>
@@ -115,16 +122,60 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // 1. СОХРАНЕНИЕ МАТЧА (ТАЙМЕР)
+    // 1. УПРАВЛЕНИЕ МАТЧЕМ (ЗАГРУЗКА + СОХРАНЕНИЕ)
+    
+    // А) Слушаем базу данных, чтобы админка сама заполняла поля при входе
+    onSnapshot(doc(db, "siteData", "match"), (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        
+        // Заполняем поле соперника
+        if(document.getElementById('enemyName')) {
+            document.getElementById('enemyName').value = data.enemy || "";
+        }
+
+        // Заполняем поле даты
+        if(document.getElementById('matchDate') && data.date) {
+            document.getElementById('matchDate').value = data.date;
+            
+            // Показываем текстом, что сейчас в базе
+            const statusDiv = document.getElementById('matchCurrentStatus');
+            const timeSpan = document.getElementById('currentSavedTime');
+            if(statusDiv && timeSpan) {
+                statusDiv.style.display = 'block';
+                // Красиво форматируем дату для проверки
+                const dateObj = new Date(data.date);
+                timeSpan.innerText = `${data.enemy} | ${data.date.replace('T', ' ')} (МСК)`;
+            }
+        }
+      }
+    });
+
+    // Б) Функция сохранения
     window.saveMatch = async () => {
+      const btn = document.getElementById('saveMatchBtn');
       const enemy = document.getElementById('enemyName').value;
       const date = document.getElementById('matchDate').value;
-      if(!enemy || !date) return alert("Заполни данные матча!");
+
+      if(!enemy || !date) return alert("❌ Заполни и имя, и дату!");
+
+      btn.innerText = "Сохранение...";
+      btn.disabled = true;
+
       try {
+        // Мы сохраняем просто строку даты, например "2026-01-07T18:00"
+        // Index.html сам добавит к ней "+03:00", как мы настроили ранее
         await setDoc(doc(db, "siteData", "match"), { enemy, date });
-        alert('✅ Матч обновлен!');
-      } catch (e) { alert(e.message); }
+        
+        alert('✅ Таймер успешно обновлен!');
+      } catch (e) { 
+        alert("Ошибка: " + e.message); 
+      } finally {
+        btn.innerText = "Обновить таймер";
+        btn.disabled = false;
+      }
     };
+
 
     // 2. ПРОСМОТР ИГРОКОВ (ДИНАМИЧЕСКИЙ)
     let unsubscribeRoster = null; // Храним подписку, чтобы переключаться
