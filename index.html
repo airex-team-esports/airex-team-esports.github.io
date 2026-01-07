@@ -565,8 +565,8 @@
   </div>
 
   <script>
-    // Config
-    const CONF = { tg: { channel: 'airex_team', id: 638 }, match: new Date(2026, 0, 7, 18, 0, 0) };
+// Используем формат ISO с указанием часового пояса +03:00 (Москва)
+const CONF = { tg: { channel: 'airex_team', id: 638 }, match: new Date("2026-01-07T18:00:00+03:00") };
 
     // Utils
     const $ = (s) => document.querySelector(s);
@@ -726,7 +726,16 @@
           const data = doc.data();
           const enemyEl = document.querySelector('.team-vs + .text-center .font-tech');
           if(enemyEl) enemyEl.innerText = data.enemy;
-          if(window.CONF) window.CONF.match = new Date(data.date);
+          
+          if(window.CONF && data.date) {
+            // Берем дату из админки (например "2026-01-07T18:00")
+            // И приклеиваем к ней хвост "+03:00", чтобы браузер понял, что это МСК
+            // Добавляем ":00", если в админке не сохранились секунды
+            let timeString = data.date;
+            if (timeString.length === 16) timeString += ":00"; 
+            
+            window.CONF.match = new Date(timeString + "+03:00");
+          }
       }
   });
 
