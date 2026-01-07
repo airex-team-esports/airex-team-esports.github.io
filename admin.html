@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>AIREX ADMIN // COMMAND CENTER</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://airex-team-esports.github.io/site/">
+
+  <style>
+    :root {
+      --accent: #ff004c;
+      --accent-dim: rgba(255, 0, 76, 0.15);
+      --bg-deep: #020202;
+      --glass-dark: rgba(12, 12, 12, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --text-white: #ffffff;
+      --font-main: 'Montserrat', sans-serif;
+      --font-tech: 'Orbitron', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text-white);
+      font-family: var(--font-main);
+      margin: 0; padding: 20px;
+      background-image: radial-gradient(circle at 50% 0%, #1a0008 0%, #000 100%);
+      min-height: 100vh;
+    }
+
+    h1, h2, h3 { font-family: var(--font-tech); text-transform: uppercase; letter-spacing: 2px; margin-top: 0; }
+    h1 { color: var(--accent); text-shadow: 0 0 15px var(--accent-dim); text-align: center; margin-bottom: 30px; }
+
+    .container { max-width: 800px; margin: 0 auto; padding-bottom: 50px; }
+
+    .panel {
+      background: var(--glass-dark);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px; padding: 25px; margin-bottom: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+    }
+    
+    .panel-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 20px; }
+    .panel-header h2 { margin: 0; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+    
+    label { font-size: 10px; color: var(--accent); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; display: block; margin-top: 15px; margin-bottom: 5px; }
+    
+    input, select, textarea {
+      width: 100%; padding: 12px; background: rgba(0,0,0,0.4);
+      border: 1px solid #333; color: #fff; border-radius: 6px;
+      font-family: var(--font-main); outline: none; transition: 0.3s;
+      box-sizing: border-box;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-dim); }
+
+    button {
+      background: linear-gradient(45deg, #cc003d, var(--accent));
+      color: white; border: none; padding: 14px; width: 100%;
+      font-family: var(--font-tech); font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; border-radius: 6px; cursor: pointer;
+      margin-top: 20px; transition: 0.2s;
+    }
+    button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px var(--accent-dim); }
+    button:active { transform: scale(0.98); }
+    
+    .btn-del { background: transparent; border: 1px solid #444; color: #666; width: auto; padding: 5px 10px; font-size: 10px; margin: 0; }
+    .btn-del:hover { border-color: red; color: red; box-shadow: none; transform: none; }
+
+    .list-item {
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px;
+      margin-bottom: 8px; border: 1px solid transparent;
+    }
+    .list-item:hover { border-color: #333; }
+
+    /* Login Screen */
+    #loginOverlay {
+      position: fixed; inset: 0; background: #000; z-index: 9999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .login-box { width: 300px; text-align: center; }
+    .glitch-text { animation: glitch 2s infinite; color: var(--accent); font-family: var(--font-tech); font-size: 24px; margin-bottom: 20px; }
+
+  </style>
+</head>
+<body>
+
+  <div id="loginOverlay">
+    <div class="login-box">
+        <div class="glitch-text">ACCESS CONTROL</div>
+        <input type="password" id="adminPass" placeholder="ENTER PASSCODE" style="text-align: center; letter-spacing: 3px;">
+        <button onclick="sysAuth()">UNLOCK SYSTEM</button>
+        <p id="loginError" style="color: #ff004c; font-size: 11px; margin-top: 15px; opacity: 0;">ACCESS DENIED</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>AIREX <span style="color:#fff; opacity:0.3;">//</span> PANEL</h1>
+<a href="index.html" target="_blank" style="
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 10px;
+    color: #fff;
+    border: 1px solid #ff004c;
+    border-radius: 6px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    background: rgba(0,0,0,0.5);
+    transition: 0.3s;
+">
+    ОТКРЫТЬ САЙТ <i class="fas fa-external-link-alt" style="margin-left:5px;"></i>
+</a>
+
+            </button>
+        </a>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-newspaper text-accent"></i> НОВОСТИ САЙТА</h2>
+        </div>
+        
+        <label>Заголовок новости</label>
+        <input type="text" id="newsTitle" placeholder="Например: Победа на турнире">
+        
+        <label>Текст новости</label>
+        <textarea id="newsText" rows="3" placeholder="Краткое описание события..."></textarea>
+        
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1">
+                <label>Дата</label>
+                <input type="date" id="newsDate">
+            </div>
+            <div style="flex:1">
+                <label>Тип события</label>
+                <select id="newsTag">
+                    <option value="ТУРНИРЫ">ТУРНИРЫ</option>
+                    <option value="ВАЖНО">ВАЖНО</option>
+                    <option value="ОБНОВЛЕНИЕ">ОБНОВЛЕНИЕ</option>
+                </select>
+            </div>
+        </div>
+
+        <button onclick="publishNews()">ОПУБЛИКОВАТЬ НОВОСТЬ</button>
+
+        <div style="margin-top: 30px;">
+            <label>Активные новости:</label>
+            <div id="newsListContainer">Загрузка...</div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-clock"></i> NEXT MATCH TIMER</h2>
+        </div>
+        <div id="currentMatchInfo" style="font-size: 11px; color: #00ff88; margin-bottom: 10px;"></div>
+        
+        <label>Имя соперника</label>
+        <input type="text" id="enemyName" placeholder="TEAM NAME">
+        
+        <label>Дата матча (МСК)</label>
+        <input type="datetime-local" id="matchDate">
+        
+        <button onclick="updateTimer()">ОБНОВИТЬ ТАЙМЕР НА САЙТЕ</button>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-users"></i> УПРАВЛЕНИЕ СОСТАВОМ</h2>
+            <select id="rosterSelector" onchange="loadRoster()" style="width: 150px; margin:0; padding: 5px;">
+                <option value="roster">Основа (Main)</option>
+                <option value="reserve">Запас (Reserve)</option>
+            </select>
+        </div>
+
+        <div id="rosterListContainer" style="max-height: 200px; overflow-y:auto; margin-bottom: 20px;"></div>
+
+        <div style="border-top: 1px dashed #333; padding-top: 15px;">
+            <h3 style="font-size: 14px;">Добавить игрока</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <input type="text" id="pNick" placeholder="Никнейм">
+                <input type="text" id="pRole" placeholder="Роль">
+                <input type="text" id="pKd" placeholder="K/D (1.50)">
+                <input type="text" id="pRank" placeholder="Ранг">
+            </div>
+            <input type="text" id="pImg" placeholder="Ссылка на фото (URL)" style="margin-top:10px;">
+            <button onclick="addPlayer()">ДОБАВИТЬ В КОМАНДУ</button>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-history"></i> ИСТОРИЯ ИГР</h2>
+        </div>
+        <div id="historyListContainer" style="max-height: 150px; overflow-y:auto; margin-bottom: 15px;"></div>
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <input type="text" id="hEnemy" placeholder="Соперник">
+            <input type="text" id="hTour" placeholder="Турнир">
+            <input type="number" id="hOur" placeholder="Наш счет">
+            <input type="number" id="hEnemyS" placeholder="Их счет">
+        </div>
+        <button onclick="addHistory()">ДОБАВИТЬ РЕЗУЛЬТАТ</button>
+    </div>
+
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
+      authDomain: "airexsite.firebaseapp.com",
+      projectId: "airexsite",
+      storageBucket: "airexsite.firebasestorage.app",
+      messagingSenderId: "276640665598",
+      appId: "1:276640665598:web:d7400bd5962995efb43aaf"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // --- SECURITY SYSTEM ---
+    /* Внимание! Пароль скрыт. 
+       Системная переменная Decoy: "ARX#2026" - это обманка.
+       Реальный пароль зашифрован.
+    */
+    const _SYS_DECOY_ = "ARX#2026"; // Это видит тот, кто смотрит код
+    const _REAL_HASH_ = "QUlSRVgyNQ=="; // Base64 от AIREX25
+
+    window.sysAuth = () => {
+        const input = document.getElementById('adminPass').value;
+        // Проверка: кодируем ввод пользователя и сравниваем с реальным хешем
+        if (btoa(input) === _REAL_HASH_) {
+            document.getElementById('loginOverlay').style.display = 'none';
+            sessionStorage.setItem('auth_token', _REAL_HASH_);
+        } else {
+            const err = document.getElementById('loginError');
+            err.style.opacity = 1;
+            err.innerText = "INVALID PASSWORD. SYSTEM LOCKED.";
+        }
+    };
+
+    // Auto-login check
+    if(sessionStorage.getItem('auth_token') === _REAL_HASH_) {
+        document.getElementById('loginOverlay').style.display = 'none';
+    }
+
+    // --- 1. NEWS LOGIC ---
+    window.publishNews = async () => {
+        const title = document.getElementById('newsTitle').value;
+        const text = document.getElementById('newsText').value;
+        const date = document.getElementById('newsDate').value;
+        const tag = document.getElementById('newsTag').value;
+
+        if(!title || !text) return alert("Заполни заголовок и текст!");
+
+        const newItem = {
+            id: Date.now(),
+            title, text, date, tag
+        };
+
+        try {
+            const ref = doc(db, "siteData", "news");
+            const snap = await getDoc(ref);
+            let list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+            
+            // Добавляем в начало списка
+            list.unshift(newItem);
+            
+            await setDoc(ref, { list });
+            alert("✅ Новость опубликована!");
+            document.getElementById('newsTitle').value = '';
+            document.getElementById('newsText').value = '';
+        } catch(e) { alert("Ошибка: " + e.message); }
+    };
+
+    window.deleteNews = async (id) => {
+        if(!confirm("Удалить новость?")) return;
+        try {
+            const ref = doc(db, "siteData", "news");
+            const snap = await getDoc(ref);
+            if(snap.exists()) {
+                const list = snap.data().list.filter(n => n.id !== id);
+                await setDoc(ref, { list });
+            }
+        } catch(e) { alert(e.message); }
+    };
+
+    onSnapshot(doc(db, "siteData", "news"), (snap) => {
+        const c = document.getElementById('newsListContainer');
+        if(!c) return;
+        if(snap.exists() && snap.data().list) {
+            c.innerHTML = snap.data().list.map(n => `
+                <div class="list-item">
+                    <div>
+                        <span style="color:var(--accent); font-size:10px;">[${n.tag}]</span> <b>${n.title}</b>
+                        <div style="font-size:10px; color:#888;">${n.date}</div>
+                    </div>
+                    <button class="btn-del" onclick="deleteNews(${n.id})"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        } else {
+            c.innerHTML = "Новостей нет";
+        }
+    });
+
+    // --- 2. MATCH TIMER ---
+    window.updateTimer = async () => {
+        const enemy = document.getElementById('enemyName').value;
+        const date = document.getElementById('matchDate').value;
+        if(!enemy || !date) return alert("Заполни данные матча!");
+        
+        await setDoc(doc(db, "siteData", "match"), { enemy, date });
+        alert("✅ Таймер обновлен!");
+    };
+
+    onSnapshot(doc(db, "siteData", "match"), (snap) => {
+        if(snap.exists()) {
+            const d = snap.data();
+            document.getElementById('currentMatchInfo').innerText = `Сейчас на сайте: VS ${d.enemy} (${d.date})`;
+        }
+    });
+
+    // --- 3. ROSTER LOGIC ---
+    window.loadRoster = () => { /* Triggered by onSnapshot below via global var check or just redraw */ };
+
+    let currentRosterType = 'roster';
+    
+    // Listener wrapper to handle switching
+    const setupRosterListener = () => {
+        const type = document.getElementById('rosterSelector').value;
+        currentRosterType = type;
+        
+        onSnapshot(doc(db, "siteData", type), (snap) => {
+            const c = document.getElementById('rosterListContainer');
+            if(!c) return;
+            const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+            
+            c.innerHTML = list.map(p => `
+                <div class="list-item">
+                    <span>${p.nick} <span style="font-size:10px; opacity:0.5;">(${p.role})</span></span>
+                    <button class="btn-del" onclick="delPlayer('${p.nick}')">X</button>
+                </div>
+            `).join('');
+        });
+    };
+
+    document.getElementById('rosterSelector').addEventListener('change', setupRosterListener);
+    setupRosterListener(); // Init
+
+    window.addPlayer = async () => {
+        const nick = document.getElementById('pNick').value;
+        const role = document.getElementById('pRole').value;
+        const img = document.getElementById('pImg').value;
+        const kd = document.getElementById('pKd').value;
+        const rank = document.getElementById('pRank').value;
+
+        if(!nick || !img) return alert("Нужен Ник и Фото!");
+        
+        const p = { nick, role, img, kd: kd||"0.00", hs: "0%", rank: rank||"Unknown" };
+        
+        try {
+            const ref = doc(db, "siteData", currentRosterType);
+            const snap = await getDoc(ref);
+            let list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+            list.push(p);
+            await setDoc(ref, { list });
+            alert(`✅ ${nick} добавлен в ${currentRosterType}!`);
+            document.getElementById('pNick').value = '';
+        } catch(e) { alert(e.message); }
+    };
+
+    window.delPlayer = async (nick) => {
+        if(!confirm(`Удалить ${nick}?`)) return;
+        const ref = doc(db, "siteData", currentRosterType);
+        const snap = await getDoc(ref);
+        const list = snap.data().list.filter(p => p.nick !== nick);
+        await setDoc(ref, { list });
+    };
+
+    // --- 4. HISTORY LOGIC ---
+    window.addHistory = async () => {
+        const enemy = document.getElementById('hEnemy').value;
+        const tour = document.getElementById('hTour').value;
+        const our = document.getElementById('hOur').value;
+        const them = document.getElementById('hEnemyS').value;
+
+        if(!enemy || !our) return alert("Заполни данные!");
+
+        const match = { id: Date.now(), enemy, tournament: tour, ourScore: our, enemyScore: them };
+        
+        const ref = doc(db, "siteData", "history");
+        const snap = await getDoc(ref);
+        let list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        list.push(match);
+        await setDoc(ref, { list });
+        alert("✅ Добавлено в историю!");
+    };
+
+    window.delHistory = async (id) => {
+        if(!confirm("Удалить?")) return;
+        const ref = doc(db, "siteData", "history");
+        const snap = await getDoc(ref);
+        const list = snap.data().list.filter(m => m.id !== id);
+        await setDoc(ref, { list });
+    }
+
+    onSnapshot(doc(db, "siteData", "history"), (snap) => {
+        const c = document.getElementById('historyListContainer');
+        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        c.innerHTML = list.slice().reverse().map(m => `
+             <div class="list-item" style="font-size:11px;">
+                <span>VS ${m.enemy} (${m.ourScore}:${m.enemyScore})</span>
+                <button class="btn-del" onclick="delHistory(${m.id})">X</button>
+             </div>
+        `).join('');
+    });
+
+  </script>
+</body>
+</html>
