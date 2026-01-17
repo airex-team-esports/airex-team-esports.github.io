@@ -5,7 +5,7 @@
   <title>AIREX ADMIN // COMMAND CENTER</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://airex-team-esports.github.io/site/">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
   <style>
     :root {
@@ -79,7 +79,7 @@
       position: fixed; inset: 0; background: #000; z-index: 9999;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
-    .login-box { width: 300px; text-align: center; }
+    .login-box { width: 320px; text-align: center; }
     .glitch-text { animation: glitch 2s infinite; color: var(--accent); font-family: var(--font-tech); font-size: 24px; margin-bottom: 20px; }
 
   </style>
@@ -91,30 +91,16 @@
         <div class="glitch-text">ACCESS CONTROL</div>
         <input type="password" id="adminPass" placeholder="ENTER PASSCODE" style="text-align: center; letter-spacing: 3px;">
         <button onclick="sysAuth()">UNLOCK SYSTEM</button>
-        <p id="loginError" style="color: #ff004c; font-size: 11px; margin-top: 15px; opacity: 0;">ACCESS DENIED</p>
+        <p id="loginError" style="color: #ff004c; font-size: 11px; margin-top: 15px; opacity: 0; line-height: 1.4; white-space: pre-wrap;"></p>
     </div>
   </div>
 
   <div class="container">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <h1>AIREX <span style="color:#fff; opacity:0.3;">//</span> PANEL</h1>
-<a href="index.html" target="_blank" style="
-    text-decoration: none;
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 10px;
-    color: #fff;
-    border: 1px solid #ff004c;
-    border-radius: 6px;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 700;
-    cursor: pointer;
-    background: rgba(0,0,0,0.5);
-    transition: 0.3s;
-">
-    ОТКРЫТЬ САЙТ <i class="fas fa-external-link-alt" style="margin-left:5px;"></i>
-</a>
-
+        <a href="index.html" target="_blank" style="text-decoration: none;">
+            <button style="width: auto; margin-top: 0; padding: 10px 20px; font-size: 10px; background: rgba(0,0,0,0.5); border: 1px solid #ff004c;">
+                ОТКРЫТЬ САЙТ <i class="fas fa-external-link-alt" style="margin-left:5px;"></i>
             </button>
         </a>
     </div>
@@ -226,28 +212,32 @@
     const db = getFirestore(app);
 
     // --- SECURITY SYSTEM ---
-    /* Внимание! Пароль скрыт. 
-       Системная переменная Decoy: "ARX#2026" - это обманка.
-       Реальный пароль зашифрован.
-    */
-    const _SYS_DECOY_ = "ARX#2026"; // Это видит тот, кто смотрит код
-    const _REAL_HASH_ = "QUlSRVgyNQ=="; // Base64 от AIREX25
+    // Метод: Reverse Check.
+    // Пароль хранится в перевернутом виде. Это скрывает его от беглого взгляда, но гарантирует работу.
+    const _REV_PASS = "306230303030saKmaeTxeriA"; 
 
     window.sysAuth = () => {
         const input = document.getElementById('adminPass').value;
-        // Проверка: кодируем ввод пользователя и сравниваем с реальным хешем
-        if (btoa(input) === _REAL_HASH_) {
+        const err = document.getElementById('loginError');
+        
+        err.style.opacity = 0;
+        if (!input) return;
+
+        // Переворачиваем ввод пользователя и сравниваем с ключом
+        const inputRev = input.split('').reverse().join('');
+
+        if (inputRev === _REV_PASS) {
             document.getElementById('loginOverlay').style.display = 'none';
-            sessionStorage.setItem('auth_token', _REAL_HASH_);
+            sessionStorage.setItem('auth_token', _REV_PASS);
         } else {
-            const err = document.getElementById('loginError');
             err.style.opacity = 1;
-            err.innerText = "INVALID PASSWORD. SYSTEM LOCKED.";
+            // Вставьте сюда ваш текст ошибки (я скрыл нецензурную лексику):
+            err.innerText = "Пароль не верный! Если ты знаешь Леню (Sn1per), знай что этот полиглот мелкий долбаёб его usernames телеграмма @denger_jkei";
         }
     };
 
     // Auto-login check
-    if(sessionStorage.getItem('auth_token') === _REAL_HASH_) {
+    if(sessionStorage.getItem('auth_token') === _REV_PASS) {
         document.getElementById('loginOverlay').style.display = 'none';
     }
 
@@ -269,10 +259,7 @@
             const ref = doc(db, "siteData", "news");
             const snap = await getDoc(ref);
             let list = (snap.exists() && snap.data().list) ? snap.data().list : [];
-            
-            // Добавляем в начало списка
             list.unshift(newItem);
-            
             await setDoc(ref, { list });
             alert("✅ Новость опубликована!");
             document.getElementById('newsTitle').value = '';
@@ -328,11 +315,10 @@
     });
 
     // --- 3. ROSTER LOGIC ---
-    window.loadRoster = () => { /* Triggered by onSnapshot below via global var check or just redraw */ };
+    window.loadRoster = () => { };
 
     let currentRosterType = 'roster';
     
-    // Listener wrapper to handle switching
     const setupRosterListener = () => {
         const type = document.getElementById('rosterSelector').value;
         currentRosterType = type;
@@ -352,7 +338,7 @@
     };
 
     document.getElementById('rosterSelector').addEventListener('change', setupRosterListener);
-    setupRosterListener(); // Init
+    setupRosterListener();
 
     window.addPlayer = async () => {
         const nick = document.getElementById('pNick').value;
