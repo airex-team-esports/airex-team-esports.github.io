@@ -416,7 +416,7 @@
   <div class="auth-card">
     <div class="text-center" style="margin-bottom: 25px;">
         <div style="position: relative; display: inline-block;">
-            <img src="https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg" 
+            <img src="https://i.postimg.cc/GmKCy6RJ/Picsart-26-01-19-03-16-05-480.jpg" 
                  style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; box-shadow: 0 0 20px var(--accent-glow);">
         </div>
         <h2 class="font-tech" style="font-size: 22px; margin-top: 15px; letter-spacing: 2px;">AIREX ACCESS</h2>
@@ -1116,7 +1116,7 @@ Sent via Official Site`;
             // Save/Link Telegram data to Firestore
             await setDoc(doc(db, "users", uid), {
                 nick: tgUser.first_name + (tgUser.last_name ? " " + tgUser.last_name : ""),
-                avatar: tgUser.photo_url || "https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg",
+                avatar: tgUser.photo_url || "https://i.postimg.cc/GmKCy6RJ/Picsart-26-01-19-03-16-05-480.jpg",
                 tgId: tgUser.id,
                 role: "Member",
                 connectedAt: new Date().toISOString()
