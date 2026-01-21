@@ -368,6 +368,15 @@
     .form-input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(255,0,76,0.15); background: rgba(10,10,10,0.8); }
     select.form-input { appearance: none; -webkit-appearance: none; }
 
+    /* Google Button Style */
+    .btn-google {
+        background: white; color: #111; 
+        border-color: rgba(255,255,255,0.5); 
+        margin-top: 10px; width: 100%;
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .btn-google:hover { background: #f1f1f1; transform: translateY(-2px); box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+
     /* --- GALLERY LIGHTBOX --- */
     .lightbox {
       position: fixed; inset: 0; background: rgba(0,0,0,0.95); 
@@ -400,6 +409,102 @@
     .res-lose { color: var(--accent); font-weight: 700; text-shadow: 0 0 10px rgba(255,0,76,0.3); }
     .loading-text { color: var(--text-gray); font-size: 12px; letter-spacing: 1px; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+  
+        /* --- NEW FEATURE 1: ROADMAP (TIMELINE) --- */
+    .roadmap-container {
+        position: relative; padding-left: 30px; margin: 20px 0;
+    }
+    .roadmap-line {
+        position: absolute; left: 6px; top: 0; bottom: 0; width: 2px;
+        background: linear-gradient(180deg, var(--accent) 0%, rgba(255,255,255,0.1) 100%);
+        box-shadow: 0 0 10px var(--accent-glow);
+    }
+    .rm-item {
+        position: relative; margin-bottom: 40px;
+    }
+    .rm-dot {
+        position: absolute; left: -30px; top: 0; width: 14px; height: 14px;
+        background: var(--bg-deep); border: 2px solid var(--accent); border-radius: 50%;
+        z-index: 2; box-shadow: 0 0 10px var(--accent);
+    }
+    .rm-date {
+        font-family: var(--font-tech); color: var(--accent); font-size: 10px; margin-bottom: 5px;
+        display: block; letter-spacing: 1px;
+    }
+    .rm-content {
+        background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+        padding: 15px; border-radius: 0 12px 12px 12px;
+        backdrop-filter: blur(5px);
+    }
+    .rm-title { color: #fff; font-weight: 700; font-size: 14px; margin-bottom: 5px; }
+
+    /* --- NEW FEATURE 2: FAN XP SYSTEM --- */
+    .xp-bar-container {
+        width: 100%; height: 6px; background: rgba(255,255,255,0.1);
+        border-radius: 10px; margin: 10px 0; overflow: hidden; position: relative;
+    }
+    .xp-fill {
+        height: 100%; background: var(--success); width: 0%;
+        transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 0 10px var(--success);
+    }
+    .rank-badge {
+        display: inline-block; padding: 5px 12px; border: 1px solid var(--accent);
+        background: rgba(255, 0, 76, 0.1); color: #fff;
+        font-family: var(--font-tech); font-size: 10px; border-radius: 4px;
+        margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;
+        animation: neon-pulse 3s infinite;
+    }
+
+    /* --- NEW FEATURE 3: AMBIENT PLAYER --- */
+    #ambient-player {
+        position: fixed; bottom: 20px; right: 20px; z-index: 9000;
+        display: flex; align-items: center; gap: 10px;
+        background: rgba(0,0,0,0.8); padding: 8px 12px; border-radius: 50px;
+        border: 1px solid var(--glass-border); backdrop-filter: blur(10px);
+        transition: 0.3s;
+    }
+    #ambient-player:hover { border-color: var(--accent); }
+    .music-waves {
+        display: flex; gap: 3px; height: 15px; align-items: flex-end;
+    }
+    .wave {
+        width: 3px; background: var(--accent); animation: wave 1s infinite ease-in-out;
+    }
+    .wave:nth-child(2) { animation-delay: 0.1s; height: 60%; }
+    .wave:nth-child(3) { animation-delay: 0.2s; height: 30%; }
+    @keyframes wave { 0%, 100% { height: 20%; } 50% { height: 100%; } }
+    .play-state-icon { color: #fff; font-size: 14px; cursor: pointer; width: 20px; text-align: center; }
+
+    /* --- NEW FEATURE 4: LIVE CHAT --- */
+    .chat-window {
+        height: 60vh; background: rgba(0,0,0,0.3); border-radius: 12px;
+        border: 1px solid var(--glass-border); display: flex; flex-direction: column;
+        overflow: hidden;
+    }
+    .chat-messages {
+        flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .chat-msg {
+        max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 12px; line-height: 1.4;
+        position: relative; animation: slideIn 0.3s ease; word-wrap: break-word;
+    }
+    .chat-msg.msg-own {
+        align-self: flex-end; background: rgba(255, 0, 76, 0.2); border: 1px solid rgba(255, 0, 76, 0.3);
+        color: #fff; border-bottom-right-radius: 0;
+    }
+    .chat-msg.msg-other {
+        align-self: flex-start; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #ddd; border-bottom-left-radius: 0;
+    }
+    .msg-author { font-size: 9px; color: var(--accent); font-weight: 700; margin-bottom: 2px; display: block; }
+    .msg-time { font-size: 8px; opacity: 0.4; float: right; margin-left: 8px; margin-top: 2px; }
+    .chat-input-area {
+        padding: 10px; background: rgba(0,0,0,0.6); border-top: 1px solid var(--glass-border);
+        display: flex; gap: 10px;
+    }
+    @keyframes slideIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+
   </style>
 
   <script>
@@ -412,11 +517,21 @@
 </head>
 <body>
 
+<div id="ambient-player">
+    <div class="music-waves" id="music-anim" style="opacity: 0;">
+        <div class="wave"></div><div class="wave"></div><div class="wave"></div>
+    </div>
+    <i class="fas fa-play play-state-icon" id="music-btn" onclick="toggleAmbient()"></i>
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_734891122a.mp3?filename=cyberpunk-city-11017.mp3" type="audio/mpeg">
+    </audio>
+</div>
+
 <div id="auth-barrier">
   <div class="auth-card">
     <div class="text-center" style="margin-bottom: 25px;">
         <div style="position: relative; display: inline-block;">
-            <img src="https://i.postimg.cc/GmKCy6RJ/Picsart-26-01-19-03-16-05-480.jpg" 
+            <img src="https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg" 
                  style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; box-shadow: 0 0 20px var(--accent-glow);">
         </div>
         <h2 class="font-tech" style="font-size: 22px; margin-top: 15px; letter-spacing: 2px;">AIREX ACCESS</h2>
@@ -440,14 +555,32 @@
         </button>
     </form>
 
-    <div id="tg-auth-container" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; display: flex; justify-content: center;">
-        </div>
+    <div style="display:flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+        <button onclick="window.loginGoogle()" class="btn-glitch btn-google">
+            <i class="fab fa-google"></i> ВОЙТИ ЧЕРЕЗ GOOGLE
+        </button>
+        
+        <div id="tg-auth-container" style="display: flex; justify-content: center;"></div>
+    </div>
   </div>
 </div>
 
 <div id="profile-modal" class="lightbox" style="display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9);">
     <div class="card" style="max-width: 400px; width: 90%;">
         <h3 class="font-tech">НАСТРОЙКИ АККАУНТА</h3>
+        
+        <div style="text-align: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--glass-border);">
+            <div class="rank-badge" id="user-rank-display">LOADING RANK...</div>
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: #888;">
+                <span>XP: <span id="current-xp">0</span></span>
+                <span>NEXT: <span id="next-rank-xp">100</span></span>
+            </div>
+            <div class="xp-bar-container">
+                <div class="xp-fill" id="xp-bar-fill"></div>
+            </div>
+            <p style="font-size: 9px; color: #555; margin: 5px 0 0 0;">Заходи каждый день, чтобы прокачивать уровень!</p>
+        </div>
+
         <div class="form-group">
             <label class="form-label">Никнейм в системе</label>
             <input type="text" id="set-nick" class="form-input">
@@ -463,6 +596,7 @@
         <button onclick="document.getElementById('profile-modal').style.display='none'" style="margin-top: 15px; background: none; border: none; color: #555; cursor: pointer; width: 100%; font-size: 12px; text-transform: uppercase;">Закрыть</button>
     </div>
 </div>
+
 
 <div class="bg-logo"></div>
 
@@ -493,6 +627,9 @@
       <button class="menu-item" onclick="selectTab('about', this)">
           <i class="fas fa-shield-alt"></i> Инфо
       </button>
+      <button class="menu-item" onclick="selectTab('chat', this)">
+          <i class="fas fa-comments"></i> Live Chat
+      </button>
       <button class="menu-item" onclick="selectTab('news', this)">
           <i class="fas fa-bolt"></i> Новости
       </button>
@@ -521,7 +658,6 @@
            </button>
         </div>
       </div>
-
       <div class="stats-row">
         <div class="stat-card">
           <div class="stat-val-main">0</div>
@@ -587,6 +723,69 @@
       </button>
     </div>
     </section>
+    <section id="roadmap-sec">
+       <div class="card">
+           <h3><i class="fas fa-route text-accent"></i> ПУТЬ AIREX</h3>
+           <p style="font-size:12px;">Наша история от создания до легенды.</p>
+           
+           <div class="roadmap-container">
+               <div class="roadmap-line"></div>
+               
+               <div class="rm-item">
+                   <div class="rm-dot"></div>
+                   <div class="rm-content">
+                       <span class="rm-date">01.01.2024</span>
+                       <div class="rm-title">INITIATION</div>
+                       <div style="font-size: 12px; color: #aaa;">Основание Airex Team. Сбор первого состава.</div>
+                   </div>
+               </div>
+
+               <div class="rm-item">
+                   <div class="rm-dot"></div>
+                   <div class="rm-content">
+                       <span class="rm-date">15.06.2025</span>
+                       <div class="rm-title">FIRST BLOOD</div>
+                       <div style="font-size: 12px; color: #aaa;">Победа на турнире CyberStandoff Major (Tier-3).</div>
+                   </div>
+               </div>
+
+               <div class="rm-item">
+                   <div class="rm-dot" style="background: var(--bg-deep); border-color: #fff;"></div>
+                   <div class="rm-content" style="border-color: rgba(255,255,255,0.2);">
+                       <span class="rm-date">FUTURE</span>
+                       <div class="rm-title">GLOBAL ELITE</div>
+                       <div style="font-size: 12px; color: #aaa;">Выход на международную арену. Цель зафиксирована.</div>
+                   </div>
+               </div>
+           </div>
+       </div>
+    </section>
+
+    <section id="chat">
+        <div class="text-center" style="margin-bottom: 15px;">
+            <h2 class="font-tech">CLAN CHAT</h2>
+            <p style="font-size: 10px; opacity: 0.6;">Только для авторизованных фанатов</p>
+        </div>
+        
+        <div class="chat-window">
+            <div class="chat-messages" id="chat-feed">
+                <div style="text-align:center; margin-top: 50px; color: #444;">
+                    <i class="fas fa-lock"></i><br>Войдите в аккаунт, чтобы видеть чат
+                </div>
+            </div>
+            
+            <form id="chat-form" class="chat-input-area">
+                <input type="text" id="chat-input" class="form-input" 
+                       style="padding: 10px; border-radius: 50px; font-size: 12px;" 
+                       placeholder="Написать сообщение..." autocomplete="off">
+                <button type="submit" class="btn-glitch" style="width: 50px; border-radius: 50%; padding: 0;">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </section>
+
+
     <section id="team">
       <div class="text-center" style="margin-bottom: 25px;">
         <h2 class="font-tech" style="text-shadow: 0 0 20px rgba(255,255,255,0.1);">MAIN ROSTER</h2>
@@ -602,7 +801,7 @@
         <h3 class="font-tech" style="opacity: 0.7; font-size: 18px;">RESERVE / ACADEMY</h3>
       </div>
       <div class="roster-grid" id="reserve-roster">
-          </div>
+      </div>
     </section>
 
     <section id="about">
@@ -783,7 +982,9 @@
         <p style="margin: 5px 0 0 0; opacity: 0.5;">DESIGNED FOR CHAMPIONS</p>
     </footer>
 
-</div> <div class="lightbox" id="lightbox">
+</div> 
+
+<div class="lightbox" id="lightbox">
     <div class="lightbox-close">&times;</div>
     <div class="lightbox-nav lb-prev">&#10094;</div>
     <div class="lightbox-nav lb-next">&#10095;</div>
@@ -968,6 +1169,7 @@ Sent via Official Site`;
 </script>
 
 <script type="module">
+    // ИСПРАВЛЕННЫЙ ИМПОРТ: Убрано дублирование getFirestore
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { 
         getAuth, 
@@ -975,6 +1177,8 @@ Sent via Official Site`;
         signInWithEmailAndPassword, 
         signInAnonymously,
         onAuthStateChanged,
+        GoogleAuthProvider,
+        signInWithPopup,
         signOut 
     } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
     import { 
@@ -982,7 +1186,13 @@ Sent via Official Site`;
         doc, 
         setDoc, 
         getDoc, 
-        onSnapshot 
+        onSnapshot, 
+        addDoc, 
+        collection, 
+        query, 
+        orderBy, 
+        limit, 
+        serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
     // --- CONFIG ---
@@ -1050,17 +1260,48 @@ Sent via Official Site`;
         };
     }
 
+    // --- GOOGLE AUTH LOGIN ---
+    window.loginGoogle = async () => {
+        const provider = new GoogleAuthProvider();
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            
+            // Check if user doc exists, if not create it
+            const userDocRef = doc(db, "users", user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+
+            if (!userDocSnap.exists()) {
+                await setDoc(userDocRef, {
+                    nick: user.displayName || "G-User",
+                    avatar: user.photoURL || "https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg",
+                    role: "Member",
+                    createdAt: new Date().toISOString(),
+                    authType: "Google"
+                });
+            }
+            // Barrier will close automatically via onAuthStateChanged
+        } catch (error) {
+            console.error(error);
+            alert("Google Auth Error: " + error.message);
+        }
+    };
+
     // Monitor Auth State
     onAuthStateChanged(auth, async (user) => {
         const barrier = document.getElementById('auth-barrier');
         const userNav = document.getElementById('user-nav-btn');
-
+        
         if (user) {
             if(barrier) {
                 barrier.style.opacity = '0';
                 setTimeout(() => barrier.style.display = 'none', 500);
             }
             if(userNav) userNav.style.display = 'flex';
+            
+            // Загрузка и проверка данных
+            checkDailyXP(user.uid);
+            initChat(user);
             
             // Load user data
             const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -1103,7 +1344,6 @@ Sent via Official Site`;
     };
 
     // --- TELEGRAM LOGIN LOGIC ---
-    // Make this globally accessible for the Widget
     window.onTelegramAuth = async (tgUser) => {
         const btn = document.getElementById('auth-submit-btn');
         if(btn) btn.innerText = "ВХОД ЧЕРЕЗ TELEGRAM...";
@@ -1116,7 +1356,7 @@ Sent via Official Site`;
             // Save/Link Telegram data to Firestore
             await setDoc(doc(db, "users", uid), {
                 nick: tgUser.first_name + (tgUser.last_name ? " " + tgUser.last_name : ""),
-                avatar: tgUser.photo_url || "https://i.postimg.cc/GmKCy6RJ/Picsart-26-01-19-03-16-05-480.jpg",
+                avatar: tgUser.photo_url || "https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg",
                 tgId: tgUser.id,
                 role: "Member",
                 connectedAt: new Date().toISOString()
@@ -1308,7 +1548,167 @@ Sent via Official Site`;
             `).join('');
         }
     });
+  
+        // --- AMBIENT MUSIC LOGIC ---
+    function toggleAmbient() {
+        const audio = document.getElementById('bg-music');
+        const icon = document.getElementById('music-btn');
+        const anim = document.getElementById('music-anim');
+        
+        if (audio.paused) {
+            audio.volume = 0.4; // Не слишком громко
+            audio.play().then(() => {
+                icon.className = "fas fa-pause play-state-icon";
+                anim.style.opacity = '1';
+                icon.style.color = "var(--accent)";
+            }).catch(e => alert("Нажми на страницу, чтобы разрешить аудио!"));
+        } else {
+            audio.pause();
+            icon.className = "fas fa-play play-state-icon";
+            anim.style.opacity = '0';
+            icon.style.color = "#fff";
+        }
+    }
+  
+    // --- FAN XP SYSTEM ---
+    const RANKS = [
+        { name: "Пользователь", max: 100 },
+        { name: "Активный", max: 300 },
+        { name: "Супер Актив", max: 800 },
+        { name: "LEGEND AIREX", max: 5000 }
+    ];
+
+    async function checkDailyXP(uid) {
+        const userRef = doc(db, "users", uid);
+        const snap = await getDoc(userRef);
+        if(!snap.exists()) return;
+
+        const data = snap.data();
+        const today = new Date().toDateString();
+        const lastVisit = data.lastVisitDate;
+        
+        let newXP = data.xp || 0;
+        
+        // Начисляем 10 XP, если сегодня еще не заходил
+        if (lastVisit !== today) {
+            newXP += 10;
+            await setDoc(userRef, { 
+                xp: newXP, 
+                lastVisitDate: today 
+            }, { merge: true });
+            
+            console.log("Daily XP Granted!"); 
+        }
+
+        updateXPUI(newXP);
+    }
+
+    function updateXPUI(xp) {
+        let currentRank = RANKS[0];
+        let nextRankXP = RANKS[0].max;
+
+        for (let r of RANKS) {
+            if (xp >= r.max) {
+                continue; 
+            } else {
+                break;
+            }
+        }
+        
+        let rName = "Пользователь";
+        let max = 100;
+        let progress = 0;
+
+        if (xp < 100) { rName = RANKS[0].name; max = 100; }
+        else if (xp < 300) { rName = RANKS[1].name; max = 300; }
+        else if (xp < 800) { rName = RANKS[2].name; max = 800; }
+        else { rName = RANKS[3].name; max = 5000; }
+
+        progress = (xp / max) * 100;
+        if(progress > 100) progress = 100;
+
+        const xpBar = document.getElementById('xp-bar-fill');
+        const rankTxt = document.getElementById('user-rank-display');
+        const curXp = document.getElementById('current-xp');
+        const nextXp = document.getElementById('next-rank-xp');
+
+        if(xpBar) xpBar.style.width = `${progress}%`;
+        if(rankTxt) rankTxt.innerText = rName;
+        if(curXp) curXp.innerText = xp;
+        if(nextXp) nextXp.innerText = max;
+        
+        if(rName === "LEGEND AIREX") {
+            rankTxt.style.boxShadow = "0 0 20px #FFD700";
+            rankTxt.style.borderColor = "#FFD700";
+            rankTxt.style.color = "#FFD700";
+        }
+    }
+
+    // --- LIVE CHAT SYSTEM ---
+    let unsubscribeChat = null;
+
+    function initChat(user) {
+        const chatFeed = document.getElementById('chat-feed');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+
+        if(!chatFeed) return;
+
+        // 1. Send Message
+        if(chatForm) {
+            chatForm.onsubmit = async (e) => {
+                e.preventDefault();
+                const text = chatInput.value.trim();
+                if(!text) return;
+                
+                // Get fresh nick/avatar from local DOM or cached user object
+                const nick = document.getElementById('nav-username').innerText || "User";
+                
+                try {
+                    await addDoc(collection(db, "chat_messages"), {
+                        text: text,
+                        uid: user.uid,
+                        nick: nick,
+                        timestamp: serverTimestamp()
+                    });
+                    chatInput.value = '';
+                } catch(e) {
+                    console.error("Chat Error", e);
+                }
+            };
+        }
+
+        // 2. Listen for Messages
+        const q = query(collection(db, "chat_messages"), orderBy("timestamp", "desc"), limit(50));
+        
+        if(unsubscribeChat) unsubscribeChat(); 
+
+        unsubscribeChat = onSnapshot(q, (snapshot) => {
+            const msgs = [];
+            snapshot.forEach(doc => msgs.push({id: doc.id, ...doc.data()}));
+            
+            // Reverse to show oldest at top, newest at bottom
+            msgs.reverse();
+            
+            chatFeed.innerHTML = msgs.map(msg => {
+                const isMine = msg.uid === user.uid;
+                // Проверка на null timestamp (может быть null пару миллисекунд после отправки локально)
+                const time = msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
+                
+                return `
+                <div class="chat-msg ${isMine ? 'msg-own' : 'msg-other'}">
+                    <span class="msg-author">${msg.nick}</span>
+                    ${msg.text}
+                    <span class="msg-time">${time}</span>
+                </div>
+                `;
+            }).join('');
+            
+            // Auto scroll to bottom
+            chatFeed.scrollTop = chatFeed.scrollHeight;
+        });
+    }
+
 </script>
 </body>
 </html>
-
