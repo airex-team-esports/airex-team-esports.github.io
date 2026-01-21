@@ -54,9 +54,9 @@
       position: fixed; top: 50%; left: 50%; 
       transform: translate(-50%, -50%);
       width: 80vw; height: 80vh;
-      background: url('logo.png') center/contain no-repeat;
-      opacity: 0.03; z-index: -1; 
-      filter: grayscale(100%) brightness(2); 
+      /* Замените logo.png на реальный URL, если нужно */
+      background: radial-gradient(circle, rgba(255,0,76,0.1) 0%, transparent 70%);
+      opacity: 0.5; z-index: -1; 
       pointer-events: none;
     }
 
@@ -76,7 +76,7 @@
     
     .nav-brand { 
       display: flex; align-items: center; gap: 12px; 
-      flex-shrink: 0; 
+      flex-shrink: 0; cursor: pointer;
     }
     .nav-brand img { 
       height: 40px; width: auto; 
@@ -344,7 +344,7 @@
 
     /* --- AUTH & FORMS --- */
     #auth-barrier {
-        position: fixed; inset: 0; z-index: 10000;
+        position: fixed; inset: 0; z-index: 9999;
         background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
         display: flex; align-items: center; justify-content: center;
         backdrop-filter: blur(20px); transition: 0.5s ease;
@@ -380,7 +380,7 @@
     /* --- GALLERY LIGHTBOX --- */
     .lightbox {
       position: fixed; inset: 0; background: rgba(0,0,0,0.95); 
-      backdrop-filter: blur(10px); z-index: 2000; 
+      backdrop-filter: blur(10px); z-index: 11000; 
       display: none; flex-direction: column; align-items: center; justify-content: center;
       opacity: 0; transition: opacity 0.3s;
     }
@@ -410,7 +410,7 @@
     .loading-text { color: var(--text-gray); font-size: 12px; letter-spacing: 1px; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
   
-        /* --- NEW FEATURE 1: ROADMAP (TIMELINE) --- */
+        /* --- ROADMAP --- */
     .roadmap-container {
         position: relative; padding-left: 30px; margin: 20px 0;
     }
@@ -438,7 +438,7 @@
     }
     .rm-title { color: #fff; font-weight: 700; font-size: 14px; margin-bottom: 5px; }
 
-    /* --- NEW FEATURE 2: FAN XP SYSTEM --- */
+    /* --- FAN XP SYSTEM --- */
     .xp-bar-container {
         width: 100%; height: 6px; background: rgba(255,255,255,0.1);
         border-radius: 10px; margin: 10px 0; overflow: hidden; position: relative;
@@ -456,9 +456,9 @@
         animation: neon-pulse 3s infinite;
     }
 
-    /* --- NEW FEATURE 3: AMBIENT PLAYER --- */
+    /* --- AMBIENT PLAYER --- */
     #ambient-player {
-        position: fixed; bottom: 20px; right: 20px; z-index: 9000;
+        position: fixed; bottom: 20px; right: 20px; z-index: 10005;
         display: flex; align-items: center; gap: 10px;
         background: rgba(0,0,0,0.8); padding: 8px 12px; border-radius: 50px;
         border: 1px solid var(--glass-border); backdrop-filter: blur(10px);
@@ -476,7 +476,7 @@
     @keyframes wave { 0%, 100% { height: 20%; } 50% { height: 100%; } }
     .play-state-icon { color: #fff; font-size: 14px; cursor: pointer; width: 20px; text-align: center; }
 
-    /* --- NEW FEATURE 4: LIVE CHAT --- */
+    /* --- LIVE CHAT --- */
     .chat-window {
         height: 60vh; background: rgba(0,0,0,0.3); border-radius: 12px;
         border: 1px solid var(--glass-border); display: flex; flex-direction: column;
@@ -508,7 +508,7 @@
   </style>
 
   <script>
-    // Anti-inspect and basic protection
+    // Basic protection
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.addEventListener('keydown', function(e) {
       if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) { e.preventDefault(); }
@@ -521,7 +521,7 @@
     <div class="music-waves" id="music-anim" style="opacity: 0;">
         <div class="wave"></div><div class="wave"></div><div class="wave"></div>
     </div>
-    <i class="fas fa-play play-state-icon" id="music-btn" onclick="toggleAmbient()"></i>
+    <i class="fas fa-play play-state-icon" id="music-btn" onclick="window.toggleAmbient()"></i>
     <audio id="bg-music" loop>
         <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_734891122a.mp3?filename=cyberpunk-city-11017.mp3" type="audio/mpeg">
     </audio>
@@ -532,7 +532,7 @@
     <div class="text-center" style="margin-bottom: 25px;">
         <div style="position: relative; display: inline-block;">
             <img src="https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg" 
-                 style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; box-shadow: 0 0 20px var(--accent-glow);">
+                 style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; box-shadow: 0 0 20px var(--accent-glow);" alt="Logo">
         </div>
         <h2 class="font-tech" style="font-size: 22px; margin-top: 15px; letter-spacing: 2px;">AIREX ACCESS</h2>
         <div style="font-size: 10px; opacity: 0.5; text-transform: uppercase;">Система авторизации игрока</div>
@@ -559,16 +559,14 @@
         <button onclick="window.loginGoogle()" class="btn-glitch btn-google">
             <i class="fab fa-google"></i> ВОЙТИ ЧЕРЕЗ GOOGLE
         </button>
-        
         <div id="tg-auth-container" style="display: flex; justify-content: center;"></div>
     </div>
   </div>
 </div>
 
-<div id="profile-modal" class="lightbox" style="display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9);">
+<div id="profile-modal" class="lightbox" style="align-items: center; justify-content: center; background: rgba(0,0,0,0.95); z-index: 10010;">
     <div class="card" style="max-width: 400px; width: 90%;">
         <h3 class="font-tech">НАСТРОЙКИ АККАУНТА</h3>
-        
         <div style="text-align: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--glass-border);">
             <div class="rank-badge" id="user-rank-display">LOADING RANK...</div>
             <div style="display: flex; justify-content: space-between; font-size: 10px; color: #888;">
@@ -582,11 +580,11 @@
         </div>
 
         <div class="form-group">
-            <label class="form-label">Никнейм в системе</label>
+            <label class="form-label" for="set-nick">Никнейм в системе</label>
             <input type="text" id="set-nick" class="form-input">
         </div>
         <div class="form-group">
-            <label class="form-label">Ссылка на аватар (URL)</label>
+            <label class="form-label" for="set-avatar">Ссылка на аватар (URL)</label>
             <input type="text" id="set-avatar" class="form-input">
         </div>
         <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -601,8 +599,8 @@
 <div class="bg-logo"></div>
 
 <nav class="navbar">
-    <div class="nav-brand">
-      <img src="logo.png" alt="AX" onerror="this.style.display='none'"> 
+    <div class="nav-brand" onclick="window.selectTab('home', document.querySelector('.menu-item'))">
+      <img src="https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg" alt="AX" onerror="this.style.display='none'"> 
       <h1>Airex<span style="color:var(--text-gray); font-weight:400;">Team</span></h1>
     </div>
 
@@ -618,28 +616,28 @@
     </div>
 
     <div class="nav-dropdown" id="navDropdown">
-      <button class="menu-item active-tab" onclick="selectTab('home', this)">
+      <button class="menu-item active-tab" onclick="window.selectTab('home', this)">
           <i class="fas fa-home"></i> Главная
       </button>
-      <button class="menu-item" onclick="selectTab('team', this)">
+      <button class="menu-item" onclick="window.selectTab('team', this)">
           <i class="fas fa-users"></i> Состав
       </button>
-      <button class="menu-item" onclick="selectTab('about', this)">
+      <button class="menu-item" onclick="window.selectTab('about', this)">
           <i class="fas fa-shield-alt"></i> Инфо
       </button>
-      <button class="menu-item" onclick="selectTab('chat', this)">
+      <button class="menu-item" onclick="window.selectTab('chat', this)">
           <i class="fas fa-comments"></i> Live Chat
       </button>
-      <button class="menu-item" onclick="selectTab('news', this)">
+      <button class="menu-item" onclick="window.selectTab('news', this)">
           <i class="fas fa-bolt"></i> Новости
       </button>
-      <button class="menu-item" onclick="selectTab('media', this)">
+      <button class="menu-item" onclick="window.selectTab('media', this)">
           <i class="fas fa-play-circle"></i> Медиа
       </button>
-      <button class="menu-item" onclick="selectTab('history', this)">
+      <button class="menu-item" onclick="window.selectTab('history', this)">
           <i class="fas fa-trophy"></i> Матчи
       </button>
-      <button class="menu-item join-btn" onclick="selectTab('join', this)">
+      <button class="menu-item join-btn" onclick="window.selectTab('join', this)">
           <i class="fas fa-user-plus"></i> Вступить
       </button>
     </div>
@@ -653,18 +651,18 @@
         <p style="font-size: 16px; color: #ddd;">Professional Standoff 2 Esports Organization</p>
         <div id="typing-text"></div>
         <div style="margin-top: 25px;">
-           <button class="btn-glitch" onclick="selectTab('join', document.querySelector('.join-btn'))">
+           <button class="btn-glitch" onclick="window.selectTab('join', document.querySelector('.join-btn'))">
              СТАТЬ ЧАСТЬЮ КОМАНДЫ <i class="fas fa-chevron-right" style="margin-left:8px; font-size:10px;"></i>
            </button>
         </div>
       </div>
       <div class="stats-row">
         <div class="stat-card">
-          <div class="stat-val-main">0</div>
+          <div class="stat-val-main">15</div>
           <div class="stat-lbl">Трофеев</div>
         </div>
         <div class="stat-card">
-          <div id="win-rate-val" class="stat-val-main">0%</div>
+          <div id="win-rate-val" class="stat-val-main">--%</div>
           <div class="stat-lbl">Win Rate</div>
         </div>
       </div>
@@ -718,11 +716,12 @@
       <div id="latest-results-container">
           <p class="text-center loading-text">ЗАГРУЗКА ДАННЫХ...</p>
       </div>
-      <button class="btn-glitch btn-secondary" onclick="selectTab('history', document.querySelectorAll('.menu-item')[5])">
+      <button class="btn-glitch btn-secondary" onclick="window.selectTab('history', document.querySelectorAll('.menu-item')[5])">
         ВСЯ ИСТОРИЯ
       </button>
     </div>
     </section>
+
     <section id="roadmap-sec">
        <div class="card">
            <h3><i class="fas fa-route text-accent"></i> ПУТЬ AIREX</h3>
@@ -730,7 +729,6 @@
            
            <div class="roadmap-container">
                <div class="roadmap-line"></div>
-               
                <div class="rm-item">
                    <div class="rm-dot"></div>
                    <div class="rm-content">
@@ -739,7 +737,6 @@
                        <div style="font-size: 12px; color: #aaa;">Основание Airex Team. Сбор первого состава.</div>
                    </div>
                </div>
-
                <div class="rm-item">
                    <div class="rm-dot"></div>
                    <div class="rm-content">
@@ -748,7 +745,6 @@
                        <div style="font-size: 12px; color: #aaa;">Победа на турнире CyberStandoff Major (Tier-3).</div>
                    </div>
                </div>
-
                <div class="rm-item">
                    <div class="rm-dot" style="background: var(--bg-deep); border-color: #fff;"></div>
                    <div class="rm-content" style="border-color: rgba(255,255,255,0.2);">
@@ -785,7 +781,6 @@
         </div>
     </section>
 
-
     <section id="team">
       <div class="text-center" style="margin-bottom: 25px;">
         <h2 class="font-tech" style="text-shadow: 0 0 20px rgba(255,255,255,0.1);">MAIN ROSTER</h2>
@@ -801,7 +796,7 @@
         <h3 class="font-tech" style="opacity: 0.7; font-size: 18px;">RESERVE / ACADEMY</h3>
       </div>
       <div class="roster-grid" id="reserve-roster">
-      </div>
+          </div>
     </section>
 
     <section id="about">
@@ -823,7 +818,7 @@
           <a href="https://t.me/airex_team" target="_blank" class="social-icon si-tg"><i class="fab fa-telegram"></i></a>
           <a href="https://www.tiktok.com/@airex_team" target="_blank" class="social-icon si-tt"><i class="fab fa-tiktok"></i></a>
           <a href="https://vk.ru/airex_team" target="_blank" class="social-icon si-vk"><i class="fab fa-vk"></i></a>
-          <a href="https://youtube.com/@airex_team.official" target="_blank" class="social-icon si-yt"><i class="fab fa-youtube"></i></a>
+          <a href="https://youtube.com/@airex_team" target="_blank" class="social-icon si-yt"><i class="fab fa-youtube"></i></a>
           <a href="https://www.twitch.tv/airex_team" target="_blank" class="social-icon si-tw"><i class="fab fa-twitch"></i></a>
         </div>
         <style>
@@ -847,7 +842,6 @@
           </div>
       </div>
     </section>
-
     <section id="media">
         <div class="card">
           <h3>📸 ГАЛЕРЕЯ</h3>
@@ -902,23 +896,23 @@
             <p style="font-size: 13px;">Готов проверить себя? Заполни анкету.</p>
         </div>
         
-        <form onsubmit="sendToTelegram(event)" autocomplete="off" style="margin-top: 20px;">
+        <form onsubmit="window.sendToTelegram(event)" autocomplete="off" style="margin-top: 20px;">
           <div class="form-group">
-            <label class="form-label">Никнейм</label>
+            <label class="form-label" for="nick">Никнейм</label>
             <input type="text" id="nick" class="form-input" placeholder="Твой ник" required>
           </div>
           <div class="form-row" style="display: flex; gap: 15px;">
             <div class="form-group" style="flex: 1;">
-              <label class="form-label">Возраст</label>
+              <label class="form-label" for="age">Возраст</label>
               <input type="number" id="age" class="form-input" placeholder="16" required>
             </div>
             <div class="form-group" style="flex: 1;">
-              <label class="form-label">K/D (Ranked)</label>
+              <label class="form-label" for="kd">K/D (Ranked)</label>
               <input type="number" step="0.01" id="kd" class="form-input" placeholder="1.50" required>
             </div>
           </div> 
           <div class="form-group">
-            <label class="form-label">Желаемая роль</label>
+            <label class="form-label" for="role">Желаемая роль</label>
             <select id="role" class="form-input">
               <option value="Рифлер">Рифлер (Rifler)</option>
               <option value="Снайпер">Снайпер (AWP)</option>
@@ -929,11 +923,11 @@
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label">Часов в игре</label>
+            <label class="form-label" for="hours">Часов в игре</label>
             <input type="text" id="hours" class="form-input" placeholder="Например: 2500ч" required>
           </div>
           <div class="form-group">
-            <label class="form-label">Максимальный ранг</label>
+            <label class="form-label" for="best_rank">Максимальный ранг</label>
             <input type="text" id="best_rank" class="form-input" placeholder="Elite / Master / Legend" required> 
           </div>
           
@@ -988,46 +982,78 @@
     <div class="lightbox-close">&times;</div>
     <div class="lightbox-nav lb-prev">&#10094;</div>
     <div class="lightbox-nav lb-next">&#10095;</div>
-    <img src="" class="lightbox-img" id="lightboxImg">
+    <img src="" class="lightbox-img" id="lightboxImg" alt="Gallery Full">
     <div class="lightbox-caption" id="lightboxCaption"></div>
 </div>
 
-<script>
-    // --- UI CONFIG ---
+<script type="module">
+    // --- FIREBASE IMPORTS ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { 
+        getAuth, 
+        createUserWithEmailAndPassword, 
+        signInWithEmailAndPassword, 
+        signInAnonymously,
+        onAuthStateChanged,
+        GoogleAuthProvider,
+        signInWithPopup,
+        signOut 
+    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { 
+        getFirestore, 
+        doc, 
+        setDoc, 
+        getDoc, 
+        onSnapshot, 
+        addDoc, 
+        collection, 
+        query, 
+        orderBy, 
+        limit, 
+        serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+    // --- CONFIG & GLOBAL VARIABLES ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
+        authDomain: "airexsite.firebaseapp.com",
+        projectId: "airexsite",
+        storageBucket: "airexsite.firebasestorage.app",
+        messagingSenderId: "276640665598",
+        appId: "1:276640665598:web:d7400bd5962995efb43aaf"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore(app);
+
     const CONF = { 
         tg: { channel: 'airex_team', id: 638 }, 
-        match: new Date("2026-01-07T18:00:00+03:00") // Will be overwritten by Firebase
+        match: new Date("2026-01-07T18:00:00+03:00") 
     };
-    const $ = (s) => document.querySelector(s);
-    const $$ = (s) => document.querySelectorAll(s);
 
-    // --- TABS & NAVIGATION ---
-    function toggleMenu() {
+    // --- UTILITY FUNCTIONS ATTACHED TO WINDOW ---
+    // (Делаем их глобальными, чтобы HTML onclick="..." их видел)
+
+    // 1. Navigation & Tabs
+    window.toggleMenu = function() {
       const menuBtn = document.getElementById('menuBtn');
       const dropdown = document.getElementById('navDropdown');
       menuBtn.classList.toggle('active');
       dropdown.classList.toggle('active');
       const icon = menuBtn.querySelector('i');
       icon.className = menuBtn.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
-    }
+    };
 
-    document.addEventListener('click', (e) => {
-      const dropdown = document.getElementById('navDropdown');
-      const menuBtn = document.getElementById('menuBtn');
-      if (dropdown && dropdown.classList.contains('active') && !dropdown.contains(e.target) && !menuBtn.contains(e.target)) {
-        toggleMenu();
-      }
-    });
-
-    window.selectTab = (id, btn) => {
-      $$('section').forEach(s => {
+    window.selectTab = function(id, btn) {
+      document.querySelectorAll('section').forEach(s => {
           s.style.opacity = '0';
           s.style.transform = 'translateY(15px)';
           setTimeout(() => s.classList.remove('active'), 200);
       });
       
       setTimeout(() => {
-          const target = $('#' + id);
+          const target = document.getElementById(id);
           if(target) {
               target.classList.add('active');
               void target.offsetWidth; // force reflow
@@ -1036,105 +1062,50 @@
           }
       }, 200);
       
-      $$('.menu-item').forEach(b => b.classList.remove('active-tab'));
+      document.querySelectorAll('.menu-item').forEach(b => b.classList.remove('active-tab'));
       if(btn) btn.classList.add('active-tab');
       
       const dropdown = document.getElementById('navDropdown');
-      if (dropdown && dropdown.classList.contains('active')) toggleMenu();
-
-      // Reset video if leaving media tab
-      if (id !== 'media') {
-        const v = $('.video-wrapper');
-        if (v && v.dataset.loaded) {
-          const vidId = v.dataset.videoId;
-          v.innerHTML = `<div style="width:100%; height:100%; background: url('https://img.youtube.com/vi/${vidId}/maxresdefault.jpg') center/cover; opacity: 0.8;"></div><div class="play-btn-overlay" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;"><div style="width: 60px; height: 60px; background: rgba(255,0,76,0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">▶</div></div>`;
-          delete v.dataset.loaded;
-        }
-      }
+      if (dropdown && dropdown.classList.contains('active')) window.toggleMenu();
+      
       window.scrollTo({top: 0, behavior: 'smooth'});
     };
 
-    // --- COUNTDOWN ---
-    function updateCountdown() {
-      const diff = CONF.match - new Date();
-      if (diff < 0) {
-        if($('#countdown')) $('#countdown').innerHTML = "<div class='text-center' style='color:#00ff88; font-size:18px; font-weight:bold; animation: pulse 1s infinite;'>🟢 LIVE MATCH IS ON</div>";
-        if($('#match-status')) $('#match-status').innerText = "LIVE NOW";
-        return;
-      }
-      const set = (id, v) => { if($('#'+id)) $('#'+id).innerText = Math.floor(v).toString().padStart(2, '0'); };
-      set('days', diff / (864e5));
-      set('hours', (diff % 864e5) / 36e5);
-      set('minutes', (diff % 36e5) / 6e4);
-      set('seconds', (diff % 6e4) / 1e3);
-    }
-    setInterval(updateCountdown, 1000);
+    // 2. Auth Switching
+    let authMode = 'login';
+    window.switchAuth = function(mode) {
+        authMode = mode;
+        document.getElementById('tab-login').classList.toggle('active', mode === 'login');
+        document.getElementById('tab-reg').classList.toggle('active', mode === 'reg');
+        document.getElementById('auth-submit-btn').innerText = mode === 'login' ? 'ВОЙТИ В СИСТЕМУ' : 'СОЗДАТЬ АККАУНТ';
+    };
 
-    // --- ANIMATIONS & UTILS ---
-    let tIdx = 0; 
-    const txt = "Создаем историю. Побеждаем красиво. Airex Team.";
-    function typeW() {
-      const el = $('#typing-text');
-      if (el && tIdx < txt.length) { 
-          el.innerHTML += txt.charAt(tIdx++); 
-          setTimeout(typeW, 40); 
-      }
-    }
+    // 3. Ambient Player
+    window.toggleAmbient = function() {
+        const audio = document.getElementById('bg-music');
+        const icon = document.getElementById('music-btn');
+        const anim = document.getElementById('music-anim');
+        
+        if (audio.paused) {
+            audio.volume = 0.4;
+            audio.play().then(() => {
+                icon.className = "fas fa-pause play-state-icon";
+                anim.style.opacity = '1';
+                icon.style.color = "var(--accent)";
+            }).catch(e => {
+                console.log(e);
+                alert("Взаимодействие с сайтом требуется для запуска аудио!");
+            });
+        } else {
+            audio.pause();
+            icon.className = "fas fa-play play-state-icon";
+            anim.style.opacity = '0';
+            icon.style.color = "#fff";
+        }
+    };
 
-    // --- INIT ---
-    document.addEventListener('DOMContentLoaded', () => {
-      // Lightbox Logic
-      const lb = $('#lightbox'), lbImg = $('#lightboxImg'), lbCap = $('#lightboxCaption');
-      let curIdx = 0;
-      const items = Array.from($$('.gallery-item'));
-      
-      const updateLb = () => {
-         if(!items[curIdx]) return;
-         lbImg.src = items[curIdx].dataset.src;
-         lbCap.innerText = items[curIdx].dataset.caption;
-      };
-      
-      items.forEach((item, i) => {
-        item.addEventListener('click', () => {
-          curIdx = i; updateLb(); lb.classList.add('active'); 
-          document.body.style.overflow = 'hidden'; 
-        });
-      });
-      
-      if($('.lightbox-close')) $('.lightbox-close').onclick = () => { lb.classList.remove('active'); document.body.style.overflow = ''; };
-      if($('.lb-next')) $('.lb-next').onclick = (e) => { e.stopPropagation(); curIdx = (curIdx + 1) % items.length; updateLb(); };
-      if($('.lb-prev')) $('.lb-prev').onclick = (e) => { e.stopPropagation(); curIdx = (curIdx - 1 + items.length) % items.length; updateLb(); };
-      lb.onclick = (e) => { if(e.target === lb) $('.lightbox-close').click(); };
-
-      // Video Click
-      const videoWrap = $('.video-wrapper');
-      if(videoWrap) {
-        videoWrap.addEventListener('click', function() {
-          if(this.dataset.loaded) return;
-          this.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${this.dataset.videoId}?autoplay=1&rel=0" frameborder="0" allowfullscreen></iframe>`;
-          this.dataset.loaded = true;
-        });
-      }
-
-      setTimeout(typeW, 800);
-      
-      // Init TG Widget
-      const c = $('#dynamic-tg-widget');
-      if (c) {
-          const s = document.createElement('script');
-          s.src = 'https://telegram.org/js/telegram-widget.js?22';
-          s.dataset.telegramPost = `${CONF.tg.channel}/${CONF.tg.id}`;
-          s.dataset.width = '100%';
-          s.dataset.color = 'E91E63';
-          s.dataset.dark = '1';
-          s.dataset.userpic = 'true';
-          c.innerHTML = '';
-          c.appendChild(s);
-      }
-    });
-
-    // --- FORM SEND ---
-    window.sendToTelegram = (e) => {
+    // 4. Send Application Form
+    window.sendToTelegram = function(e) {
       e.preventDefault();
       const val = id => document.getElementById(id) ? document.getElementById(id).value : '—';
       
@@ -1166,60 +1137,14 @@ Sent via Official Site`;
           }, 800);
       });
     };
-</script>
 
-<script type="module">
-    // ИСПРАВЛЕННЫЙ ИМПОРТ: Убрано дублирование getFirestore
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { 
-        getAuth, 
-        createUserWithEmailAndPassword, 
-        signInWithEmailAndPassword, 
-        signInAnonymously,
-        onAuthStateChanged,
-        GoogleAuthProvider,
-        signInWithPopup,
-        signOut 
-    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-    import { 
-        getFirestore, 
-        doc, 
-        setDoc, 
-        getDoc, 
-        onSnapshot, 
-        addDoc, 
-        collection, 
-        query, 
-        orderBy, 
-        limit, 
-        serverTimestamp 
-    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-
-    // --- CONFIG ---
-    const firebaseConfig = {
-        apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
-        authDomain: "airexsite.firebaseapp.com",
-        projectId: "airexsite",
-        storageBucket: "airexsite.firebasestorage.app",
-        messagingSenderId: "276640665598",
-        appId: "1:276640665598:web:d7400bd5962995efb43aaf"
+    // 5. Flip Card
+    window.flipCard = function(el) {
+         const inner = el.querySelector('.player-card-inner');
+         if(inner) inner.classList.toggle('is-flipped');
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const db = getFirestore(app);
-
-    // --- AUTH UI LOGIC ---
-    let authMode = 'login';
-
-    // Globalize functions needed for HTML onClick
-    window.switchAuth = (mode) => {
-        authMode = mode;
-        document.getElementById('tab-login').classList.toggle('active', mode === 'login');
-        document.getElementById('tab-reg').classList.toggle('active', mode === 'reg');
-        document.getElementById('auth-submit-btn').innerText = mode === 'login' ? 'ВОЙТИ В СИСТЕМУ' : 'СОЗДАТЬ АККАУНТ';
-    };
-
+    // --- AUTH LOGIC ---
     const authForm = document.getElementById('auth-form');
     if(authForm) {
         authForm.onsubmit = async (e) => {
@@ -1235,7 +1160,6 @@ Sent via Official Site`;
             try {
                 if (authMode === 'reg') {
                     const res = await createUserWithEmailAndPassword(auth, email, pass);
-                    // Create default profile
                     await setDoc(doc(db, "users", res.user.uid), {
                         nick: email.split('@')[0],
                         avatar: "https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg",
@@ -1260,14 +1184,12 @@ Sent via Official Site`;
         };
     }
 
-    // --- GOOGLE AUTH LOGIN ---
-    window.loginGoogle = async () => {
+    window.loginGoogle = async function() {
         const provider = new GoogleAuthProvider();
         try {
             const result = await signInWithPopup(auth, provider);
             const user = result.user;
             
-            // Check if user doc exists, if not create it
             const userDocRef = doc(db, "users", user.uid);
             const userDocSnap = await getDoc(userDocRef);
 
@@ -1280,49 +1202,18 @@ Sent via Official Site`;
                     authType: "Google"
                 });
             }
-            // Barrier will close automatically via onAuthStateChanged
         } catch (error) {
             console.error(error);
             alert("Google Auth Error: " + error.message);
         }
     };
 
-    // Monitor Auth State
-    onAuthStateChanged(auth, async (user) => {
-        const barrier = document.getElementById('auth-barrier');
-        const userNav = document.getElementById('user-nav-btn');
-        
-        if (user) {
-            if(barrier) {
-                barrier.style.opacity = '0';
-                setTimeout(() => barrier.style.display = 'none', 500);
-            }
-            if(userNav) userNav.style.display = 'flex';
-            
-            // Загрузка и проверка данных
-            checkDailyXP(user.uid);
-            initChat(user);
-            
-            // Load user data
-            const userDoc = await getDoc(doc(db, "users", user.uid));
-            if (userDoc.exists()) {
-                const data = userDoc.data();
-                if(document.getElementById('nav-username')) document.getElementById('nav-username').innerText = data.nick;
-                if(document.getElementById('nav-avatar')) document.getElementById('nav-avatar').src = data.avatar;
-                // Prefill settings
-                if(document.getElementById('set-nick')) document.getElementById('set-nick').value = data.nick;
-                if(document.getElementById('set-avatar')) document.getElementById('set-avatar').value = data.avatar;
-            }
-        } else {
-            if(barrier) {
-                barrier.style.display = 'flex';
-                barrier.style.opacity = '1';
-            }
-            if(userNav) userNav.style.display = 'none';
-        }
-    });
-
-    window.saveProfile = async () => {
+    window.logout = function() {
+        signOut(auth);
+        location.reload();
+    };
+    
+    window.saveProfile = async function() {
         const user = auth.currentUser;
         if (!user) return;
         const newNick = document.getElementById('set-nick').value;
@@ -1338,59 +1229,130 @@ Sent via Official Site`;
         }
     };
 
-    window.logout = () => {
-        signOut(auth);
-        location.reload();
-    };
-
-    // --- TELEGRAM LOGIN LOGIC ---
-    window.onTelegramAuth = async (tgUser) => {
-        const btn = document.getElementById('auth-submit-btn');
-        if(btn) btn.innerText = "ВХОД ЧЕРЕЗ TELEGRAM...";
-
-        try {
-            // Sign in anonymously to pass the Auth Barrier
-            const userCred = await signInAnonymously(auth);
-            const uid = userCred.user.uid;
-
-            // Save/Link Telegram data to Firestore
-            await setDoc(doc(db, "users", uid), {
-                nick: tgUser.first_name + (tgUser.last_name ? " " + tgUser.last_name : ""),
-                avatar: tgUser.photo_url || "https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg",
-                tgId: tgUser.id,
-                role: "Member",
-                connectedAt: new Date().toISOString()
-            }, { merge: true });
-
-            alert("Успешный вход через Telegram!");
-        } catch (error) {
-            console.error(error);
-            alert("Ошибка Telegram Auth: " + error.message);
+    // Monitor Auth State
+    onAuthStateChanged(auth, async (user) => {
+        const barrier = document.getElementById('auth-barrier');
+        const userNav = document.getElementById('user-nav-btn');
+        
+        if (user) {
+            if(barrier) {
+                barrier.style.opacity = '0';
+                setTimeout(() => barrier.style.display = 'none', 500);
+            }
+            if(userNav) userNav.style.display = 'flex';
+            
+            checkDailyXP(user.uid);
+            initChat(user);
+            
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists()) {
+                const data = userDoc.data();
+                if(document.getElementById('nav-username')) document.getElementById('nav-username').innerText = data.nick;
+                if(document.getElementById('nav-avatar')) document.getElementById('nav-avatar').src = data.avatar;
+                if(document.getElementById('set-nick')) document.getElementById('set-nick').value = data.nick;
+                if(document.getElementById('set-avatar')) document.getElementById('set-avatar').value = data.avatar;
+            }
+        } else {
+            if(barrier) {
+                barrier.style.display = 'flex';
+                barrier.style.opacity = '1';
+            }
+            if(userNav) userNav.style.display = 'none';
         }
-    };
+    });
 
-    // Setup Telegram Widget dynamically
-    const tgContainer = document.getElementById('tg-auth-container');
-    if(tgContainer) {
-        tgContainer.innerHTML = '';
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = "https://telegram.org/js/telegram-widget.js?22";
-        script.setAttribute('data-telegram-login', 'airex_teamBot'); // Your Bot Name
-        script.setAttribute('data-size', 'large');
-        script.setAttribute('data-radius', '10');
-        script.setAttribute('data-onauth', 'onTelegramAuth(user)');
-        script.setAttribute('data-request-access', 'write');
-        tgContainer.appendChild(script);
+    // --- GAME & LOGIC ---
+
+    // Countdown
+    setInterval(() => {
+      const diff = CONF.match - new Date();
+      if (diff < 0) {
+        const cd = document.getElementById('countdown');
+        const st = document.getElementById('match-status');
+        if(cd && !cd.innerHTML.includes('LIVE MATCH')) {
+             cd.innerHTML = "<div class='text-center' style='color:#00ff88; font-size:18px; font-weight:bold; animation: pulse 1s infinite;'>🟢 LIVE MATCH IS ON</div>";
+             if(st) st.innerText = "LIVE NOW";
+        }
+        return;
+      }
+      const set = (id, v) => { 
+          const el = document.getElementById(id); 
+          if(el) el.innerText = Math.floor(v).toString().padStart(2, '0'); 
+      };
+      set('days', diff / (864e5));
+      set('hours', (diff % 864e5) / 36e5);
+      set('minutes', (diff % 36e5) / 6e4);
+      set('seconds', (diff % 6e4) / 1e3);
+    }, 1000);
+
+    // Typing Effect
+    let tIdx = 0; 
+    const txt = "Создаем историю. Побеждаем красиво. Airex Team.";
+    function typeW() {
+      const el = document.getElementById('typing-text');
+      if (el && tIdx < txt.length) { 
+          el.innerHTML += txt.charAt(tIdx++); 
+          setTimeout(typeW, 40); 
+      }
     }
+    setTimeout(typeW, 800);
 
-    // --- DATA RENDERERS ---
+    // Lightbox Logic
+    document.addEventListener('DOMContentLoaded', () => {
+      const lb = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lightboxImg');
+      const lbCap = document.getElementById('lightboxCaption');
+      let curIdx = 0;
+      let items = [];
 
-    // 1. Player Card Flip
-    window.flipCard = (el) => {
-         const inner = el.querySelector('.player-card-inner');
-         if(inner) inner.classList.toggle('is-flipped');
-    };
+      // Init Video
+      const videoWrap = document.querySelector('.video-wrapper');
+      if(videoWrap) {
+        videoWrap.addEventListener('click', function() {
+          if(this.dataset.loaded) return;
+          this.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${this.dataset.videoId}?autoplay=1&rel=0" frameborder="0" allowfullscreen></iframe>`;
+          this.dataset.loaded = true;
+        });
+      }
+      
+      // Init Gallery
+      items = Array.from(document.querySelectorAll('.gallery-item'));
+      const updateLb = () => {
+         if(!items[curIdx]) return;
+         lbImg.src = items[curIdx].dataset.src;
+         lbCap.innerText = items[curIdx].dataset.caption;
+      };
+      
+      items.forEach((item, i) => {
+        item.addEventListener('click', () => {
+          curIdx = i; updateLb(); lb.classList.add('active'); 
+          document.body.style.overflow = 'hidden'; 
+        });
+      });
+      
+      const closeBtn = document.querySelector('.lightbox-close');
+      if(closeBtn) closeBtn.onclick = () => { lb.classList.remove('active'); document.body.style.overflow = ''; };
+      
+      document.querySelector('.lb-next').onclick = (e) => { e.stopPropagation(); curIdx = (curIdx + 1) % items.length; updateLb(); };
+      document.querySelector('.lb-prev').onclick = (e) => { e.stopPropagation(); curIdx = (curIdx - 1 + items.length) % items.length; updateLb(); };
+      lb.onclick = (e) => { if(e.target === lb) closeBtn.click(); };
+      
+      // TG Widget
+      const c = document.getElementById('dynamic-tg-widget');
+      if (c) {
+          const s = document.createElement('script');
+          s.src = 'https://telegram.org/js/telegram-widget.js?22';
+          s.dataset.telegramPost = `${CONF.tg.channel}/${CONF.tg.id}`;
+          s.dataset.width = '100%';
+          s.dataset.color = 'E91E63';
+          s.dataset.dark = '1';
+          s.dataset.userpic = 'true';
+          c.innerHTML = '';
+          c.appendChild(s);
+      }
+    });
+
+    // --- FIRESTORE LISTENERS ---
 
     const renderPlayer = (p) => {
         const kd = p.kd || (p.stats ? p.stats.kd : "0.00");
@@ -1399,7 +1361,7 @@ Sent via Official Site`;
         const imgUrl = p.img || 'https://via.placeholder.com/300x400/000000/ffffff?text=No+Image';
 
         return `
-        <div class="player-wrapper" onclick="flipCard(this)">
+        <div class="player-wrapper" onclick="window.flipCard(this)">
           <div class="player-card-inner">
             <div class="player-front">
               <div class="player-info-container" style="height:100%; display:flex; flex-direction:column;">
@@ -1431,146 +1393,50 @@ Sent via Official Site`;
         </div>`;
     };
 
-    // --- FIRESTORE LISTENERS ---
-
-    // Match Info
+    // Listeners
     onSnapshot(doc(db, "siteData", "match"), (docSnap) => {
         if(docSnap.exists()) {
             const data = docSnap.data();
             const enemyBlocks = document.querySelectorAll('.team-name');
-            // Assuming 2nd team-name is opponent
             if(enemyBlocks.length > 1) enemyBlocks[1].innerText = data.enemy || "TBA";
-            
             if(data.date) {
-              // Parse date string (e.g. 2026-01-07T18:00)
               let timeString = data.date;
               if (timeString.length === 16) timeString += ":00"; 
-              window.CONF.match = new Date(timeString + "+03:00");
+              CONF.match = new Date(timeString + "+03:00");
             }
         }
     });
 
-    // Main Roster
     onSnapshot(doc(db, "siteData", "roster"), (docSnap) => {
         const container = document.getElementById('dynamic-roster');
         if(docSnap.exists() && container) {
             const players = docSnap.data().list || [];
-            if(players.length === 0) {
-                 container.innerHTML = '<p class="text-center" style="grid-column:1/-1;">Roster is empty</p>';
-            } else {
-                container.innerHTML = players.map(p => renderPlayer(p)).join('');
-            }
-        } else if (container) {
-            container.innerHTML = '<div class="text-center" style="grid-column:1/-1; opacity:0.5;">Loading...</div>';
+            container.innerHTML = players.length ? players.map(p => renderPlayer(p)).join('') : '<p class="text-center" style="grid-column:1/-1;">Roster is empty</p>';
         }
     });
 
-    // Reserve Roster
-    onSnapshot(doc(db, "siteData", "reserve"), (docSnap) => {
-        const container = document.getElementById('reserve-roster');
-        if(docSnap.exists() && container) {
-            const players = docSnap.data().list || [];
-            container.innerHTML = players.map(p => renderPlayer(p)).join('');
-        }
-    });
-
-    // History
-    onSnapshot(doc(db, "siteData", "history"), (docSnap) => {
-        if(docSnap.exists()) {
-            const matches = docSnap.data().list || [];
-            const fullHistory = document.getElementById('full-history-container');
-            const latestWidget = document.getElementById('latest-results-container');
-            const winRateEl = document.getElementById('win-rate-val'); 
-            
-            if(matches.length === 0) {
-               if(fullHistory) fullHistory.innerHTML = "<p class='text-center'>No matches recorded</p>";
-               if(latestWidget) latestWidget.innerHTML = "<p class='text-center'>No matches</p>";
-               return;
-            }
-
-            // Calc Winrate
-            const wins = matches.filter(m => parseInt(m.ourScore) > parseInt(m.enemyScore)).length;
-            if(winRateEl) winRateEl.innerText = Math.round((wins / matches.length) * 100) + '%';
-
-            const reversedMatches = [...matches].reverse();
-
-            // Render Full History
-            if(fullHistory) {
-                fullHistory.innerHTML = reversedMatches.map(m => {
-                    const isWin = parseInt(m.ourScore) > parseInt(m.enemyScore);
-                    return `
-                    <div class="history-card ${isWin ? 'win-border' : 'lose-border'}">
-                        <div class="h-info">
-                            <span class="h-tour">${m.tournament || 'Showmatch'}</span>
-                            <span class="h-opponent">vs ${m.enemy}</span>
-                            ${m.screenshot ? `<button onclick="window.open('${m.screenshot}', '_blank')" class="btn-glitch" style="padding: 4px 8px; font-size: 8px; margin-top: 5px; width: auto; height: auto;">PROOF</button>` : ''}
-                        </div>
-                        <div class="h-result" style="text-align:right;">
-                            <div class="h-score">${m.ourScore} : ${m.enemyScore}</div>
-                            <div class="h-status ${isWin ? 'text-win' : 'text-lose'}">${isWin ? 'WIN' : 'LOSE'}</div>
-                        </div>
-                    </div>`;
-                }).join('');
-            }
-
-            // Render Widget (Top 3)
-            if(latestWidget) {
-                latestWidget.innerHTML = reversedMatches.slice(0, 3).map(m => {
-                    const isWin = parseInt(m.ourScore) > parseInt(m.enemyScore);
-                    return `
-                    <div class="result-row">
-                        <span>vs ${m.enemy}</span>
-                        <span class="${isWin ? 'res-win' : 'res-lose'}">${m.ourScore} : ${m.enemyScore}</span>
-                    </div>`;
-                }).join('');
-            }
-        }
-    });
-
-    // News
     onSnapshot(doc(db, "siteData", "news"), (docSnap) => {
         const container = document.getElementById('dynamic-news-container');
         if(docSnap.exists() && container) {
             const newsList = docSnap.data().list || [];
             if(newsList.length === 0) {
                 container.innerHTML = '<div class="card text-center"><p>Новостей пока нет.</p></div>';
-                return;
-            }
-            container.innerHTML = newsList.map(item => `
-              <div class="card">
-                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                     <span style="font-size: 10px; background: var(--accent); color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: 700;">${item.tag || 'NEWS'}</span>
-                     <span style="font-size: 10px; color: var(--text-gray);">${item.date || ''}</span>
+            } else {
+                container.innerHTML = newsList.map(item => `
+                  <div class="card">
+                      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                         <span style="font-size: 10px; background: var(--accent); color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: 700;">${item.tag || 'NEWS'}</span>
+                         <span style="font-size: 10px; color: var(--text-gray);">${item.date || ''}</span>
+                      </div>
+                      <h3 style="margin-bottom: 10px;">${item.title}</h3>
+                      <p>${item.text}</p>
                   </div>
-                  <h3 style="margin-bottom: 10px;">${item.title}</h3>
-                  <p>${item.text}</p>
-              </div>
-            `).join('');
+                `).join('');
+            }
         }
     });
-  
-        // --- AMBIENT MUSIC LOGIC ---
-    function toggleAmbient() {
-        const audio = document.getElementById('bg-music');
-        const icon = document.getElementById('music-btn');
-        const anim = document.getElementById('music-anim');
-        
-        if (audio.paused) {
-            audio.volume = 0.4; // Не слишком громко
-            audio.play().then(() => {
-                icon.className = "fas fa-pause play-state-icon";
-                anim.style.opacity = '1';
-                icon.style.color = "var(--accent)";
-            }).catch(e => alert("Нажми на страницу, чтобы разрешить аудио!"));
-        } else {
-            audio.pause();
-            icon.className = "fas fa-play play-state-icon";
-            anim.style.opacity = '0';
-            icon.style.color = "#fff";
-        }
-    }
-  
-    // --- FAN XP SYSTEM ---
+
+    // XP System
     const RANKS = [
         { name: "Пользователь", max: 100 },
         { name: "Активный", max: 300 },
@@ -1582,129 +1448,60 @@ Sent via Official Site`;
         const userRef = doc(db, "users", uid);
         const snap = await getDoc(userRef);
         if(!snap.exists()) return;
-
         const data = snap.data();
         const today = new Date().toDateString();
-        const lastVisit = data.lastVisitDate;
-        
-        let newXP = data.xp || 0;
-        
-        // Начисляем 10 XP, если сегодня еще не заходил
-        if (lastVisit !== today) {
-            newXP += 10;
-            await setDoc(userRef, { 
-                xp: newXP, 
-                lastVisitDate: today 
-            }, { merge: true });
-            
-            console.log("Daily XP Granted!"); 
+        if (data.lastVisitDate !== today) {
+            await setDoc(userRef, { xp: (data.xp || 0) + 10, lastVisitDate: today }, { merge: true });
         }
-
-        updateXPUI(newXP);
+        updateXPUI((data.xp || 0) + (data.lastVisitDate !== today ? 10 : 0));
     }
 
     function updateXPUI(xp) {
-        let currentRank = RANKS[0];
-        let nextRankXP = RANKS[0].max;
-
-        for (let r of RANKS) {
-            if (xp >= r.max) {
-                continue; 
-            } else {
-                break;
-            }
-        }
+        let rName = "Пользователь", max = 100;
+        if (xp >= 100 && xp < 300) { rName = RANKS[1].name; max = 300; }
+        else if (xp >= 300 && xp < 800) { rName = RANKS[2].name; max = 800; }
+        else if (xp >= 800) { rName = RANKS[3].name; max = 5000; }
         
-        let rName = "Пользователь";
-        let max = 100;
-        let progress = 0;
-
-        if (xp < 100) { rName = RANKS[0].name; max = 100; }
-        else if (xp < 300) { rName = RANKS[1].name; max = 300; }
-        else if (xp < 800) { rName = RANKS[2].name; max = 800; }
-        else { rName = RANKS[3].name; max = 5000; }
-
-        progress = (xp / max) * 100;
-        if(progress > 100) progress = 100;
-
+        const progress = Math.min((xp / max) * 100, 100);
         const xpBar = document.getElementById('xp-bar-fill');
-        const rankTxt = document.getElementById('user-rank-display');
-        const curXp = document.getElementById('current-xp');
-        const nextXp = document.getElementById('next-rank-xp');
-
         if(xpBar) xpBar.style.width = `${progress}%`;
-        if(rankTxt) rankTxt.innerText = rName;
-        if(curXp) curXp.innerText = xp;
-        if(nextXp) nextXp.innerText = max;
-        
-        if(rName === "LEGEND AIREX") {
-            rankTxt.style.boxShadow = "0 0 20px #FFD700";
-            rankTxt.style.borderColor = "#FFD700";
-            rankTxt.style.color = "#FFD700";
-        }
+        if(document.getElementById('user-rank-display')) document.getElementById('user-rank-display').innerText = rName;
+        if(document.getElementById('current-xp')) document.getElementById('current-xp').innerText = xp;
+        if(document.getElementById('next-rank-xp')) document.getElementById('next-rank-xp').innerText = max;
     }
 
-    // --- LIVE CHAT SYSTEM ---
+    // Chat
     let unsubscribeChat = null;
-
     function initChat(user) {
         const chatFeed = document.getElementById('chat-feed');
         const chatForm = document.getElementById('chat-form');
         const chatInput = document.getElementById('chat-input');
+        if(!chatFeed || !chatForm) return;
 
-        if(!chatFeed) return;
+        chatForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if(!text) return;
+            const nick = document.getElementById('nav-username').innerText || "User";
+            try {
+                await addDoc(collection(db, "chat_messages"), {
+                    text: text, uid: user.uid, nick: nick, timestamp: serverTimestamp()
+                });
+                chatInput.value = '';
+            } catch(e) { console.error(e); }
+        };
 
-        // 1. Send Message
-        if(chatForm) {
-            chatForm.onsubmit = async (e) => {
-                e.preventDefault();
-                const text = chatInput.value.trim();
-                if(!text) return;
-                
-                // Get fresh nick/avatar from local DOM or cached user object
-                const nick = document.getElementById('nav-username').innerText || "User";
-                
-                try {
-                    await addDoc(collection(db, "chat_messages"), {
-                        text: text,
-                        uid: user.uid,
-                        nick: nick,
-                        timestamp: serverTimestamp()
-                    });
-                    chatInput.value = '';
-                } catch(e) {
-                    console.error("Chat Error", e);
-                }
-            };
-        }
-
-        // 2. Listen for Messages
         const q = query(collection(db, "chat_messages"), orderBy("timestamp", "desc"), limit(50));
-        
-        if(unsubscribeChat) unsubscribeChat(); 
-
+        if(unsubscribeChat) unsubscribeChat();
         unsubscribeChat = onSnapshot(q, (snapshot) => {
             const msgs = [];
             snapshot.forEach(doc => msgs.push({id: doc.id, ...doc.data()}));
-            
-            // Reverse to show oldest at top, newest at bottom
             msgs.reverse();
-            
             chatFeed.innerHTML = msgs.map(msg => {
                 const isMine = msg.uid === user.uid;
-                // Проверка на null timestamp (может быть null пару миллисекунд после отправки локально)
                 const time = msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
-                
-                return `
-                <div class="chat-msg ${isMine ? 'msg-own' : 'msg-other'}">
-                    <span class="msg-author">${msg.nick}</span>
-                    ${msg.text}
-                    <span class="msg-time">${time}</span>
-                </div>
-                `;
+                return `<div class="chat-msg ${isMine ? 'msg-own' : 'msg-other'}"><span class="msg-author">${msg.nick}</span>${msg.text}<span class="msg-time">${time}</span></div>`;
             }).join('');
-            
-            // Auto scroll to bottom
             chatFeed.scrollTop = chatFeed.scrollHeight;
         });
     }
