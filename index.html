@@ -17,13 +17,82 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
+    /* Экран блокировки и Авторизация */
+    #auth-barrier {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(20px);
+        transition: 0.5s ease;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 400px;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .auth-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        border-bottom: 1px solid var(--glass-border);
+        padding-bottom: 10px;
+    }
+
+    .auth-tab {
+        cursor: pointer;
+        opacity: 0.5;
+        font-family: var(--font-tech);
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+    .auth-tab.active {
+        opacity: 1;
+        color: var(--accent);
+    }
+
+    #tg-auth-container {
+        margin-top: 15px;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Профиль в навигации */
+    .user-profile-nav {
+        display: none; /* Покажем после входа */
+        align-items: center;
+        gap: 10px;
+        padding: 5px 15px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 30px;
+        border: 1px solid var(--glass-border);
+        cursor: pointer;
+    }
+
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid var(--accent);
+    }
+
     /* --- CORE VARIABLES --- */
     :root {
-      --accent: #ff004c; /* Более агрессивный, яркий неон */
+      --accent: #ff004c;
       --accent-dim: rgba(255, 0, 76, 0.15);
       --accent-glow: rgba(255, 0, 76, 0.6); 
       --bg-deep: #020202;
-      --bg-panel: #0a0a0a;
       --glass-dark: rgba(12, 12, 12, 0.7);
       --glass-border: rgba(255, 255, 255, 0.06);
       --text-white: #ffffff;
@@ -46,7 +115,6 @@
       min-height: 100vh; 
       overflow-x: hidden; 
       padding-top: 80px;
-      /* Protection: Disable selection */
       user-select: none; 
       -webkit-user-select: none;
     }
@@ -62,12 +130,6 @@
       pointer-events: none;
     }
     
-    .bg-noise {
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-      z-index: -1; pointer-events: none;
-    }
-
     /* --- NAVIGATION --- */
     .navbar {
       position: fixed; top: 0; inset-inline: 0; height: 72px;
@@ -79,11 +141,12 @@
       display: flex; align-items: center; 
       padding: 0 5%;
       box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      justify-content: space-between;
     }
     
     .nav-brand { 
       display: flex; align-items: center; gap: 12px; 
-      margin-right: 20px; flex-shrink: 0; 
+      flex-shrink: 0; 
     }
     .nav-brand img { 
       height: 40px; width: auto; 
@@ -99,36 +162,72 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
 
-    .nav-menu {
-      display: flex; gap: 8px; overflow-x: auto; height: 100%; align-items: center;
-      scrollbar-width: none; -ms-overflow-style: none; padding-right: 15px; mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-    }
-    .nav-menu::-webkit-scrollbar { display: none; }
-    
-    .nav-btn {
-      background: transparent; border: none; color: var(--text-gray);
-      font-family: var(--font-tech); font-size: 11px; font-weight: 600;
-      text-transform: uppercase; padding: 10px 16px; 
-      cursor: pointer; transition: all 0.3s ease;
-      white-space: nowrap; border-radius: 6px; letter-spacing: 1px;
-      position: relative; overflow: hidden;
-    }
-    
-    .nav-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
-    
-    .nav-btn.active {
-      color: #fff; background: var(--accent-dim);
-      box-shadow: 0 0 15px var(--accent-dim);
-      border: 1px solid rgba(255, 0, 76, 0.3);
+    .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
     }
 
-    /* --- LAYOUT & ANIMATION --- */
-    .container { max-width: 900px; margin: 0 auto; padding: 20px 15px; padding-bottom: 80px; }
+    /* Hamburger Menu Toggle */
+    .menu-toggle {
+      background: transparent; border: none; color: #fff;
+      font-size: 24px; cursor: pointer; padding: 10px;
+      transition: transform 0.3s ease, color 0.3s ease;
+      z-index: 1002;
+    }
+    .menu-toggle:hover { color: var(--accent); transform: scale(1.1); text-shadow: 0 0 15px var(--accent-glow); }
+    .menu-toggle.active { transform: rotate(90deg); color: var(--accent); }
+
+    /* Dropdown Menu */
+    .nav-dropdown {
+      position: fixed; top: 75px; right: 20px; width: 220px;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px; padding: 10px;
+      display: flex; flex-direction: column; gap: 5px;
+      opacity: 0; visibility: hidden;
+      transform: translateY(-20px) scale(0.95);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      z-index: 1001;
+    }
+    .nav-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+
+    /* Menu Items */
+    .menu-item {
+      display: flex; align-items: center; justify-content: flex-start;
+      gap: 15px; padding: 12px 16px;
+      background: transparent; border: none;
+      color: var(--text-gray); font-family: var(--font-tech);
+      font-size: 12px; text-transform: uppercase; font-weight: 600;
+      letter-spacing: 1px; border-radius: 8px;
+      cursor: pointer; transition: all 0.2s ease;
+      text-align: left; width: 100%;
+    }
+    .menu-item i { width: 20px; text-align: center; font-size: 14px; transition: 0.2s; }
+    .menu-item:hover { background: rgba(255, 255, 255, 0.05); color: #fff; padding-left: 20px; }
+    .menu-item:hover i { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
     
+    .menu-item.active-tab {
+      background: var(--accent-dim); color: #fff;
+      border: 1px solid rgba(255, 0, 76, 0.2);
+    }
+    .menu-item.active-tab i { color: var(--accent); }
+
+    .menu-item.join-btn {
+      margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.1);
+      border-radius: 0 0 8px 8px; color: var(--accent);
+    }
+    .menu-item.join-btn:hover { background: var(--accent); color: #000; }
+    .menu-item.join-btn:hover i { color: #000; text-shadow: none; }
+
+    /* --- LAYOUT & ANIMATION --- */
+    .container { max-width: 900px; margin: 0 auto; padding: 20px 15px 80px 15px; }
     section { display: none; opacity: 0; transform: translateY(15px); transition: 0.5s var(--ease-out); }
     section.active { display: block; opacity: 1; transform: translateY(0); }
 
-    /* --- CARDS & GLASS --- */
+    /* --- CARDS & UI --- */
     .card {
       background: var(--glass-dark);
       border: 1px solid var(--glass-border);
@@ -138,24 +237,20 @@
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
     }
-    
-    /* Subtle hover effect for all cards */
     .card:hover { border-color: rgba(255,255,255,0.15); box-shadow: 0 15px 40px -10px rgba(0,0,0,0.7); }
-
     .card::before {
       content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
       background: linear-gradient(90deg, transparent, var(--accent), transparent);
       opacity: 0.6;
     }
 
-    /* --- TYPOGRAPHY --- */
     h2, h3, h4 { font-family: var(--font-tech); color: #fff; margin: 0 0 15px 0; letter-spacing: 1px; text-transform: uppercase; }
     p { line-height: 1.7; color: var(--text-gray); font-size: 14px; margin-bottom: 15px; margin-top: 0; font-weight: 300; }
     .text-center { text-align: center; }
     .text-accent { color: var(--accent); }
     .font-tech { font-family: var(--font-tech); }
 
-    /* --- HERO SECTION --- */
+    /* --- HERO --- */
     .hero-card { 
       padding: 60px 20px; text-align: center; 
       background: radial-gradient(circle at center, rgba(255,0,76,0.08) 0%, rgba(10,10,10,0.8) 100%);
@@ -164,11 +259,9 @@
     .hero-title {
       font-size: 38px; font-weight: 900; margin-bottom: 15px;
       text-shadow: 0 0 30px var(--accent-glow);
-      position: relative; display: inline-block;
-      letter-spacing: 4px;
+      position: relative; display: inline-block; letter-spacing: 4px;
     }
     
-    /* GLITCH EFFECT REFINED */
     .glitch { position: relative; color: white; }
     .glitch::before, .glitch::after {
       content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -184,33 +277,18 @@
       clip: rect(85px, 550px, 140px, 0);
       animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
     }
-    @keyframes glitch-anim-1 { 
-      0% { clip: rect(20px, 9999px, 15px, 0); } 
-      100% { clip: rect(50px, 9999px, 20px, 0); } 
-    }
-    @keyframes glitch-anim-2 { 
-      0% { clip: rect(10px, 9999px, 80px, 0); } 
-      100% { clip: rect(90px, 9999px, 10px, 0); } 
-    }
+    @keyframes glitch-anim-1 { 0% { clip: rect(20px, 9999px, 15px, 0); } 100% { clip: rect(50px, 9999px, 20px, 0); } }
+    @keyframes glitch-anim-2 { 0% { clip: rect(10px, 9999px, 80px, 0); } 100% { clip: rect(90px, 9999px, 10px, 0); } }
 
-    #typing-text {
-      font-family: var(--font-tech); color: var(--text-gray);
-      min-height: 40px; font-size: 13px; letter-spacing: 1px;
-    }
-    
-    /* --- STATS GRID --- */
-    .stats-row { 
-      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; 
-    }
+    #typing-text { font-family: var(--font-tech); color: var(--text-gray); min-height: 40px; font-size: 13px; letter-spacing: 1px; }
+
+    /* --- STATS --- */
+    .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
     .stat-card { 
       background: rgba(255, 255, 255, 0.02); 
       padding: 20px; text-align: center; 
       border-radius: 12px; border: 1px solid var(--glass-border);
       position: relative; overflow: hidden;
-    }
-    .stat-card::after {
-      content: ''; position: absolute; inset: 0; border-radius: 12px;
-      box-shadow: inset 0 0 20px rgba(255,0,76,0.05); pointer-events: none;
     }
     .stat-val-main { 
       font-family: var(--font-tech); color: var(--accent); 
@@ -226,31 +304,24 @@
     }
     .match-header { 
       display: flex; justify-content: space-between; align-items: center;
-      font-size: 11px; font-family: var(--font-tech); margin-bottom: 20px; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;
+      font-size: 11px; font-family: var(--font-tech); margin-bottom: 20px; 
+      letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;
     }
-    .status-live { 
-      color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.4); 
-      animation: blink 2s infinite; 
-    }
+    .status-live { color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.4); animation: blink 2s infinite; }
     @keyframes blink { 50% { opacity: 0.5; } }
 
-    .countdown { 
-      display: flex; justify-content: center; align-items: flex-end; gap: 12px; 
-      margin-bottom: 25px; font-family: var(--font-tech); 
-    }
+    .countdown { display: flex; justify-content: center; align-items: flex-end; gap: 12px; margin-bottom: 25px; font-family: var(--font-tech); }
     .cd-item { text-align: center; width: 50px; }
     .cd-num { font-size: 26px; color: #fff; font-weight: 700; line-height: 1; }
     .cd-lbl { font-size: 9px; color: var(--accent); margin-top: 6px; font-weight: 600; }
 
     .match-teams { 
       display: flex; justify-content: space-between; align-items: center; 
-      border-top: 1px solid var(--glass-border); padding-top: 20px; 
-      position: relative;
+      border-top: 1px solid var(--glass-border); padding-top: 20px; position: relative;
     }
     .team-block { text-align: center; flex: 1; }
     .team-name { font-family: var(--font-tech); font-size: 20px; font-weight: 700; margin-bottom: 5px; }
     .team-sub { font-size: 10px; color: var(--text-gray); text-transform: uppercase; }
-    
     .team-vs { 
       color: var(--accent); font-weight: 900; font-family: var(--font-tech); 
       font-size: 24px; font-style: italic; opacity: 0.8;
@@ -267,11 +338,7 @@
       position: relative; overflow: hidden; transition: all 0.3s ease;
       cursor: pointer; width: 100%; border-radius: 4px;
     }
-    .btn-glitch:hover { 
-      background: var(--accent); 
-      box-shadow: 0 0 25px var(--accent-glow); 
-      transform: translateY(-2px);
-    }
+    .btn-glitch:hover { background: var(--accent); box-shadow: 0 0 25px var(--accent-glow); transform: translateY(-2px); }
     .btn-glitch:active { transform: scale(0.98); }
     
     .pulse-btn { animation: neon-pulse 3s infinite ease-in-out; }
@@ -280,75 +347,47 @@
       50% { box-shadow: 0 0 25px rgba(255,0,76,0.6), 0 0 5px rgba(255,255,255,0.5); } 
     }
     
-    .btn-secondary {
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-      margin-top: 10px; color: var(--text-gray);
-    }
+    .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; color: var(--text-gray); }
     .btn-secondary:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: #fff; box-shadow: none; }
 
-    /* --- ROSTER 3D CARD --- */
-    .roster-grid { 
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); 
-      gap: 15px; margin-top: 10px;
-    }
-    .player-wrapper { 
-      width: 100%; height: 320px; perspective: 1000px; cursor: pointer; 
-    }
+    /* --- ROSTER --- */
+    .roster-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 15px; margin-top: 10px; }
+    .player-wrapper { width: 100%; height: 320px; perspective: 1000px; cursor: pointer; }
     .player-card-inner { 
       position: relative; width: 100%; height: 100%; 
-      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); 
-      transform-style: preserve-3d; 
+      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; 
     }
     .player-card-inner.is-flipped { transform: rotateY(180deg); }
     
     .player-front, .player-back {
-      position: absolute; inset: 0; 
-      -webkit-backface-visibility: hidden; backface-visibility: hidden;
-      border-radius: 12px; overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08); 
-      background: rgba(20,20,20,0.6);
-      backdrop-filter: blur(8px);
+      position: absolute; inset: 0; -webkit-backface-visibility: hidden; backface-visibility: hidden;
+      border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); 
+      background: rgba(20,20,20,0.6); backdrop-filter: blur(8px);
     }
-    
     .player-front { 
       padding: 15px; display: flex; flex-direction: column; justify-content: space-between; z-index: 2;
       background: linear-gradient(160deg, rgba(25,25,25,0.9) 0%, rgba(10,10,10,0.95) 100%);
     }
-    
-    .player-back { 
-      transform: rotateY(180deg); 
-      background: #000;
-    }
+    .player-back { transform: rotateY(180deg); background: #000; }
     .player-back img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
     .player-wrapper:hover .player-back img { opacity: 1; scale: 1.05; }
 
-    /* Roster Info Styles */
     .p-nick { 
       font-size: 22px; font-weight: 700; margin: 0;
-      background: linear-gradient(90deg, #fff, #bbb); 
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background: linear-gradient(90deg, #fff, #bbb); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .p-role { 
-      color: var(--accent); font-size: 10px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; 
-    }
-    .p-quote { 
-      font-style: italic; color: #777; font-size: 11px; line-height: 1.4;
-      border-left: 2px solid var(--accent); padding-left: 8px;
-    }
+    .p-role { color: var(--accent); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+    .p-quote { font-style: italic; color: #777; font-size: 11px; line-height: 1.4; border-left: 2px solid var(--accent); padding-left: 8px; }
 
-    /* Player Stats Grid */
     .stats-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
-      margin-top: auto; padding-top: 15px;
-      border-top: 1px solid rgba(255,255,255,0.1);
+      margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);
     }
     .stat-item {
       background: rgba(0,0,0,0.4); padding: 8px 4px; text-align: center;
       border-radius: 4px; transition: 0.2s; border: 1px solid transparent;
     }
     .stat-item:hover { border-color: var(--accent); background: rgba(255,0,76,0.05); }
-    
     .stat-item.rank-full {
       grid-column: 1 / -1; 
       background: linear-gradient(90deg, rgba(0,0,0,0.6), rgba(0,204,255,0.15), rgba(0,0,0,0.6));
@@ -356,75 +395,166 @@
     }
     .stat-val { font-family: var(--font-tech); font-weight: 700; font-size: 14px; color: #fff; }
     .stat-label { font-size: 8px; color: #666; text-transform: uppercase; margin-top: 2px; }
-    
-    .s-kd { color: var(--success); }
-    .s-hs { color: #ff0055; }
-    .s-rnk { color: #00ccff; letter-spacing: 1px; }
+    .s-kd { color: var(--success); } .s-hs { color: #ff0055; } .s-rnk { color: #00ccff; letter-spacing: 1px; }
 
-    /* --- SUPPORT / DONATE --- */
-    .donate-card {
-      border: 1px dashed var(--accent); 
-      background: linear-gradient(45deg, rgba(255,0,76,0.05) 0%, transparent 100%);
-    }
-    .donate-icon { font-size: 16px; margin-right: 8px; }
-
-    /* --- LATEST RESULTS --- */
+    /* --- MISC --- */
+    .donate-card { border: 1px dashed var(--accent); background: linear-gradient(45deg, rgba(255,0,76,0.05) 0%, transparent 100%); }
     .result-row { 
       display: flex; justify-content: space-between; align-items: center;
-      font-size: 13px; padding: 12px 0; 
-      border-bottom: 1px solid rgba(255,255,255,0.05); 
-      font-family: var(--font-tech);
+      font-size: 13px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: var(--font-tech);
     }
     .result-row:last-child { border-bottom: none; }
     .res-win { color: var(--success); font-weight: 700; text-shadow: 0 0 10px rgba(0,255,163,0.3); }
     .res-lose { color: var(--accent); font-weight: 700; text-shadow: 0 0 10px rgba(255,0,76,0.3); }
-
-    /* --- UTILS --- */
     .loading-text { color: var(--text-gray); font-size: 12px; letter-spacing: 1px; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
+    /* --- LIGHTBOX --- */
+    .lightbox {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.95); 
+      backdrop-filter: blur(10px); z-index: 2000; 
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .lightbox.active { display: flex; opacity: 1; }
+    .lightbox-img { max-width: 95%; max-height: 70vh; border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,0.8); border: 1px solid #333; }
+    .lightbox-nav { 
+        position: absolute; color: #fff; font-size: 40px; cursor: pointer; padding: 20px; 
+        opacity: 0.5; transition: 0.3s; top: 50%; transform: translateY(-50%); 
+    }
+    .lightbox-nav:hover { opacity: 1; color: var(--accent); text-shadow: 0 0 15px var(--accent); }
+    .lb-prev { left: 10px; } .lb-next { right: 10px; }
+    .lightbox-close { 
+        position: absolute; top: 20px; right: 30px; font-size: 35px; cursor: pointer; color: #fff; opacity: 0.6; transition: 0.3s; 
+    }
+    .lightbox-close:hover { opacity: 1; color: var(--accent); transform: rotate(90deg); }
+    .lightbox-caption { margin-top: 15px; color: #ccc; font-family: var(--font-tech); letter-spacing: 1px; font-size: 14px; }
+
+    /* --- FORM --- */
+    .form-group { margin-bottom: 15px; }
+    .form-label { display: block; color: var(--accent); font-size: 11px; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .form-input {
+      width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--glass-border);
+      color: #fff; padding: 14px; border-radius: 8px; outline: none; transition: 0.3s; font-family: var(--font-main);
+    }
+    .form-input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(255,0,76,0.15); background: rgba(10,10,10,0.8); }
+    select.form-input { appearance: none; -webkit-appearance: none; }
   </style>
 
   <script>
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
-        e.preventDefault();
-      }
+      if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) { e.preventDefault(); }
     });
   </script>
 </head>
 <body>
 
-  <div class="bg-logo"></div>
-  <div class="bg-noise"></div>
+<div id="auth-barrier">
+  <div class="auth-card">
+    <div class="text-center" style="margin-bottom: 25px;">
+        <div style="position: relative; display: inline-block;">
+            <img src="https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg" 
+                 style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; box-shadow: 0 0 20px var(--accent-glow);">
+        </div>
+        <h2 class="font-tech" style="font-size: 22px; margin-top: 15px; letter-spacing: 2px;">AIREX ACCESS</h2>
+        <div style="font-size: 10px; opacity: 0.5; text-transform: uppercase;">Система авторизации игрока</div>
+    </div>
 
-  <nav class="navbar">
+    <div class="auth-tabs">
+        <div class="auth-tab active" id="tab-login" onclick="window.switchAuth('login')">ВХОД</div>
+        <div class="auth-tab" id="tab-reg" onclick="window.switchAuth('reg')">РЕГИСТРАЦИЯ</div>
+    </div>
+
+    <form id="auth-form">
+        <div class="form-group">
+            <input type="email" id="auth-email" class="form-input" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+            <input type="password" id="auth-pass" class="form-input" placeholder="Пароль" required minlength="6">
+        </div>
+        <button type="submit" id="auth-submit-btn" class="btn-glitch" style="margin-top: 10px; width: 100%;">
+            ВОЙТИ В СИСТЕМУ
+        </button>
+    </form>
+
+    <div id="tg-auth-container" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+        </div>
+  </div>
+</div>
+
+<div id="profile-modal" class="lightbox" style="display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9);">
+    <div class="card" style="max-width: 400px; width: 90%;">
+        <h3 class="font-tech">НАСТРОЙКИ АККАУНТА</h3>
+        <div class="form-group">
+            <label class="form-label">Никнейм в системе</label>
+            <input type="text" id="set-nick" class="form-input">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Ссылка на аватар (URL)</label>
+            <input type="text" id="set-avatar" class="form-input">
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button onclick="window.saveProfile()" class="btn-glitch" style="flex: 1;">СОХРАНИТЬ</button>
+            <button onclick="window.logout()" class="btn-glitch" style="flex: 1; background: #333;">ВЫЙТИ</button>
+        </div>
+        <button onclick="document.getElementById('profile-modal').style.display='none'" style="margin-top: 15px; background: none; border: none; color: #555; cursor: pointer; width: 100%;">Закрыть</button>
+    </div>
+</div>
+
+<div class="bg-logo"></div>
+
+<nav class="navbar">
     <div class="nav-brand">
       <img src="logo.png" alt="AX" onerror="this.style.display='none'"> 
       <h1>Airex<span style="color:var(--text-gray); font-weight:400;">Team</span></h1>
     </div>
-    <div class="nav-menu">
-      <button class="nav-btn active" onclick="openTab('home', this)">Главная</button>
-      <button class="nav-btn" onclick="openTab('team', this)">Состав</button>
-      <button class="nav-btn" onclick="openTab('about', this)">Инфо</button>
-      <button class="nav-btn" onclick="openTab('news', this)">Новости</button>
-      <button class="nav-btn" onclick="openTab('media', this)">Медиа</button>
-      <button class="nav-btn" onclick="openTab('history', this)">Матчи</button>
-      <button class="nav-btn" onclick="openTab('join', this)" style="color: var(--accent);">Вступить</button>
-    </div>
-  </nav>
 
-  <div class="container">
+    <div class="nav-controls">
+        <div class="user-profile-nav" id="user-nav-btn" onclick="document.getElementById('profile-modal').style.display='flex'">
+            <img src="" id="nav-avatar" class="user-avatar">
+            <span id="nav-username" style="font-size: 12px; font-weight: bold;">User</span>
+        </div>
+
+        <button class="menu-toggle" id="menuBtn" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <div class="nav-dropdown" id="navDropdown">
+      <button class="menu-item active-tab" onclick="selectTab('home', this)">
+          <i class="fas fa-home"></i> Главная
+      </button>
+      <button class="menu-item" onclick="selectTab('team', this)">
+          <i class="fas fa-users"></i> Состав
+      </button>
+      <button class="menu-item" onclick="selectTab('about', this)">
+          <i class="fas fa-shield-alt"></i> Инфо
+      </button>
+      <button class="menu-item" onclick="selectTab('news', this)">
+          <i class="fas fa-bolt"></i> Новости
+      </button>
+      <button class="menu-item" onclick="selectTab('media', this)">
+          <i class="fas fa-play-circle"></i> Медиа
+      </button>
+      <button class="menu-item" onclick="selectTab('history', this)">
+          <i class="fas fa-trophy"></i> Матчи
+      </button>
+      <button class="menu-item join-btn" onclick="selectTab('join', this)">
+          <i class="fas fa-user-plus"></i> Вступить
+      </button>
+    </div>
+</nav>
+
+<div class="container">
 
     <section id="home" class="active">
-      
       <div class="card hero-card">
         <h2 class="glitch hero-title" data-text="AIREX TEAM">AIREX TEAM</h2>
         <p style="font-size: 16px; color: #ddd;">Professional Standoff 2 Esports Organization</p>
         <div id="typing-text"></div>
         <div style="margin-top: 25px;">
-           <button class="btn-glitch" onclick="openTab('join', document.querySelectorAll('.nav-btn')[6])">
+           <button class="btn-glitch" onclick="selectTab('join', document.querySelector('.join-btn'))">
              СТАТЬ ЧАСТЬЮ КОМАНДЫ <i class="fas fa-chevron-right" style="margin-left:8px; font-size:10px;"></i>
            </button>
         </div>
@@ -479,10 +609,9 @@
 
      <div class="card donate-card text-center">
       <h3 style="font-size: 16px; margin-bottom: 8px;">ПОДДЕРЖКА КОМАНДЫ</h3>
-      <p style="font-size: 12px; margin-bottom: 20px;">Твой вклад приближает нас к новым победам и турнирам.</p>
-      
-      <a href="https://dalink.to/airex_team" target="_blank" class="btn-glitch pulse-btn" style="border:none; background: var(--accent);">
-        <i class="fas fa-heart donate-icon"></i> ОТПРАВИТЬ ДОНАТ
+      <p style="font-size: 12px; margin-bottom: 20px;">Твой вклад приближает нас к новым победам.</p>
+      <a href="https://dalink.to/airex_team" target="_blank" class="btn-glitch pulse-btn" style="border:none; background: var(--accent); width: auto; display: inline-flex;">
+        <i class="fas fa-heart" style="font-size: 14px; margin-right: 8px;"></i> ОТПРАВИТЬ ДОНАТ
       </a>
     </div>
 
@@ -491,11 +620,10 @@
       <div id="latest-results-container">
           <p class="text-center loading-text">ЗАГРУЗКА ДАННЫХ...</p>
       </div>
-      <button class="btn-glitch btn-secondary" onclick="openTab('history', document.querySelectorAll('.nav-btn')[5])">
+      <button class="btn-glitch btn-secondary" onclick="selectTab('history', document.querySelectorAll('.menu-item')[5])">
         ВСЯ ИСТОРИЯ
       </button>
     </div>
-
     </section>
 
     <section id="team">
@@ -503,17 +631,13 @@
         <h2 class="font-tech" style="text-shadow: 0 0 20px rgba(255,255,255,0.1);">MAIN ROSTER</h2>
         <p style="font-size: 12px; opacity: 0.6;">(Нажми на карту игрока)</p>
       </div>
-      
-      <div class="roster-grid" id="dynamic-roster">
-        </div>
-
+      <div class="roster-grid" id="dynamic-roster"></div>
       <div class="text-center" style="margin-top: 50px; margin-bottom: 25px;">
         <h3 class="font-tech" style="opacity: 0.7; font-size: 18px;">RESERVE / ACADEMY</h3>
       </div>
+      <div class="roster-grid" id="reserve-roster"></div>
+    </section>
 
-      <div class="roster-grid" id="reserve-roster">
-         </div>
-</section>
     <section id="about">
       <div class="card">
         <h3><i class="fas fa-shield-alt text-accent" style="margin-right:10px;"></i> О НАС</h3>
@@ -536,7 +660,6 @@
           <a href="https://youtube.com/@airex_team.official?si=Zpyt10GXVFQddMqp" target="_blank" class="social-icon si-yt"><i class="fab fa-youtube"></i></a>
           <a href="https://www.twitch.tv/airex_team" target="_blank" class="social-icon si-tw"><i class="fab fa-twitch"></i></a>
         </div>
-
         <style>
           .social-icon { 
             font-size: 24px; color: #fff; opacity: 0.6; transition: 0.3s; 
@@ -547,11 +670,11 @@
         </style>
       </div>
     </section>
+
     <section id="news">
       <div style="margin-bottom: 20px;" class="text-center">
         <h2 class="font-tech">NEWS FEED</h2>
       </div>
-      
       <div id="dynamic-news-container">
           <div class="card text-center">
               <span class="loading-text">ЗАГРУЗКА НОВОСТЕЙ...</span>
@@ -559,60 +682,60 @@
       </div>
     </section>
 
-   <section id="media">
-    <div class="card">
-      <h3>📸 ГАЛЕРЕЯ</h3>
-      <p style="font-size: 12px;">Моменты славы и рабочие будни.</p>
-      
-      <div class="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px;">
-        <div class="gallery-item" style="background-image: url('https://i.postimg.cc/X7JxT5Wp/IMG_20260103_231729_893.jpg');" data-src="https://i.postimg.cc/X7JxT5Wp/IMG_20260103_231729_893.jpg" data-caption="ACE by Nazzzy">
-          <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
+    <section id="media">
+        <div class="card">
+          <h3>📸 ГАЛЕРЕЯ</h3>
+          <p style="font-size: 12px;">Моменты славы и рабочие будни.</p>
+          
+          <div class="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px;">
+            <div class="gallery-item" style="background-image: url('https://i.postimg.cc/X7JxT5Wp/IMG_20260103_231729_893.jpg');" data-src="https://i.postimg.cc/X7JxT5Wp/IMG_20260103_231729_893.jpg" data-caption="ACE by Nazzzy">
+              <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
+            </div>
+            <div class="gallery-item" style="background-image: url('https://i.postimg.cc/VL643twC/IMG-20260103-231733-964.jpg');" data-src="https://i.postimg.cc/VL643twC/IMG-20260103-231733-964.jpg" data-caption="ACE by ToDay">
+              <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
+            </div>
+            <div class="gallery-item" style="background-image: url('https://i.postimg.cc/DyZ5tGhs/IMG_20260103_231725_487.jpg');" data-src="https://i.postimg.cc/DyZ5tGhs/IMG_20260103_231725_487.jpg" data-caption="Win vs E0R Esports">
+               <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
+            </div>
+            <div class="gallery-item" style="background-image: url('https://i.postimg.cc/653zDZK7/IMG_20260103_231815_987.jpg');" data-src="https://i.postimg.cc/653zDZK7/IMG_20260103_231815_987.jpg" data-caption="ApeX Star Champions">
+               <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
+            </div>
+            <div class="gallery-item" style="background-image: url('https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg'); background-position: top;" data-src="https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg" data-caption="Main Roster 2026">
+               <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
+            </div>
+          </div>
+    
+          <style>
+            .gallery-item {
+                height: 120px; background-size: cover; background-position: center; 
+                border-radius: 8px; border: 1px solid var(--glass-border); 
+                cursor: pointer; position: relative; overflow: hidden; transition: 0.3s;
+            }
+            .gallery-item:hover { border-color: var(--accent); transform: scale(1.02); }
+            .gallery-overlay {
+                position: absolute; inset: 0; background: rgba(0,0,0,0.5); 
+                display: flex; align-items: center; justify-content: center;
+                opacity: 0; transition: 0.3s; color: #fff; font-size: 20px;
+            }
+            .gallery-item:hover .gallery-overlay { opacity: 1; }
+          </style>
         </div>
-        <div class="gallery-item" style="background-image: url('https://i.postimg.cc/VL643twC/IMG-20260103-231733-964.jpg');" data-src="https://i.postimg.cc/VL643twC/IMG-20260103-231733-964.jpg" data-caption="ACE by ToDay">
-          <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
-        </div>
-        <div class="gallery-item" style="background-image: url('https://i.postimg.cc/DyZ5tGhs/IMG_20260103_231725_487.jpg');" data-src="https://i.postimg.cc/DyZ5tGhs/IMG_20260103_231725_487.jpg" data-caption="Win vs E0R Esports">
-           <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
-        </div>
-        <div class="gallery-item" style="background-image: url('https://i.postimg.cc/653zDZK7/IMG_20260103_231815_987.jpg');" data-src="https://i.postimg.cc/653zDZK7/IMG_20260103_231815_987.jpg" data-caption="ApeX Star Champions">
-           <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
-        </div>
-        <div class="gallery-item" style="background-image: url('https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg'); background-position: top;" data-src="https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg" data-caption="Main Roster 2026">
-           <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
-        </div>
-      </div>
+    
+        <div class="card">
+          <h3>🎥 HIGHLIGHTS</h3>
+          <div class="video-wrapper" data-video-id="Cq3ej9jtyIY" style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; border: 1px solid var(--glass-border); background: #000; cursor: pointer;">
+            <div style="width:100%; height:100%; background: url('https://img.youtube.com/vi/Cq3ej9jtyIY/maxresdefault.jpg') center/cover; opacity: 0.8; transition: 0.3s;"></div>
+            <div class="play-btn-overlay" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+                <div style="width: 60px; height: 60px; background: rgba(255,0,76,0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; box-shadow: 0 0 20px var(--accent-glow);">▶</div>
+            </div>
+          </div>
+          <a href="https://youtube.com/@airex_team.official" target="_blank" class="btn-glitch btn-secondary" style="margin-top: 15px;">
+            <i class="fab fa-youtube" style="margin-right: 8px;"></i> ПЕРЕЙТИ НА КАНАЛ
+          </a>
+        </div> 
+    </section>
 
-      <style>
-        .gallery-item {
-            height: 120px; background-size: cover; background-position: center; 
-            border-radius: 8px; border: 1px solid var(--glass-border); 
-            cursor: pointer; position: relative; overflow: hidden; transition: 0.3s;
-        }
-        .gallery-item:hover { border-color: var(--accent); transform: scale(1.02); }
-        .gallery-overlay {
-            position: absolute; inset: 0; background: rgba(0,0,0,0.5); 
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; transition: 0.3s; color: #fff; font-size: 20px;
-        }
-        .gallery-item:hover .gallery-overlay { opacity: 1; }
-      </style>
-    </div>
-
-    <div class="card">
-      <h3>🎥 HIGHLIGHTS</h3>
-      <div class="video-wrapper" data-video-id="Cq3ej9jtyIY" style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; border: 1px solid var(--glass-border); background: #000; cursor: pointer;">
-        <div style="width:100%; height:100%; background: url('https://img.youtube.com/vi/Cq3ej9jtyIY/maxresdefault.jpg') center/cover; opacity: 0.8; transition: 0.3s;"></div>
-        <div class="play-btn-overlay" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
-            <div style="width: 60px; height: 60px; background: rgba(255,0,76,0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; box-shadow: 0 0 20px var(--accent-glow);">▶</div>
-        </div>
-      </div>
-      <a href="https://youtube.com/@airex_team.official" target="_blank" class="btn-glitch btn-secondary" style="margin-top: 15px;">
-        <i class="fab fa-youtube" style="margin-right: 8px;"></i> ПЕРЕЙТИ НА КАНАЛ
-      </a>
-    </div> 
-  </section>
-
-  <section id="join">
+    <section id="join">
       <div class="card">
         <div class="text-center">
             <h3 style="font-size: 24px; margin-bottom: 5px;">JOIN AIREX</h3>
@@ -659,129 +782,109 @@
           </button>
         </form>
       </div>
-
-      <style>
-        .form-group { margin-bottom: 15px; }
-        .form-label { display: block; color: var(--accent); font-size: 11px; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        .form-input {
-          width: 100%; background: rgba(0, 0, 0, 0.4); 
-          border: 1px solid var(--glass-border);
-          color: #fff; padding: 14px; border-radius: 8px; 
-          outline: none; transition: 0.3s; font-family: var(--font-main);
-        }
-        .form-input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(255,0,76,0.15); background: rgba(10,10,10,0.8); }
-        select.form-input { appearance: none; -webkit-appearance: none; }
-      </style>
     </section>
 
-  <section id="history">
-    <div class="text-center" style="margin-bottom: 30px;">
-      <h2 class="glitch hero-title" style="font-size: 28px;" data-text="MATCH HISTORY">MATCH HISTORY</h2>
-      <p style="font-size: 12px; opacity: 0.6;">Хронология наших сражений</p>
-    </div>
-
-    <div id="full-history-container">
-      <div class="text-center" style="padding: 40px;">
-          <i class="fas fa-circle-notch fa-spin text-accent" style="font-size: 30px;"></i>
-          <p style="margin-top: 15px; font-size: 12px;">СИНХРОНИЗАЦИЯ С БАЗОЙ...</p>
-      </div>
-    </div>
+    <section id="history">
+        <div class="text-center" style="margin-bottom: 30px;">
+          <h2 class="glitch hero-title" style="font-size: 28px;" data-text="MATCH HISTORY">MATCH HISTORY</h2>
+          <p style="font-size: 12px; opacity: 0.6;">Хронология наших сражений</p>
+        </div>
     
-    <style>
-        .history-card {
-            background: rgba(20, 20, 20, 0.6);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px; padding: 20px; margin-bottom: 12px;
-            display: flex; align-items: center; justify-content: space-between;
-            position: relative; overflow: hidden; backdrop-filter: blur(10px);
-        }
-        .history-card::before {
-            content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%;
-        }
-        .history-card.win-border::before { background: var(--success); box-shadow: 0 0 15px var(--success); }
-        .history-card.lose-border::before { background: var(--accent); box-shadow: 0 0 15px var(--accent); }
+        <div id="full-history-container">
+          <div class="text-center" style="padding: 40px;">
+              <i class="fas fa-circle-notch fa-spin text-accent" style="font-size: 30px;"></i>
+              <p style="margin-top: 15px; font-size: 12px;">СИНХРОНИЗАЦИЯ С БАЗОЙ...</p>
+          </div>
+        </div>
         
-        .h-opponent { font-family: var(--font-tech); font-size: 16px; color: #fff; font-weight: 700; }
-        .h-tour { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; display: block; }
-        .h-score { font-family: var(--font-tech); font-size: 20px; font-weight: 700; letter-spacing: 1px; }
-        .h-status { font-size: 9px; text-transform: uppercase; font-weight: 800; margin-top: 5px; }
-        .text-win { color: var(--success); }
-        .text-lose { color: var(--accent); }
-    </style>
+        <style>
+            .history-card {
+                background: rgba(20, 20, 20, 0.6);
+                border: 1px solid var(--glass-border);
+                border-radius: 12px; padding: 20px; margin-bottom: 12px;
+                display: flex; align-items: center; justify-content: space-between;
+                position: relative; overflow: hidden; backdrop-filter: blur(10px);
+            }
+            .history-card::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; }
+            .history-card.win-border::before { background: var(--success); box-shadow: 0 0 15px var(--success); }
+            .history-card.lose-border::before { background: var(--accent); box-shadow: 0 0 15px var(--accent); }
+            
+            .h-opponent { font-family: var(--font-tech); font-size: 16px; color: #fff; font-weight: 700; }
+            .h-tour { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; display: block; }
+            .h-score { font-family: var(--font-tech); font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+            .h-status { font-size: 9px; text-transform: uppercase; font-weight: 800; margin-top: 5px; }
+            .text-win { color: var(--success); } .text-lose { color: var(--accent); }
+        </style>
+    </section>
 
-  <footer style="text-align: center; padding: 40px 20px; color: #444; font-size: 10px; font-family: var(--font-tech); text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 40px;">
-    <p style="margin: 0;">© 2026 AIREX TEAM INC. ALL RIGHTS RESERVED.</p>
-    <p style="margin: 5px 0 0 0; opacity: 0.5;">DESIGNED FOR CHAMPIONS</p>
-  </footer>
+    <footer style="text-align: center; padding: 40px 20px; color: #444; font-size: 10px; font-family: var(--font-tech); text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 40px;">
+        <p style="margin: 0;">© 2026 AIREX TEAM INC. ALL RIGHTS RESERVED.</p>
+        <p style="margin: 5px 0 0 0; opacity: 0.5;">DESIGNED FOR CHAMPIONS</p>
+    </footer>
 
-  </div> <div class="lightbox" id="lightbox">
+</div> 
+
+<div class="lightbox" id="lightbox">
     <div class="lightbox-close">&times;</div>
     <div class="lightbox-nav lb-prev">&#10094;</div>
     <div class="lightbox-nav lb-next">&#10095;</div>
     <img src="" class="lightbox-img" id="lightboxImg">
     <div class="lightbox-caption" id="lightboxCaption"></div>
-  </div>
+</div>
 
-  <style>
-    .lightbox {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.95); 
-      backdrop-filter: blur(10px); z-index: 2000; 
-      display: none; flex-direction: column; align-items: center; justify-content: center;
-      opacity: 0; transition: opacity 0.3s;
-    }
-    .lightbox.active { display: flex; opacity: 1; }
-    .lightbox-img { max-width: 95%; max-height: 70vh; border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,0.8); border: 1px solid #333; }
-    .lightbox-nav { 
-        position: absolute; color: #fff; font-size: 40px; cursor: pointer; padding: 20px; 
-        opacity: 0.5; transition: 0.3s; top: 50%; transform: translateY(-50%); 
-    }
-    .lightbox-nav:hover { opacity: 1; color: var(--accent); text-shadow: 0 0 15px var(--accent); }
-    .lb-prev { left: 10px; } .lb-next { right: 10px; }
-    .lightbox-close { 
-        position: absolute; top: 20px; right: 30px; font-size: 35px; cursor: pointer; color: #fff; opacity: 0.6; transition: 0.3s; 
-    }
-    .lightbox-close:hover { opacity: 1; color: var(--accent); transform: rotate(90deg); }
-    .lightbox-caption { margin-top: 15px; color: #ccc; font-family: var(--font-tech); letter-spacing: 1px; font-size: 14px; }
-  </style>
-
-  <script>
-    // --- CONFIGURATION ---
+<script>
+    // Config
     const CONF = { 
         tg: { channel: 'airex_team', id: 638 }, 
-        // Начальная дата (будет перезаписана Firebase)
-        match: new Date("2026-01-07T18:00:00+03:00") 
+        match: new Date("2026-01-07T18:00:00+03:00") // Will be updated by Firebase
     };
 
-    // --- UTILS ---
+    // Utils
     const $ = (s) => document.querySelector(s);
     const $$ = (s) => document.querySelectorAll(s);
 
-    // 1. TABS SYSTEM (Optimized)
-    window.openTab = (id, btn) => {
-      // Скрытие всех секций
+    // MENU & TABS SYSTEM
+    function toggleMenu() {
+      const menuBtn = document.getElementById('menuBtn');
+      const dropdown = document.getElementById('navDropdown');
+      menuBtn.classList.toggle('active');
+      dropdown.classList.toggle('active');
+      const icon = menuBtn.querySelector('i');
+      icon.className = menuBtn.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
+    }
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      const dropdown = document.getElementById('navDropdown');
+      const menuBtn = document.getElementById('menuBtn');
+      if (dropdown && dropdown.classList.contains('active') && !dropdown.contains(e.target) && !menuBtn.contains(e.target)) {
+        toggleMenu();
+      }
+    });
+
+    window.selectTab = (id, btn) => {
       $$('section').forEach(s => {
           s.style.opacity = '0';
           s.style.transform = 'translateY(15px)';
           setTimeout(() => s.classList.remove('active'), 200);
       });
       
-      // Активация нужной секции с задержкой для анимации
       setTimeout(() => {
           const target = $('#' + id);
           if(target) {
               target.classList.add('active');
-              // Force reflow
-              void target.offsetWidth;
+              void target.offsetWidth; // force reflow
               target.style.opacity = '1';
               target.style.transform = 'translateY(0)';
           }
       }, 200);
       
-      // Кнопки
-      $$('.nav-btn').forEach(b => b.classList.remove('active'));
-      if(btn) btn.classList.add('active');
+      $$('.menu-item').forEach(b => b.classList.remove('active-tab'));
+      if(btn) btn.classList.add('active-tab');
       
-      // Stop Video Logic
+      const dropdown = document.getElementById('navDropdown');
+      if (dropdown && dropdown.classList.contains('active')) toggleMenu();
+
       if (id !== 'media') {
         const v = $('.video-wrapper');
         if (v && v.dataset.loaded) {
@@ -789,11 +892,10 @@
           delete v.dataset.loaded;
         }
       }
-      // Scroll to top
       window.scrollTo({top: 0, behavior: 'smooth'});
     };
 
-    // 2. TELEGRAM WIDGET
+    // TELEGRAM WIDGET
     function loadTgWidget() {
       const c = $('#dynamic-tg-widget');
       if (!c) return;
@@ -802,13 +904,13 @@
       s.src = 'https://telegram.org/js/telegram-widget.js?22';
       s.dataset.telegramPost = `${CONF.tg.channel}/${CONF.tg.id}`;
       s.dataset.width = '100%';
-      s.dataset.color = 'E91E63'; // Fallback color
+      s.dataset.color = 'E91E63';
       s.dataset.dark = '1';
       s.dataset.userpic = 'true';
       c.appendChild(s);
     }
 
-    // 3. COUNTDOWN TIMER
+    // COUNTDOWN
     function updateCountdown() {
       const diff = CONF.match - new Date();
       if (diff < 0) {
@@ -816,7 +918,6 @@
         if($('#match-status')) $('#match-status').innerText = "LIVE NOW";
         return;
       }
-      
       const set = (id, v) => { if($('#'+id)) $('#'+id).innerText = Math.floor(v).toString().padStart(2, '0'); };
       set('days', diff / (864e5));
       set('hours', (diff % 864e5) / 36e5);
@@ -825,7 +926,7 @@
     }
     setInterval(updateCountdown, 1000);
 
-    // 4. TYPEWRITER EFFECT
+    // TYPEWRITER
     let tIdx = 0; 
     const txt = "Создаем историю. Побеждаем красиво. Airex Team.";
     function typeW() {
@@ -836,9 +937,8 @@
       }
     }
 
-    // 5. LIGHTBOX & INTERACTIVE
+    // LIGHTBOX & INTERACTIVE
     document.addEventListener('DOMContentLoaded', () => {
-      // Lightbox Logic
       const lb = $('#lightbox'), lbImg = $('#lightboxImg'), lbCap = $('#lightboxCaption');
       let curIdx = 0;
       const items = Array.from($$('.gallery-item'));
@@ -848,21 +948,18 @@
          lbImg.src = items[curIdx].dataset.src;
          lbCap.innerText = items[curIdx].dataset.caption;
       };
-
       items.forEach((item, i) => {
         item.addEventListener('click', () => {
           curIdx = i; updateLb(); lb.classList.add('active'); 
-          document.body.style.overflow = 'hidden'; // Block scroll
+          document.body.style.overflow = 'hidden'; 
         });
       });
-
-      // Controls
-      $('.lightbox-close').onclick = () => { lb.classList.remove('active'); document.body.style.overflow = ''; };
-      $('.lb-next').onclick = (e) => { e.stopPropagation(); curIdx = (curIdx + 1) % items.length; updateLb(); };
-      $('.lb-prev').onclick = (e) => { e.stopPropagation(); curIdx = (curIdx - 1 + items.length) % items.length; updateLb(); };
+      if($('.lightbox-close')) $('.lightbox-close').onclick = () => { lb.classList.remove('active'); document.body.style.overflow = ''; };
+      if($('.lb-next')) $('.lb-next').onclick = (e) => { e.stopPropagation(); curIdx = (curIdx + 1) % items.length; updateLb(); };
+      if($('.lb-prev')) $('.lb-prev').onclick = (e) => { e.stopPropagation(); curIdx = (curIdx - 1 + items.length) % items.length; updateLb(); };
       lb.onclick = (e) => { if(e.target === lb) $('.lightbox-close').click(); };
 
-      // Video Click
+      // Video
       const videoWrap = $('.video-wrapper');
       if(videoWrap) {
         videoWrap.addEventListener('click', function() {
@@ -872,19 +969,17 @@
         });
       }
 
-      // 3D Card Flip
       window.flipCard = (el) => {
          const inner = el.querySelector('.player-card-inner');
          inner.classList.toggle('is-flipped');
       };
 
-      // Init
       setTimeout(typeW, 800);
       loadTgWidget();
       if(window.Telegram?.WebApp) window.Telegram.WebApp.expand();
     });
 
-    // 6. FORM LOGIC (Resume Sender)
+    // SEND FORM
     window.sendToTelegram = (e) => {
       e.preventDefault();
       const val = id => document.getElementById(id) ? document.getElementById(id).value : '—';
@@ -902,7 +997,6 @@
 Sent via Official Site`;
 
       navigator.clipboard.writeText(resumeText).then(() => {
-          // Visual Feedback
           const btn = e.target.querySelector('button');
           const oldText = btn.innerHTML;
           btn.innerHTML = "✅ СКОПИРОВАНО!";
@@ -922,180 +1016,293 @@ Sent via Official Site`;
           window.open(`https://t.me/share/url?url=https://t.me/Airex_invite&text=${encodedText}`, '_blank');
       });
     };
-  </script>
+    
+    // Setup TG Auth Placeholder
+    function setupTG() {
+        const container = document.getElementById('tg-auth-container');
+        if(container) {
+            container.innerHTML = `<div style="color: #54a9eb; font-size: 12px; cursor: pointer;" onclick="alert('Для работы Telegram Auth нужно привязать домен в BotFather')">
+                <i class="fab fa-telegram"></i> Войти через Telegram
+            </div>`;
+        }
+    }
+    setupTG();
+</script>
 
-  <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-  import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    onAuthStateChanged,
+    signOut 
+} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { 
+    getFirestore, 
+    doc, 
+    setDoc, 
+    getDoc, 
+    onSnapshot 
+} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-  // YOUR CONFIG
-  const firebaseConfig = {
-      apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
-      authDomain: "airexsite.firebaseapp.com",
-      projectId: "airexsite",
-      storageBucket: "airexsite.firebasestorage.app",
-      messagingSenderId: "276640665598",
-      appId: "1:276640665598:web:d7400bd5962995efb43aaf"
-  };
+// --- CONFIG ---
+const firebaseConfig = {
+    apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
+    authDomain: "airexsite.firebaseapp.com",
+    projectId: "airexsite",
+    storageBucket: "airexsite.firebasestorage.app",
+    messagingSenderId: "276640665598",
+    appId: "1:276640665598:web:d7400bd5962995efb43aaf"
+};
 
-  // Init
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const db = getFirestore(app);
 
-  // Helper for generating player cards
-  const renderPlayer = (p) => {
-      const kd = p.kd || (p.stats ? p.stats.kd : "0.00");
-      const hs = p.hs || (p.stats ? p.stats.hs : "0%");
-      const rank = p.rank || (p.stats ? p.stats.rank : "Unknown");
-      // Fallback image if broken
-      const imgUrl = p.img || 'https://via.placeholder.com/300x400/000000/ffffff?text=No+Image';
+// --- AUTH LOGIC ---
+let authMode = 'login';
 
-      return `
-      <div class="player-wrapper" onclick="flipCard(this)">
-        <div class="player-card-inner">
-          <div class="player-front">
-            <div class="player-info-container" style="height:100%; display:flex; flex-direction:column;">
-              <div>
-                <h4 class="p-nick">${p.nick}</h4>
-                <div class="p-role">${p.role}</div>
-                <div class="p-quote">"${p.quote || 'Ready to win'}"</div>
+window.switchAuth = (mode) => {
+    authMode = mode;
+    document.getElementById('tab-login').classList.toggle('active', mode === 'login');
+    document.getElementById('tab-reg').classList.toggle('active', mode === 'reg');
+    document.getElementById('auth-submit-btn').innerText = mode === 'login' ? 'ВОЙТИ В СИСТЕМУ' : 'СОЗДАТЬ АККАУНТ';
+};
+
+const authForm = document.getElementById('auth-form');
+if(authForm) {
+    authForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('auth-email').value;
+        const pass = document.getElementById('auth-pass').value;
+        const btn = document.getElementById('auth-submit-btn');
+
+        const originalText = btn.innerText;
+        btn.innerText = "ОБРАБОТКА...";
+        btn.disabled = true;
+
+        try {
+            if (authMode === 'reg') {
+                const res = await createUserWithEmailAndPassword(auth, email, pass);
+                // Create user profile
+                await setDoc(doc(db, "users", res.user.uid), {
+                    nick: email.split('@')[0],
+                    avatar: "https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg",
+                    role: "Member",
+                    createdAt: new Date().toISOString()
+                });
+                alert("Аккаунт создан!");
+            } else {
+                await signInWithEmailAndPassword(auth, email, pass);
+            }
+        } catch (err) {
+            let errorMsg = "Ошибка: " + err.message;
+            if (err.code === 'auth/email-already-in-use') errorMsg = "Email уже занят";
+            if (err.code === 'auth/weak-password') errorMsg = "Пароль слишком простой";
+            if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') errorMsg = "Неверные данные";
+            alert(errorMsg);
+        } finally {
+            btn.disabled = false;
+            btn.innerText = originalText;
+        }
+    };
+}
+
+onAuthStateChanged(auth, async (user) => {
+    const barrier = document.getElementById('auth-barrier');
+    const userNav = document.getElementById('user-nav-btn');
+
+    if (user) {
+        if(barrier) {
+            barrier.style.opacity = '0';
+            setTimeout(() => barrier.style.display = 'none', 500);
+        }
+        if(userNav) userNav.style.display = 'flex';
+        
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+            const data = userDoc.data();
+            if(document.getElementById('nav-username')) document.getElementById('nav-username').innerText = data.nick;
+            if(document.getElementById('nav-avatar')) document.getElementById('nav-avatar').src = data.avatar;
+            if(document.getElementById('set-nick')) document.getElementById('set-nick').value = data.nick;
+            if(document.getElementById('set-avatar')) document.getElementById('set-avatar').value = data.avatar;
+        }
+    } else {
+        if(barrier) {
+            barrier.style.display = 'flex';
+            barrier.style.opacity = '1';
+        }
+        if(userNav) userNav.style.display = 'none';
+    }
+});
+
+window.saveProfile = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+    const newNick = document.getElementById('set-nick').value;
+    const newAvatar = document.getElementById('set-avatar').value;
+    try {
+        await setDoc(doc(db, "users", user.uid), { nick: newNick, avatar: newAvatar }, { merge: true });
+        if(document.getElementById('nav-username')) document.getElementById('nav-username').innerText = newNick;
+        if(document.getElementById('nav-avatar')) document.getElementById('nav-avatar').src = newAvatar;
+        alert("Профиль обновлен!");
+        document.getElementById('profile-modal').style.display = 'none';
+    } catch (e) {
+        alert("Ошибка сохранения");
+    }
+};
+
+window.logout = () => {
+    signOut(auth);
+    location.reload();
+};
+
+// --- DATA LISTENERS (Match, Roster, News, History) ---
+
+const renderPlayer = (p) => {
+    const kd = p.kd || (p.stats ? p.stats.kd : "0.00");
+    const hs = p.hs || (p.stats ? p.stats.hs : "0%");
+    const rank = p.rank || (p.stats ? p.stats.rank : "Unknown");
+    const imgUrl = p.img || 'https://via.placeholder.com/300x400/000000/ffffff?text=No+Image';
+
+    return `
+    <div class="player-wrapper" onclick="flipCard(this)">
+      <div class="player-card-inner">
+        <div class="player-front">
+          <div class="player-info-container" style="height:100%; display:flex; flex-direction:column;">
+            <div>
+              <h4 class="p-nick">${p.nick}</h4>
+              <div class="p-role">${p.role}</div>
+              <div class="p-quote">"${p.quote || 'Ready to win'}"</div>
+            </div>
+            <div class="stats-grid">
+              <div class="stat-item rank-full">
+                <div class="stat-val s-rnk">${rank}</div>
+                <div class="stat-label">Rank</div>
               </div>
-              
-              <div class="stats-grid">
-                <div class="stat-item rank-full">
-                  <div class="stat-val s-rnk">${rank}</div>
-                  <div class="stat-label">Rank</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-val s-kd">${kd}</div>
-                  <div class="stat-label">K/D</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-val s-hs">${hs}</div>
-                  <div class="stat-label">HS%</div>
-                </div>
+              <div class="stat-item">
+                <div class="stat-val s-kd">${kd}</div>
+                <div class="stat-label">K/D</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-val s-hs">${hs}</div>
+                <div class="stat-label">HS%</div>
               </div>
             </div>
-          </div>
-          <div class="player-back">
-            <img src="${imgUrl}" alt="${p.nick}" loading="lazy">
           </div>
         </div>
-      </div>`;
-  };
+        <div class="player-back">
+          <img src="${imgUrl}" alt="${p.nick}" loading="lazy">
+        </div>
+      </div>
+    </div>`;
+};
 
-  // 1. MATCH UPDATES
-  onSnapshot(doc(db, "siteData", "match"), (docSnap) => {
-      if(docSnap.exists()) {
-          const data = docSnap.data();
-          const enemyBlocks = document.querySelectorAll('.team-name');
-          // Update Enemy Name (2nd block usually)
-          if(enemyBlocks.length > 1) enemyBlocks[1].innerText = data.enemy || "TBA";
-          
-          if(data.date) {
-            let timeString = data.date;
-            if (timeString.length === 16) timeString += ":00"; 
-            window.CONF.match = new Date(timeString + "+03:00");
-          }
-      }
-  });
+// Match
+onSnapshot(doc(db, "siteData", "match"), (docSnap) => {
+    if(docSnap.exists()) {
+        const data = docSnap.data();
+        const enemyBlocks = document.querySelectorAll('.team-name');
+        if(enemyBlocks.length > 1) enemyBlocks[1].innerText = data.enemy || "TBA";
+        if(data.date) {
+          let timeString = data.date;
+          if (timeString.length === 16) timeString += ":00"; 
+          window.CONF.match = new Date(timeString + "+03:00");
+        }
+    }
+});
 
-  // 2. MAIN ROSTER
-  onSnapshot(doc(db, "siteData", "roster"), (docSnap) => {
-      const container = document.getElementById('dynamic-roster');
-      if(docSnap.exists() && container) {
-          const players = docSnap.data().list || [];
-          container.innerHTML = players.map(p => renderPlayer(p)).join('');
-      } else if (container) {
-          container.innerHTML = '<div class="text-center" style="grid-column:1/-1;">Roster updating...</div>';
-      }
-  });
+// Roster
+onSnapshot(doc(db, "siteData", "roster"), (docSnap) => {
+    const container = document.getElementById('dynamic-roster');
+    if(docSnap.exists() && container) {
+        const players = docSnap.data().list || [];
+        container.innerHTML = players.map(p => renderPlayer(p)).join('');
+    } else if (container) {
+        container.innerHTML = '<div class="text-center" style="grid-column:1/-1; opacity:0.5;">Загрузка состава...</div>';
+    }
+});
 
-  // 3. RESERVE ROSTER
-  onSnapshot(doc(db, "siteData", "reserve"), (docSnap) => {
-      const container = document.getElementById('reserve-roster');
-      if(docSnap.exists() && container) {
-          const players = docSnap.data().list || [];
-          container.innerHTML = players.map(p => renderPlayer(p)).join('');
-      }
-  });
+// Reserve
+onSnapshot(doc(db, "siteData", "reserve"), (docSnap) => {
+    const container = document.getElementById('reserve-roster');
+    if(docSnap.exists() && container) {
+        const players = docSnap.data().list || [];
+        container.innerHTML = players.map(p => renderPlayer(p)).join('');
+    }
+});
 
-  // 4. HISTORY
-  onSnapshot(doc(db, "siteData", "history"), (docSnap) => {
-      if(docSnap.exists()) {
-          const matches = docSnap.data().list || [];
-          const fullHistory = document.getElementById('full-history-container');
-          const latestWidget = document.getElementById('latest-results-container');
-          const winRateEl = document.getElementById('win-rate-val'); 
-          
-          if(matches.length === 0) {
-             if(fullHistory) fullHistory.innerHTML = "<p class='text-center'>Нет сыгранных матчей</p>";
-             return;
-          }
+// History
+onSnapshot(doc(db, "siteData", "history"), (docSnap) => {
+    if(docSnap.exists()) {
+        const matches = docSnap.data().list || [];
+        const fullHistory = document.getElementById('full-history-container');
+        const latestWidget = document.getElementById('latest-results-container');
+        const winRateEl = document.getElementById('win-rate-val'); 
+        
+        if(matches.length === 0) {
+           if(fullHistory) fullHistory.innerHTML = "<p class='text-center'>Нет сыгранных матчей</p>";
+           return;
+        }
 
-          // WR Logic
-          const wins = matches.filter(m => parseInt(m.ourScore) > parseInt(m.enemyScore)).length;
-          if(winRateEl) winRateEl.innerText = Math.round((wins / matches.length) * 100) + '%';
+        const wins = matches.filter(m => parseInt(m.ourScore) > parseInt(m.enemyScore)).length;
+        if(winRateEl) winRateEl.innerText = Math.round((wins / matches.length) * 100) + '%';
 
-          const reversedMatches = [...matches].reverse();
+        const reversedMatches = [...matches].reverse();
 
-          // Full History Render
-          if(fullHistory) {
-              fullHistory.innerHTML = reversedMatches.map(m => {
-                  const isWin = parseInt(m.ourScore) > parseInt(m.enemyScore);
-                  return `
-                  <div class="history-card ${isWin ? 'win-border' : 'lose-border'}">
-                      <div class="h-info">
-                          <span class="h-tour">${m.tournament || 'Showmatch'}</span>
-                          <span class="h-opponent">vs ${m.enemy}</span>
-                          ${m.screenshot ? `<button onclick="window.open('${m.screenshot}', '_blank')" class="btn-glitch" style="padding: 4px 8px; font-size: 8px; margin-top: 5px; width: auto; height: auto;">PROOF</button>` : ''}
-                      </div>
-                      <div class="h-result" style="text-align:right;">
-                          <div class="h-score">${m.ourScore} : ${m.enemyScore}</div>
-                          <div class="h-status ${isWin ? 'text-win' : 'text-lose'}">${isWin ? 'WIN' : 'LOSE'}</div>
-                      </div>
-                  </div>`;
-              }).join('');
-          }
+        if(fullHistory) {
+            fullHistory.innerHTML = reversedMatches.map(m => {
+                const isWin = parseInt(m.ourScore) > parseInt(m.enemyScore);
+                return `
+                <div class="history-card ${isWin ? 'win-border' : 'lose-border'}">
+                    <div class="h-info">
+                        <span class="h-tour">${m.tournament || 'Showmatch'}</span>
+                        <span class="h-opponent">vs ${m.enemy}</span>
+                        ${m.screenshot ? `<button onclick="window.open('${m.screenshot}', '_blank')" class="btn-glitch" style="padding: 4px 8px; font-size: 8px; margin-top: 5px; width: auto; height: auto;">PROOF</button>` : ''}
+                    </div>
+                    <div class="h-result" style="text-align:right;">
+                        <div class="h-score">${m.ourScore} : ${m.enemyScore}</div>
+                        <div class="h-status ${isWin ? 'text-win' : 'text-lose'}">${isWin ? 'WIN' : 'LOSE'}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
 
-          // Latest Widget Render (Top 3)
-          if(latestWidget) {
-              latestWidget.innerHTML = reversedMatches.slice(0, 3).map(m => {
-                  const isWin = parseInt(m.ourScore) > parseInt(m.enemyScore);
-                  return `
-                  <div class="result-row">
-                      <span>vs ${m.enemy}</span>
-                      <span class="${isWin ? 'res-win' : 'res-lose'}">${m.ourScore} : ${m.enemyScore}</span>
-                  </div>`;
-              }).join('');
-          }
-      }
-  });
-  // 5. НОВОСТИ (Добавить в конец script type="module")
-  onSnapshot(doc(db, "siteData", "news"), (docSnap) => {
-      const container = document.getElementById('dynamic-news-container');
-      if(docSnap.exists() && container) {
-          const newsList = docSnap.data().list || [];
-          
-          if(newsList.length === 0) {
-              container.innerHTML = '<div class="card text-center"><p>Новостей пока нет.</p></div>';
-              return;
-          }
+        if(latestWidget) {
+            latestWidget.innerHTML = reversedMatches.slice(0, 3).map(m => {
+                const isWin = parseInt(m.ourScore) > parseInt(m.enemyScore);
+                return `
+                <div class="result-row">
+                    <span>vs ${m.enemy}</span>
+                    <span class="${isWin ? 'res-win' : 'res-lose'}">${m.ourScore} : ${m.enemyScore}</span>
+                </div>`;
+            }).join('');
+        }
+    }
+});
 
-          container.innerHTML = newsList.map(item => `
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                   <span style="font-size: 10px; background: var(--accent); color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: 700;">${item.tag || 'NEWS'}</span>
-                   <span style="font-size: 10px; color: var(--text-gray);">${item.date || ''}</span>
-                </div>
-                <h3 style="margin-bottom: 10px;">${item.title}</h3>
-                <p>${item.text}</p>
-            </div>
-          `).join('');
-      }
-  });
-
-
-  </script>
+// News
+onSnapshot(doc(db, "siteData", "news"), (docSnap) => {
+    const container = document.getElementById('dynamic-news-container');
+    if(docSnap.exists() && container) {
+        const newsList = docSnap.data().list || [];
+        if(newsList.length === 0) {
+            container.innerHTML = '<div class="card text-center"><p>Новостей пока нет.</p></div>';
+            return;
+        }
+        container.innerHTML = newsList.map(item => `
+          <div class="card">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                 <span style="font-size: 10px; background: var(--accent); color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: 700;">${item.tag || 'NEWS'}</span>
+                 <span style="font-size: 10px; color: var(--text-gray);">${item.date || ''}</span>
+              </div>
+              <h3 style="margin-bottom: 10px;">${item.title}</h3>
+              <p>${item.text}</p>
+          </div>
+        `).join('');
+    }
+});
+</script>
 </body>
 </html>
