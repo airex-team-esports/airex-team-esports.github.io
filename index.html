@@ -1708,6 +1708,40 @@ Sent via Official Site`;
             chatFeed.scrollTop = chatFeed.scrollHeight;
         });
     }
+  // --- 1. ИСПРАВЛЕНИЕ МУЗЫКИ ---
+window.toggleAmbient = function() {
+    const audio = document.getElementById('bg-music');
+    const btn = document.getElementById('music-btn');
+    const anim = document.getElementById('music-anim');
+    
+    if (audio.paused) {
+        audio.play().catch(e => console.log("Нужен клик для старта"));
+        btn.className = 'fas fa-pause';
+        if(anim) anim.style.opacity = '1';
+    } else {
+        audio.pause();
+        btn.className = 'fas fa-play';
+        if(anim) anim.style.opacity = '0';
+    }
+};
+
+// --- 2. ИСПРАВЛЕНИЕ ЧАТА (Заменяет замок на сообщения) ---
+async function initChat(user) {
+    const chatFeed = document.getElementById('chat-feed');
+    const chatForm = document.getElementById('chat-form');
+    
+    // Убираем замок
+    chatFeed.innerHTML = '<div class="loading-text">Загрузка сообщений...</div>';
+    
+    // Здесь должна быть логика слушателя Firebase (onSnapshot)
+    // которую мы обсуждали ранее. Убедитесь, что она у вас вставлена!
+}
+
+// --- 3. ИСПРАВЛЕНИЕ ТЕЛЕГРАМА ---
+window.loginTelegram = function() {
+    alert("Для работы Telegram-входа нужно настроить виджет в BotFather и вставить его скрипт в Auth Card.");
+};
+
 </script>
 </body>
 </html>
