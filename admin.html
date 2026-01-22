@@ -5,14 +5,14 @@
   <title>AIREX ADMIN // COMMAND CENTER</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
       --accent: #ff004c;
       --accent-dim: rgba(255, 0, 76, 0.15);
       --bg-deep: #020202;
-      --glass-dark: rgba(12, 12, 12, 0.85);
+      --glass-dark: rgba(12, 12, 12, 0.9);
       --glass-border: rgba(255, 255, 255, 0.08);
       --text-white: #ffffff;
       --font-main: 'Montserrat', sans-serif;
@@ -29,59 +29,82 @@
     }
 
     h1, h2, h3 { font-family: var(--font-tech); text-transform: uppercase; letter-spacing: 2px; margin-top: 0; }
-    h1 { color: var(--accent); text-shadow: 0 0 15px var(--accent-dim); text-align: center; margin-bottom: 30px; }
-
-    .container { max-width: 800px; margin: 0 auto; padding-bottom: 50px; }
+    h1 { color: var(--accent); text-align: center; margin-bottom: 30px; text-shadow: 0 0 20px var(--accent-dim); }
+    
+    .container { 
+        max-width: 1200px; margin: 0 auto; padding-bottom: 50px; 
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;
+    }
+    
+    .full-width { grid-column: 1 / -1; }
 
     .panel {
       background: var(--glass-dark);
       border: 1px solid var(--glass-border);
-      border-radius: 12px; padding: 25px; margin-bottom: 25px;
+      border-radius: 12px; padding: 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px); display: flex; flex-direction: column;
     }
     
-    .panel-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 20px; }
-    .panel-header h2 { margin: 0; font-size: 18px; display: flex; align-items: center; gap: 10px; }
-    
-    label { font-size: 10px; color: var(--accent); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; display: block; margin-top: 15px; margin-bottom: 5px; }
+    .panel-header { 
+        display: flex; align-items: center; justify-content: space-between; 
+        border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 15px; 
+    }
+    .panel-header h2 { margin: 0; font-size: 16px; display: flex; align-items: center; gap: 10px; color: #fff; }
+    .panel-icon { color: var(--accent); }
+
+    label { font-size: 9px; color: var(--accent); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; display: block; margin-top: 10px; margin-bottom: 4px; }
     
     input, select, textarea {
-      width: 100%; padding: 12px; background: rgba(0,0,0,0.4);
-      border: 1px solid #333; color: #fff; border-radius: 6px;
+      width: 100%; padding: 10px; background: rgba(0,0,0,0.4);
+      border: 1px solid #333; color: #fff; border-radius: 4px;
       font-family: var(--font-main); outline: none; transition: 0.3s;
-      box-sizing: border-box;
+      box-sizing: border-box; font-size: 12px;
     }
     input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-dim); }
 
-    button {
-      background: linear-gradient(45deg, #cc003d, var(--accent));
-      color: white; border: none; padding: 14px; width: 100%;
-      font-family: var(--font-tech); font-weight: 700; letter-spacing: 1px;
-      text-transform: uppercase; border-radius: 6px; cursor: pointer;
-      margin-top: 20px; transition: 0.2s;
-    }
-    button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px var(--accent-dim); }
-    button:active { transform: scale(0.98); }
-    
-    .btn-del { background: transparent; border: 1px solid #444; color: #666; width: auto; padding: 5px 10px; font-size: 10px; margin: 0; }
-    .btn-del:hover { border-color: red; color: red; box-shadow: none; transform: none; }
+    .row-inputs { display: flex; gap: 10px; }
+    .row-inputs > div { flex: 1; }
 
+    button.action-btn {
+      background: linear-gradient(45deg, #cc003d, var(--accent));
+      color: white; border: none; padding: 12px; width: 100%;
+      font-family: var(--font-tech); font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; border-radius: 4px; cursor: pointer;
+      margin-top: 15px; transition: 0.2s; font-size: 12px;
+    }
+    button.action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px var(--accent-dim); }
+    
+    .btn-del { 
+        background: transparent; border: 1px solid #444; color: #666; 
+        width: 25px; height: 25px; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; transition: 0.2s; border-radius: 4px;
+    }
+    .btn-del:hover { border-color: red; color: red; }
+
+    .data-list {
+        margin-top: 20px; max-height: 200px; overflow-y: auto;
+        border-top: 1px dashed #333; padding-top: 10px;
+    }
     .list-item {
       display: flex; justify-content: space-between; align-items: center;
-      background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px;
-      margin-bottom: 8px; border: 1px solid transparent;
+      background: rgba(255,255,255,0.03); padding: 8px; border-radius: 4px;
+      margin-bottom: 6px; border: 1px solid transparent; font-size: 11px;
     }
-    .list-item:hover { border-color: #333; }
+    .list-item:hover { border-color: #444; }
+    .item-info b { color: #fff; display: block; margin-bottom: 2px; }
+    .item-sub { color: #888; font-size: 10px; }
 
-    /* Login Screen */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
     #loginOverlay {
       position: fixed; inset: 0; background: #000; z-index: 9999;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
-    .login-box { width: 320px; text-align: center; }
+    .login-box { width: 300px; text-align: center; }
     .glitch-text { animation: glitch 2s infinite; color: var(--accent); font-family: var(--font-tech); font-size: 24px; margin-bottom: 20px; }
-
   </style>
 </head>
 <body>
@@ -90,107 +113,157 @@
     <div class="login-box">
         <div class="glitch-text">ACCESS CONTROL</div>
         <input type="password" id="adminPass" placeholder="ENTER PASSCODE" style="text-align: center; letter-spacing: 3px;">
-        <button onclick="sysAuth()">UNLOCK SYSTEM</button>
-        <p id="loginError" style="color: #ff004c; font-size: 11px; margin-top: 15px; opacity: 0; line-height: 1.4; white-space: pre-wrap;"></p>
+        <button class="action-btn" onclick="sysAuth()">UNLOCK SYSTEM</button>
+        <p id="loginError" style="color: #ff004c; font-size: 11px; margin-top: 15px; opacity: 0;">Access Denied</p>
     </div>
   </div>
 
+  <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
+      <h1>AIREX <span style="color:#fff; opacity:0.3;">//</span> ADMIN</h1>
+      <a href="index.html" target="_blank" style="text-decoration: none;">
+        <button class="action-btn" style="width: auto; padding: 8px 20px; margin:0; background: #333; font-size: 10px;">
+            ОТКРЫТЬ САЙТ <i class="fas fa-external-link-alt" style="margin-left:5px;"></i>
+        </button>
+    </a>
+  </div>
+
   <div class="container">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h1>AIREX <span style="color:#fff; opacity:0.3;">//</span> PANEL</h1>
-        <a href="index.html" target="_blank" style="text-decoration: none;">
-            <button style="width: auto; margin-top: 0; padding: 10px 20px; font-size: 10px; background: rgba(0,0,0,0.5); border: 1px solid #ff004c;">
-                ОТКРЫТЬ САЙТ <i class="fas fa-external-link-alt" style="margin-left:5px;"></i>
-            </button>
-        </a>
-    </div>
 
     <div class="panel">
         <div class="panel-header">
-            <h2><i class="fas fa-newspaper text-accent"></i> НОВОСТИ САЙТА</h2>
+            <h2><i class="fas fa-newspaper panel-icon"></i> LIVE НОВОСТИ</h2>
         </div>
-        
-        <label>Заголовок новости</label>
-        <input type="text" id="newsTitle" placeholder="Например: Победа на турнире">
-        
+        <label>Заголовок</label>
+        <input type="text" id="newsTitle" placeholder="Например: Победа в турнире">
         <label>Текст новости</label>
-        <textarea id="newsText" rows="3" placeholder="Краткое описание события..."></textarea>
-        
-        <div style="display:flex; gap:10px;">
-            <div style="flex:1">
-                <label>Дата</label>
-                <input type="date" id="newsDate">
-            </div>
-            <div style="flex:1">
-                <label>Тип события</label>
+        <textarea id="newsText" rows="2" placeholder="Краткое описание..."></textarea>
+        <div class="row-inputs">
+            <div><label>Дата</label><input type="text" id="newsDate" placeholder="22.01.2026"></div>
+            <div>
+                <label>Тег</label>
                 <select id="newsTag">
-                    <option value="ТУРНИРЫ">ТУРНИРЫ</option>
                     <option value="ВАЖНО">ВАЖНО</option>
-                    <option value="ОБНОВЛЕНИЕ">ОБНОВЛЕНИЕ</option>
+                    <option value="ТУРНИР">ТУРНИР</option>
+                    <option value="СОСТАВ">СОСТАВ</option>
                 </select>
             </div>
         </div>
-
-        <button onclick="publishNews()">ОПУБЛИКОВАТЬ НОВОСТЬ</button>
-
-        <div style="margin-top: 30px;">
-            <label>Активные новости:</label>
-            <div id="newsListContainer">Загрузка...</div>
-        </div>
+        <button class="action-btn" onclick="addNews()">ОПУБЛИКОВАТЬ</button>
+        <div class="data-list" id="newsList">Загрузка...</div>
     </div>
 
     <div class="panel">
         <div class="panel-header">
-            <h2><i class="fas fa-clock"></i> NEXT MATCH TIMER</h2>
+            <h2><i class="fas fa-clock panel-icon"></i> ТАЙМЕР МАТЧА (MSK)</h2>
         </div>
-        <div id="currentMatchInfo" style="font-size: 11px; color: #00ff88; margin-bottom: 10px;"></div>
+        <div id="currentMatchInfo" style="font-size: 11px; color: #00ff88; margin-bottom: 10px; border: 1px solid #333; padding: 5px;">Нет данных</div>
         
         <label>Имя соперника</label>
-        <input type="text" id="enemyName" placeholder="TEAM NAME">
+        <input type="text" id="tmEnemy" placeholder="Например: Saints">
         
-        <label>Дата матча (МСК)</label>
-        <input type="datetime-local" id="matchDate">
-        
-        <button onclick="updateTimer()">ОБНОВИТЬ ТАЙМЕР НА САЙТЕ</button>
+        <label>Дата и время (Вводите по МСК)</label>
+        <input type="datetime-local" id="tmDate">
+        <div style="font-size: 9px; color: #666; margin-top: 5px;">* Таймер на сайте автоматически подстроится под обратный отсчет.</div>
+
+        <button class="action-btn" onclick="updateMatch()">ОБНОВИТЬ ТАЙМЕР</button>
     </div>
 
-    <div class="panel">
+    <div class="panel full-width">
         <div class="panel-header">
-            <h2><i class="fas fa-users"></i> УПРАВЛЕНИЕ СОСТАВОМ</h2>
-            <select id="rosterSelector" onchange="loadRoster()" style="width: 150px; margin:0; padding: 5px;">
-                <option value="roster">Основа (Main)</option>
-                <option value="reserve">Запас (Reserve)</option>
+            <h2><i class="fas fa-users panel-icon"></i> УПРАВЛЕНИЕ СОСТАВОМ</h2>
+            <select id="rosterType" onchange="loadRoster()" style="width: 180px; margin:0;">
+                <option value="roster_main">Основа (Main)</option>
+                <option value="roster_reserve">Резерв (Reserve)</option>
             </select>
         </div>
+        
+        <div style="display: grid; grid-template-columns: 1.2fr 2fr; gap: 20px;">
+            <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px;">
+                <h3 style="font-size: 12px; color: var(--accent);">ДАННЫЕ ИГРОКА</h3>
+                <div class="row-inputs">
+                    <div><label>Никнейм</label><input type="text" id="pNick" placeholder="Nick"></div>
+                    <div><label>Роль</label><input type="text" id="pRole" placeholder="Sniper"></div>
+                </div>
+                <label>Фото (URL)</label>
+                <input type="text" id="pImg" placeholder="https://...">
+                <label>Цитата</label>
+                <input type="text" id="pQuote" placeholder="Текст на лицевой стороне">
+                
+                <div class="row-inputs">
+                    <div><label>K/D</label><input type="text" id="pKd" placeholder="1.50"></div>
+                    <div><label>Ранг</label><input type="text" id="pRank" placeholder="Legend"></div>
+                </div>
 
-        <div id="rosterListContainer" style="max-height: 200px; overflow-y:auto; margin-bottom: 20px;"></div>
+                <h3 style="font-size: 12px; color: var(--accent); margin-top:20px;">ТЕХ. ДАННЫЕ</h3>
+                <label>Устройство</label>
+                <input type="text" id="pDevice" placeholder="iPad Pro / iPhone 13">
+                <label>Настройки (Sens)</label>
+                <input type="text" id="pSettings" placeholder="Sens: 1.20">
+                <label>Оружие</label>
+                <input type="text" id="pWeapon" placeholder="M4 / AKR / AWM">
 
-        <div style="border-top: 1px dashed #333; padding-top: 15px;">
-            <h3 style="font-size: 14px;">Добавить игрока</h3>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <input type="text" id="pNick" placeholder="Никнейм">
-                <input type="text" id="pRole" placeholder="Роль">
-                <input type="text" id="pKd" placeholder="K/D (1.50)">
-                <input type="text" id="pRank" placeholder="Ранг">
+                <button class="action-btn" onclick="addPlayer()">СОХРАНИТЬ В БАЗУ</button>
             </div>
-            <input type="text" id="pImg" placeholder="Ссылка на фото (URL)" style="margin-top:10px;">
-            <button onclick="addPlayer()">ДОБАВИТЬ В КОМАНДУ</button>
+
+            <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px;">
+                 <h3 style="font-size: 12px; color: #888; margin-bottom: 15px;">СПИСОК ИГРОКОВ</h3>
+                 <div id="rosterList" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
+            </div>
         </div>
     </div>
 
     <div class="panel">
         <div class="panel-header">
-            <h2><i class="fas fa-history"></i> ИСТОРИЯ ИГР</h2>
+            <h2><i class="fas fa-route panel-icon"></i> ПУТЬ AIREX</h2>
         </div>
-        <div id="historyListContainer" style="max-height: 150px; overflow-y:auto; margin-bottom: 15px;"></div>
+        <label>Дата события</label>
+        <input type="text" id="rmDate" placeholder="01.01.2024">
+        <label>Заголовок</label>
+        <input type="text" id="rmTitle" placeholder="Создание команды">
+        <label>Описание</label>
+        <input type="text" id="rmDesc" placeholder="Краткое описание...">
         
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <input type="text" id="hEnemy" placeholder="Соперник">
-            <input type="text" id="hTour" placeholder="Турнир">
-            <input type="number" id="hOur" placeholder="Наш счет">
-            <input type="number" id="hEnemyS" placeholder="Их счет">
+        <button class="action-btn" onclick="addRoadmap()">ДОБАВИТЬ ТОЧКУ</button>
+        <div class="data-list" id="roadmapList"></div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-play-circle panel-icon"></i> МЕДИА</h2>
         </div>
-        <button onclick="addHistory()">ДОБАВИТЬ РЕЗУЛЬТАТ</button>
+        <label>YouTube Video ID</label>
+        <div style="display: flex; gap: 5px;">
+            <input type="text" id="vidId" placeholder="ID видео">
+            <button class="action-btn" style="width: auto; margin-top:0;" onclick="updateVideo()">OK</button>
+        </div>
+        <label style="margin-top:20px;">Добавить в Галерею</label>
+        <input type="text" id="galUrl" placeholder="URL картинки">
+        <input type="text" id="galCap" placeholder="Подпись" style="margin-top: 5px;">
+        <button class="action-btn" onclick="addGallery()">ДОБАВИТЬ ФОТО</button>
+        <div class="data-list" id="galleryList"></div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-trophy panel-icon"></i> ИСТОРИЯ ИГР</h2>
+        </div>
+        <div class="row-inputs">
+            <div><label>Соперник</label><input type="text" id="hEnemy" placeholder="Team Name"></div>
+            <div><label>Турнир</label><input type="text" id="hTour" placeholder="Major"></div>
+        </div>
+        <div class="row-inputs">
+            <div><label>Наш счет</label><input type="number" id="hOur"></div>
+            <div><label>Их счет</label><input type="number" id="hTheir"></div>
+        </div>
+        <button class="action-btn" onclick="addHistory()">ДОБАВИТЬ РЕЗУЛЬТАТ</button>
+        <div class="data-list" id="historyList"></div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-comments panel-icon"></i> ОТЗЫВЫ</h2>
+        </div>
+        <div class="data-list" id="reviewsList" style="max-height: 400px;"></div>
     </div>
 
   </div>
@@ -211,203 +284,202 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // --- SECURITY SYSTEM ---
-    // Метод: Reverse Check.
-    // Пароль хранится в перевернутом виде. Это скрывает его от беглого взгляда, но гарантирует работу.
-    const _REV_PASS = "306230303030saKmaeTxeriA"; 
+    const _REV_PASS = "6202xeria"; 
 
     window.sysAuth = () => {
         const input = document.getElementById('adminPass').value;
         const err = document.getElementById('loginError');
-        
         err.style.opacity = 0;
         if (!input) return;
-
-        // Переворачиваем ввод пользователя и сравниваем с ключом
         const inputRev = input.split('').reverse().join('');
 
         if (inputRev === _REV_PASS) {
             document.getElementById('loginOverlay').style.display = 'none';
             sessionStorage.setItem('auth_token', _REV_PASS);
+            initAdminListeners();
         } else {
             err.style.opacity = 1;
-            // Вставьте сюда ваш текст ошибки (я скрыл нецензурную лексику):
-            err.innerText = "Пароль не верный! Если ты знаешь Леню (Sn1per), знай что этот полиглот мелкий долбаёб его usernames телеграмма @denger_jkei";
+            err.innerText = "ПАРОЛЬ НЕВЕРНЫЙ!";
         }
     };
 
-    // Auto-login check
     if(sessionStorage.getItem('auth_token') === _REV_PASS) {
         document.getElementById('loginOverlay').style.display = 'none';
+        initAdminListeners();
     }
 
-    // --- 1. NEWS LOGIC ---
-    window.publishNews = async () => {
-        const title = document.getElementById('newsTitle').value;
-        const text = document.getElementById('newsText').value;
-        const date = document.getElementById('newsDate').value;
-        const tag = document.getElementById('newsTag').value;
+    function listenToDoc(collection, docName, callback) {
+        onSnapshot(doc(db, collection, docName), (snap) => {
+            if(snap.exists()) callback(snap.data());
+            else callback({});
+        });
+    }
 
-        if(!title || !text) return alert("Заполни заголовок и текст!");
-
-        const newItem = {
-            id: Date.now(),
-            title, text, date, tag
-        };
-
-        try {
-            const ref = doc(db, "siteData", "news");
-            const snap = await getDoc(ref);
-            let list = (snap.exists() && snap.data().list) ? snap.data().list : [];
-            list.unshift(newItem);
-            await setDoc(ref, { list });
-            alert("✅ Новость опубликована!");
-            document.getElementById('newsTitle').value = '';
-            document.getElementById('newsText').value = '';
-        } catch(e) { alert("Ошибка: " + e.message); }
-    };
-
-    window.deleteNews = async (id) => {
-        if(!confirm("Удалить новость?")) return;
-        try {
-            const ref = doc(db, "siteData", "news");
-            const snap = await getDoc(ref);
-            if(snap.exists()) {
-                const list = snap.data().list.filter(n => n.id !== id);
-                await setDoc(ref, { list });
-            }
-        } catch(e) { alert(e.message); }
-    };
-
-    onSnapshot(doc(db, "siteData", "news"), (snap) => {
-        const c = document.getElementById('newsListContainer');
-        if(!c) return;
-        if(snap.exists() && snap.data().list) {
-            c.innerHTML = snap.data().list.map(n => `
+    function initAdminListeners() {
+        listenToDoc("siteData", "news", (data) => {
+            const list = data.list || [];
+            document.getElementById('newsList').innerHTML = list.map(n => `
                 <div class="list-item">
-                    <div>
-                        <span style="color:var(--accent); font-size:10px;">[${n.tag}]</span> <b>${n.title}</b>
-                        <div style="font-size:10px; color:#888;">${n.date}</div>
+                    <div class="item-info">
+                        <b>${n.title} <span style="color:var(--accent); font-size:9px;">[${n.tag}]</span></b>
+                        <span class="item-sub">${n.date} // ${n.text.substring(0,30)}...</span>
                     </div>
-                    <button class="btn-del" onclick="deleteNews(${n.id})"><i class="fas fa-trash"></i></button>
-                </div>
-            `).join('');
-        } else {
-            c.innerHTML = "Новостей нет";
-        }
-    });
-
-    // --- 2. MATCH TIMER ---
-    window.updateTimer = async () => {
-        const enemy = document.getElementById('enemyName').value;
-        const date = document.getElementById('matchDate').value;
-        if(!enemy || !date) return alert("Заполни данные матча!");
-        
-        await setDoc(doc(db, "siteData", "match"), { enemy, date });
-        alert("✅ Таймер обновлен!");
-    };
-
-    onSnapshot(doc(db, "siteData", "match"), (snap) => {
-        if(snap.exists()) {
-            const d = snap.data();
-            document.getElementById('currentMatchInfo').innerText = `Сейчас на сайте: VS ${d.enemy} (${d.date})`;
-        }
-    });
-
-    // --- 3. ROSTER LOGIC ---
-    window.loadRoster = () => { };
-
-    let currentRosterType = 'roster';
-    
-    const setupRosterListener = () => {
-        const type = document.getElementById('rosterSelector').value;
-        currentRosterType = type;
-        
-        onSnapshot(doc(db, "siteData", type), (snap) => {
-            const c = document.getElementById('rosterListContainer');
-            if(!c) return;
-            const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
-            
-            c.innerHTML = list.map(p => `
-                <div class="list-item">
-                    <span>${p.nick} <span style="font-size:10px; opacity:0.5;">(${p.role})</span></span>
-                    <button class="btn-del" onclick="delPlayer('${p.nick}')">X</button>
+                    <button class="btn-del" onclick="deleteItem('news', ${n.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         });
+
+        listenToDoc("siteData", "match", (data) => {
+            const info = document.getElementById('currentMatchInfo');
+            info.innerText = data.enemy ? `LIVE: VS ${data.enemy} (${data.date})` : "Матч не установлен";
+        });
+
+        setupRosterListener();
+
+        listenToDoc("siteData", "about", (data) => {
+            const list = data.roadmap || [];
+            document.getElementById('roadmapList').innerHTML = list.map(r => `
+                <div class="list-item">
+                    <div class="item-info"><b>${r.date} - ${r.title}</b></div>
+                    <button class="btn-del" onclick="deleteItem('about', ${r.id}, 'roadmap')"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        });
+
+        listenToDoc("siteData", "media", (data) => {
+            if(data.videoId) document.getElementById('vidId').value = data.videoId;
+            const gallery = data.gallery || [];
+            document.getElementById('galleryList').innerHTML = gallery.map(g => `
+                <div class="list-item">
+                    <img src="${g.src}" style="width:30px; height:30px; object-fit:cover; border-radius:4px;">
+                    <button class="btn-del" onclick="deleteItem('media', ${g.id}, 'gallery')"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        });
+
+        listenToDoc("siteData", "history", (data) => {
+            const list = data.list || [];
+            document.getElementById('historyList').innerHTML = list.slice().reverse().map(h => `
+                <div class="list-item">
+                    <div class="item-info"><b>VS ${h.enemy} (${h.our}:${h.their})</b></div>
+                    <button class="btn-del" onclick="deleteItem('history', ${h.id})"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        });
+
+        listenToDoc("siteData", "reviews", (data) => {
+            const list = data.list || [];
+            document.getElementById('reviewsList').innerHTML = list.slice().reverse().map(r => `
+                <div class="list-item">
+                    <div class="item-info"><b>${r.nick}:</b> <span>${r.text}</span></div>
+                    <button class="btn-del" onclick="deleteItem('reviews', ${r.id})"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        });
+    }
+
+    // ACTIONS
+    window.addNews = async () => {
+        const title = document.getElementById('newsTitle').value;
+        const text = document.getElementById('newsText').value;
+        if(!title) return alert("Заголовок!");
+        const item = { id: Date.now(), title, text, date: document.getElementById('newsDate').value, tag: document.getElementById('newsTag').value };
+        await updateArray("news", "list", item);
     };
 
-    document.getElementById('rosterSelector').addEventListener('change', setupRosterListener);
-    setupRosterListener();
+    window.updateMatch = async () => {
+        const enemy = document.getElementById('tmEnemy').value;
+        const date = document.getElementById('tmDate').value;
+        await setDoc(doc(db, "siteData", "match"), { enemy, date });
+        alert("Обновлено!");
+    };
+
+    let currentRosterType = "roster_main";
+    window.loadRoster = () => {
+        currentRosterType = document.getElementById('rosterType').value;
+        setupRosterListener();
+    };
+
+    function setupRosterListener() {
+        onSnapshot(doc(db, "siteData", currentRosterType), (snap) => {
+            const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+            document.getElementById('rosterList').innerHTML = list.map(p => `
+                <div class="list-item">
+                    <b>${p.nick} (${p.role})</b>
+                    <button class="btn-del" onclick="deletePlayer('${p.nick}')">X</button>
+                </div>
+            `).join('');
+        });
+    }
 
     window.addPlayer = async () => {
         const nick = document.getElementById('pNick').value;
-        const role = document.getElementById('pRole').value;
-        const img = document.getElementById('pImg').value;
-        const kd = document.getElementById('pKd').value;
-        const rank = document.getElementById('pRank').value;
-
-        if(!nick || !img) return alert("Нужен Ник и Фото!");
-        
-        const p = { nick, role, img, kd: kd||"0.00", hs: "0%", rank: rank||"Unknown" };
-        
-        try {
-            const ref = doc(db, "siteData", currentRosterType);
-            const snap = await getDoc(ref);
-            let list = (snap.exists() && snap.data().list) ? snap.data().list : [];
-            list.push(p);
-            await setDoc(ref, { list });
-            alert(`✅ ${nick} добавлен в ${currentRosterType}!`);
-            document.getElementById('pNick').value = '';
-        } catch(e) { alert(e.message); }
-    };
-
-    window.delPlayer = async (nick) => {
-        if(!confirm(`Удалить ${nick}?`)) return;
+        if(!nick) return alert("Ник!");
+        const p = {
+            nick, role: document.getElementById('pRole').value || "Player",
+            img: document.getElementById('pImg').value, quote: document.getElementById('pQuote').value,
+            device: document.getElementById('pDevice').value, settings: document.getElementById('pSettings').value,
+            weapon: document.getElementById('pWeapon').value,
+            stats: { kd: document.getElementById('pKd').value || "0.00", rank: document.getElementById('pRank').value || "-" }
+        };
         const ref = doc(db, "siteData", currentRosterType);
         const snap = await getDoc(ref);
-        const list = snap.data().list.filter(p => p.nick !== nick);
-        await setDoc(ref, { list });
-    };
-
-    // --- 4. HISTORY LOGIC ---
-    window.addHistory = async () => {
-        const enemy = document.getElementById('hEnemy').value;
-        const tour = document.getElementById('hTour').value;
-        const our = document.getElementById('hOur').value;
-        const them = document.getElementById('hEnemyS').value;
-
-        if(!enemy || !our) return alert("Заполни данные!");
-
-        const match = { id: Date.now(), enemy, tournament: tour, ourScore: our, enemyScore: them };
-        
-        const ref = doc(db, "siteData", "history");
-        const snap = await getDoc(ref);
         let list = (snap.exists() && snap.data().list) ? snap.data().list : [];
-        list.push(match);
+        list.push(p);
         await setDoc(ref, { list });
-        alert("✅ Добавлено в историю!");
+        alert("Игрок добавлен!");
     };
 
-    window.delHistory = async (id) => {
+    window.deletePlayer = async (nick) => {
         if(!confirm("Удалить?")) return;
-        const ref = doc(db, "siteData", "history");
+        const ref = doc(db, "siteData", currentRosterType);
         const snap = await getDoc(ref);
-        const list = snap.data().list.filter(m => m.id !== id);
+        let list = snap.data().list.filter(p => p.nick !== nick);
         await setDoc(ref, { list });
+    };
+
+    window.addRoadmap = async () => {
+        const item = { id: Date.now(), date: document.getElementById('rmDate').value, title: document.getElementById('rmTitle').value, desc: document.getElementById('rmDesc').value };
+        await updateArray("about", "roadmap", item);
+    };
+
+    window.updateVideo = async () => {
+        await setDoc(doc(db, "siteData", "media"), { videoId: document.getElementById('vidId').value }, { merge: true });
+    };
+
+    window.addGallery = async () => {
+        const item = { id: Date.now(), src: document.getElementById('galUrl').value, caption: document.getElementById('galCap').value };
+        await updateArray("media", "gallery", item);
+    };
+
+    window.addHistory = async () => {
+        const item = { 
+            id: Date.now(), 
+            enemy: document.getElementById('hEnemy').value, 
+            tour: document.getElementById('hTour').value,
+            our: document.getElementById('hOur').value, 
+            their: document.getElementById('hTheir').value 
+        };
+        await updateArray("history", "list", item);
+    };
+
+    async function updateArray(docName, arrayField, item) {
+        const ref = doc(db, "siteData", docName);
+        const snap = await getDoc(ref);
+        let data = (snap.exists() && snap.data()[arrayField]) ? snap.data()[arrayField] : [];
+        data.push(item);
+        await setDoc(ref, { [arrayField]: data }, { merge: true });
     }
 
-    onSnapshot(doc(db, "siteData", "history"), (snap) => {
-        const c = document.getElementById('historyListContainer');
-        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
-        c.innerHTML = list.slice().reverse().map(m => `
-             <div class="list-item" style="font-size:11px;">
-                <span>VS ${m.enemy} (${m.ourScore}:${m.enemyScore})</span>
-                <button class="btn-del" onclick="delHistory(${m.id})">X</button>
-             </div>
-        `).join('');
-    });
-
+    window.deleteItem = async (docName, id, arrayField = "list") => {
+        if(!confirm("Удалить?")) return;
+        const ref = doc(db, "siteData", docName);
+        const snap = await getDoc(ref);
+        if(snap.exists()) {
+            let data = snap.data()[arrayField].filter(i => i.id !== id);
+            await setDoc(ref, { [arrayField]: data }, { merge: true });
+        }
+    };
   </script>
 </body>
 </html>
