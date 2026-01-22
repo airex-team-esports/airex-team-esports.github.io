@@ -50,13 +50,13 @@
     }
 
     /* --- BACKGROUNDS --- */
-    .bg-logo {
+     .bg-logo {
+      opacity: 0.05;
       position: fixed; top: 50%; left: 50%; 
       transform: translate(-50%, -50%);
       width: 80vw; height: 80vh;
       background: url('logo.png') center/contain no-repeat;
-      opacity: 0.03; z-index: -1; 
-      filter: grayscale(100%) brightness(2); 
+      z-index: -1; 
       pointer-events: none;
     }
 
@@ -172,15 +172,14 @@
     section.active { display: block; opacity: 1; transform: translateY(0); }
 
     /* --- CARDS & UI --- */
-    .card {
-      background: var(--glass-dark);
+     .card {
+      background: rgba(12, 12, 12, 0.9);
       border: 1px solid var(--glass-border);
       border-radius: 16px; padding: 24px; margin-bottom: 20px;
       position: relative; overflow: hidden;
-      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     }
+
     .card:hover { border-color: rgba(255,255,255,0.15); box-shadow: 0 15px 40px -10px rgba(0,0,0,0.7); }
     .card::before {
       content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
@@ -596,7 +595,6 @@
         <button onclick="document.getElementById('profile-modal').style.display='none'" style="margin-top: 15px; background: none; border: none; color: #555; cursor: pointer; width: 100%; font-size: 12px; text-transform: uppercase;">Закрыть</button>
     </div>
 </div>
-
 <div class="bg-logo"></div>
 
 <nav class="navbar">
@@ -657,6 +655,7 @@
            </button>
         </div>
       </div>
+      
       <div class="stats-row">
         <div class="stat-card">
           <div class="stat-val-main">0</div>
@@ -991,27 +990,29 @@
     <div class="lightbox-caption" id="lightboxCaption"></div>
 </div>
 <script>
-    // --- UI CONFIG ---
+    // --- UI КОНФИГУРАЦИЯ ---
     const CONF = { 
         tg: { channel: 'airex_team', id: 638 }, 
-        match: new Date("2026-01-07T18:00:00+03:00") // Будет обновлено из Firebase
+        match: new Date("2026-01-07T18:00:00+03:00") // Дата матча (по умолчанию)
     };
     
-    // Helper selectors
+    // Вспомогательные функции для выбора элементов
     const $ = (s) => document.querySelector(s);
     const $$ = (s) => document.querySelectorAll(s);
 
-    // --- TABS & NAVIGATION ---
+    // --- ЛОГИКА МЕНЮ И ВКЛАДОК ---
     function toggleMenu() {
       const menuBtn = document.getElementById('menuBtn');
       const dropdown = document.getElementById('navDropdown');
-      menuBtn.classList.toggle('active');
-      dropdown.classList.toggle('active');
-      const icon = menuBtn.querySelector('i');
-      icon.className = menuBtn.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
+      if (menuBtn && dropdown) {
+          menuBtn.classList.toggle('active');
+          dropdown.classList.toggle('active');
+          const icon = menuBtn.querySelector('i');
+          if (icon) icon.className = menuBtn.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
+      }
     }
 
-    // Close menu when clicking outside
+    // Закрытие меню при клике вне его
     document.addEventListener('click', (e) => {
       const dropdown = document.getElementById('navDropdown');
       const menuBtn = document.getElementById('menuBtn');
@@ -1020,7 +1021,7 @@
       }
     });
 
-    // Tab Switching Logic
+    // Переключение вкладок
     window.selectTab = (id, btn) => {
       $$('section').forEach(s => {
           s.style.opacity = '0';
@@ -1032,20 +1033,20 @@
           const target = $('#' + id);
           if(target) {
               target.classList.add('active');
-              void target.offsetWidth; // force reflow
+              void target.offsetWidth; // force reflow для анимации
               target.style.opacity = '1';
               target.style.transform = 'translateY(0)';
           }
       }, 200);
       
-      // Update active state in menu
+      // Обновление активного класса в меню
       $$('.menu-item').forEach(b => b.classList.remove('active-tab'));
       if(btn) btn.classList.add('active-tab');
       
       const dropdown = document.getElementById('navDropdown');
       if (dropdown && dropdown.classList.contains('active')) toggleMenu();
 
-      // Reset video if leaving media tab to stop sound
+      // Остановка видео, если уходим с вкладки Media
       if (id !== 'media') {
         const v = $('.video-wrapper');
         if (v && v.dataset.loaded) {
@@ -1057,7 +1058,7 @@
       window.scrollTo({top: 0, behavior: 'smooth'});
     };
 
-    // --- COUNTDOWN TIMER ---
+    // --- ТАЙМЕР ОБРАТНОГО ОТСЧЕТА ---
     function updateCountdown() {
       const diff = CONF.match - new Date();
       if (diff < 0) {
@@ -1073,7 +1074,7 @@
     }
     setInterval(updateCountdown, 1000);
 
-    // --- TYPING EFFECT ---
+    // --- ЭФФЕКТ ПЕЧАТНОЙ МАШИНКИ ---
     let tIdx = 0; 
     const txt = "Создаем историю. Побеждаем красиво. Airex Team.";
     function typeW() {
@@ -1084,7 +1085,7 @@
       }
     }
 
-    // --- MUSIC PLAYER ---
+    // --- МУЗЫКАЛЬНЫЙ ПЛЕЕР ---
     window.toggleAmbient = function() {
         const audio = document.getElementById('bg-music');
         const icon = document.getElementById('music-btn');
@@ -1099,7 +1100,7 @@
                     anim.style.opacity = '1';
                     icon.style.color = "var(--accent)";
                 }).catch(error => {
-                    console.log("Auto-play prevented");
+                    console.log("Auto-play prevented by browser policy");
                 });
             }
         } else {
@@ -1110,9 +1111,9 @@
         }
     };
 
-    // --- INITIALIZATION ---
+    // --- ИНИЦИАЛИЗАЦИЯ ПОСЛЕ ЗАГРУЗКИ ---
     document.addEventListener('DOMContentLoaded', () => {
-      // Lightbox Logic
+      // Логика галереи (Lightbox)
       const lb = $('#lightbox'), lbImg = $('#lightboxImg'), lbCap = $('#lightboxCaption');
       let curIdx = 0;
       const items = Array.from($$('.gallery-item'));
@@ -1135,7 +1136,7 @@
       if($('.lb-prev')) $('.lb-prev').onclick = (e) => { e.stopPropagation(); curIdx = (curIdx - 1 + items.length) % items.length; updateLb(); };
       lb.onclick = (e) => { if(e.target === lb) $('.lightbox-close').click(); };
 
-      // Youtube Video Click Load
+      // Загрузка видео Youtube по клику (экономия трафика)
       const videoWrap = $('.video-wrapper');
       if(videoWrap) {
         videoWrap.addEventListener('click', function() {
@@ -1147,14 +1148,14 @@
 
       setTimeout(typeW, 800);
       
-      // Telegram News Widget Injection
+      // Виджет Telegram новостей
       const c = $('#dynamic-tg-widget');
       if (c) {
           const s = document.createElement('script');
           s.src = 'https://telegram.org/js/telegram-widget.js?22';
           s.dataset.telegramPost = `${CONF.tg.channel}/${CONF.tg.id}`;
           s.dataset.width = '100%';
-          s.dataset.color = 'E91E63'; // Accent color
+          s.dataset.color = 'E91E63'; 
           s.dataset.dark = '1';
           s.dataset.userpic = 'true';
           c.innerHTML = '';
@@ -1162,7 +1163,7 @@
       }
     });
 
-    // --- COPY FORM TO TELEGRAM ---
+    // --- КОПИРОВАНИЕ ЗАЯВКИ ---
     window.sendToTelegram = (e) => {
       e.preventDefault();
       const val = id => document.getElementById(id) ? document.getElementById(id).value : '—';
@@ -1223,8 +1224,7 @@ Sent via Official Site`;
         serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-    // --- CONFIG ---
-    // Вставлены твои ключи из оригинального запроса
+    // --- КОНФИГУРАЦИЯ FIREBASE ---
     const firebaseConfig = {
         apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
         authDomain: "airexsite.firebaseapp.com",
@@ -1234,20 +1234,23 @@ Sent via Official Site`;
         appId: "1:276640665598:web:d7400bd5962995efb43aaf"
     };
 
-    // Init Firebase
+    // Инициализация
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // --- AUTH LOGIC EXPOSED TO WINDOW ---
-    // Мы привязываем функции к window, чтобы HTML (onclick) мог их видеть
+    // --- ЛОГИКА АВТОРИЗАЦИИ ---
     let authMode = 'login';
 
     window.switchAuth = (mode) => {
         authMode = mode;
-        document.getElementById('tab-login').classList.toggle('active', mode === 'login');
-        document.getElementById('tab-reg').classList.toggle('active', mode === 'reg');
-        document.getElementById('auth-submit-btn').innerText = mode === 'login' ? 'ВОЙТИ В СИСТЕМУ' : 'СОЗДАТЬ АККАУНТ';
+        const loginTab = document.getElementById('tab-login');
+        const regTab = document.getElementById('tab-reg');
+        const submitBtn = document.getElementById('auth-submit-btn');
+
+        if(loginTab) loginTab.classList.toggle('active', mode === 'login');
+        if(regTab) regTab.classList.toggle('active', mode === 'reg');
+        if(submitBtn) submitBtn.innerText = mode === 'login' ? 'ВОЙТИ В СИСТЕМУ' : 'СОЗДАТЬ АККАУНТ';
     };
 
     const authForm = document.getElementById('auth-form');
@@ -1265,7 +1268,7 @@ Sent via Official Site`;
             try {
                 if (authMode === 'reg') {
                     const res = await createUserWithEmailAndPassword(auth, email, pass);
-                    // Create default profile for new user
+                    // Создаем профиль в БД
                     await setDoc(doc(db, "users", res.user.uid), {
                         nick: email.split('@')[0],
                         avatar: "https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg",
@@ -1291,14 +1294,16 @@ Sent via Official Site`;
         };
     }
 
-    // Google Login
+    // Вход через Google
     window.loginGoogle = async () => {
         const provider = new GoogleAuthProvider();
+        provider.addScope('profile');
+        provider.addScope('email');
+
         try {
             const result = await signInWithPopup(auth, provider);
             const user = result.user;
             
-            // Check if user exists, if not create default data
             const userDocRef = doc(db, "users", user.uid);
             const userDocSnap = await getDoc(userDocRef);
 
@@ -1313,20 +1318,18 @@ Sent via Official Site`;
                 });
             }
         } catch (error) {
-            console.error(error);
-            alert("Google Auth Error: " + error.message);
+            console.error("Google Auth Error:", error);
+            alert(`Ошибка входа Google: ${error.message}`);
         }
     };
 
-    // Telegram Login Callback
+
+    // Callback для Telegram виджета
     window.onTelegramAuth = async (tgUser) => {
         const btn = document.getElementById('auth-submit-btn');
         if(btn) btn.innerText = "ВХОД ЧЕРЕЗ TELEGRAM...";
 
         try {
-            // Sign in anonymously to bypass Firebase Auth barrier, but identify via Firestore
-            // Note: For full security, you'd need a backend to verify the hash. 
-            // Here we do a client-side anonymous login + DB record.
             const userCred = await signInAnonymously(auth);
             const uid = userCred.user.uid;
 
@@ -1336,7 +1339,7 @@ Sent via Official Site`;
                 tgId: tgUser.id,
                 role: "Fan",
                 connectedAt: new Date().toISOString(),
-                xp: 50 // Bonus for TG
+                xp: 50
             }, { merge: true });
 
             alert("Успешный вход через Telegram!");
@@ -1346,13 +1349,13 @@ Sent via Official Site`;
         }
     };
 
-    // Logout
+    // Выход
     window.logout = () => {
         signOut(auth);
         location.reload();
     };
 
-    // Profile Saving
+    // Сохранение профиля
     window.saveProfile = async () => {
         const user = auth.currentUser;
         if (!user) return;
@@ -1360,8 +1363,6 @@ Sent via Official Site`;
         const newAvatar = document.getElementById('set-avatar').value;
         try {
             await setDoc(doc(db, "users", user.uid), { nick: newNick, avatar: newAvatar }, { merge: true });
-            if(document.getElementById('nav-username')) document.getElementById('nav-username').innerText = newNick;
-            if(document.getElementById('nav-avatar')) document.getElementById('nav-avatar').src = newAvatar;
             alert("Профиль обновлен!");
             document.getElementById('profile-modal').style.display = 'none';
         } catch (e) {
@@ -1369,51 +1370,73 @@ Sent via Official Site`;
         }
     };
 
-    // --- AUTH STATE LISTENER ---
+    // Переменная для отписки от слушателя профиля
+    let unsubscribeUserListener = null;
+
+    // --- СЛУШАТЕЛЬ СОСТОЯНИЯ АВТОРИЗАЦИИ (ГЛАВНАЯ ЛОГИКА) ---
     onAuthStateChanged(auth, async (user) => {
         const barrier = document.getElementById('auth-barrier');
         const userNav = document.getElementById('user-nav-btn');
         
         if (user) {
-            // User is logged in
+            // --- ЕСЛИ ПОЛЬЗОВАТЕЛЬ ВОШЕЛ ---
             if(barrier) {
                 barrier.style.opacity = '0';
                 setTimeout(() => barrier.style.display = 'none', 500);
             }
             if(userNav) userNav.style.display = 'flex';
             
-            // Check XP and Init Chat
+            // Начисление XP и Запуск Чата
             checkDailyXP(user.uid);
             initChat(user);
             
-            // Load user profile data
-            const userDoc = await getDoc(doc(db, "users", user.uid));
-            if (userDoc.exists()) {
-                const data = userDoc.data();
-                if(document.getElementById('nav-username')) document.getElementById('nav-username').innerText = data.nick || "User";
-                if(document.getElementById('nav-avatar')) document.getElementById('nav-avatar').src = data.avatar || "";
-                
-                // Prefill settings inputs
-                if(document.getElementById('set-nick')) document.getElementById('set-nick').value = data.nick || "";
-                if(document.getElementById('set-avatar')) document.getElementById('set-avatar').value = data.avatar || "";
-                
-                updateXPUI(data.xp || 0);
-            }
+            // Отменяем старую подписку, если есть
+            if (unsubscribeUserListener) unsubscribeUserListener();
+
+            // Подписываемся на изменения профиля в реальном времени
+            unsubscribeUserListener = onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    // Обновляем UI навигации
+                    const navName = document.getElementById('nav-username');
+                    const navAv = document.getElementById('nav-avatar');
+                    if(navName) navName.innerText = data.nick || "Игрок";
+                    if(navAv) navAv.src = data.avatar || "https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg";
+                    
+                    // Обновляем поля в модальном окне
+                    const inpNick = document.getElementById('set-nick');
+                    const inpAv = document.getElementById('set-avatar');
+                    if(inpNick) inpNick.value = data.nick || "";
+                    if(inpAv) inpAv.value = data.avatar || "";
+                    
+                    // Обновляем XP
+                    updateXPUI(data.xp || 0);
+                }
+            }, (error) => {
+                console.log("Ошибка получения профиля:", error);
+            });
+
         } else {
-            // User is logged out
+            // --- ЕСЛИ ПОЛЬЗОВАТЕЛЬ ВЫШЕЛ ---
             if(barrier) {
                 barrier.style.display = 'flex';
                 barrier.style.opacity = '1';
             }
             if(userNav) userNav.style.display = 'none';
+
+            if (unsubscribeUserListener) {
+                unsubscribeUserListener();
+                unsubscribeUserListener = null;
+            }
             
-            // Inject Telegram Widget Logic specifically when logged out
+            // Добавляем виджет Telegram для входа (если его нет)
             const tgContainer = document.getElementById('tg-auth-container');
             if(tgContainer && tgContainer.innerHTML === "") {
                 const script = document.createElement('script');
                 script.async = true;
                 script.src = "https://telegram.org/js/telegram-widget.js?22";
-                script.setAttribute('data-telegram-login', 'airex_teamBot'); // REPLACE WITH YOUR BOT USERNAME IF DIFFERENT
+                script.setAttribute('data-telegram-login', 'airex_teamBot'); 
                 script.setAttribute('data-size', 'large');
                 script.setAttribute('data-radius', '10');
                 script.setAttribute('data-onauth', 'onTelegramAuth(user)');
@@ -1423,16 +1446,15 @@ Sent via Official Site`;
         }
     });
 
-    // --- ROSTER & DATA LOGIC ---
+    // --- ЛОГИКА ДАННЫХ САЙТА (МАТЧИ, СОСТАВ, ИСТОРИЯ) ---
     
-    // Helper to render player card
+    // Переворот карточки
     window.flipCard = (el) => {
          const inner = el.querySelector('.player-card-inner');
          if(inner) inner.classList.toggle('is-flipped');
     };
 
     const renderPlayer = (p) => {
-        // Fallbacks for missing data
         const kd = p.kd || (p.stats ? p.stats.kd : "0.00");
         const hs = p.hs || (p.stats ? p.stats.hs : "0%");
         const rank = p.rank || (p.stats ? p.stats.rank : "Unknown");
@@ -1471,16 +1493,14 @@ Sent via Official Site`;
         </div>`;
     };
 
-    // 1. Fetch Match Data
+    // 1. Получение данных о матче
     onSnapshot(doc(db, "siteData", "match"), (docSnap) => {
         if(docSnap.exists()) {
             const data = docSnap.data();
             const enemyBlocks = document.querySelectorAll('.team-name');
-            // Assuming 2nd team-name is opponent
             if(enemyBlocks.length > 1) enemyBlocks[1].innerText = data.enemy || "TBA";
             
             if(data.date) {
-              // Parse date string for countdown
               let timeString = data.date;
               if (timeString.length === 16) timeString += ":00"; 
               window.CONF.match = new Date(timeString + "+03:00");
@@ -1488,7 +1508,7 @@ Sent via Official Site`;
         }
     });
 
-    // 2. Fetch Main Roster
+    // 2. Получение состава
     onSnapshot(doc(db, "siteData", "roster"), (docSnap) => {
         const container = document.getElementById('dynamic-roster');
         if(docSnap.exists() && container) {
@@ -1501,7 +1521,7 @@ Sent via Official Site`;
         }
     });
 
-    // 3. Fetch History
+    // 3. Получение истории
     onSnapshot(doc(db, "siteData", "history"), (docSnap) => {
         if(docSnap.exists()) {
             const matches = docSnap.data().list || [];
@@ -1515,13 +1535,11 @@ Sent via Official Site`;
                return;
             }
 
-            // Calc Winrate
             const wins = matches.filter(m => parseInt(m.ourScore) > parseInt(m.enemyScore)).length;
             if(winRateEl) winRateEl.innerText = Math.round((wins / matches.length) * 100) + '%';
 
             const reversedMatches = [...matches].reverse();
 
-            // Render Full History
             if(fullHistory) {
                 fullHistory.innerHTML = reversedMatches.map(m => {
                     const isWin = parseInt(m.ourScore) > parseInt(m.enemyScore);
@@ -1539,7 +1557,6 @@ Sent via Official Site`;
                 }).join('');
             }
 
-            // Render Widget (Top 3)
             if(latestWidget) {
                 latestWidget.innerHTML = reversedMatches.slice(0, 3).map(m => {
                     const isWin = parseInt(m.ourScore) > parseInt(m.enemyScore);
@@ -1553,7 +1570,7 @@ Sent via Official Site`;
         }
     });
 
-    // 4. Fetch News
+    // 4. Получение новостей
     onSnapshot(doc(db, "siteData", "news"), (docSnap) => {
         const container = document.getElementById('dynamic-news-container');
         if(docSnap.exists() && container) {
@@ -1575,7 +1592,7 @@ Sent via Official Site`;
         }
     });
 
-    // --- XP SYSTEM ---
+    // --- XP СИСТЕМА (РАНГИ) ---
     const RANKS = [
         { name: "Пользователь", max: 100 },
         { name: "Активный", max: 300 },
@@ -1594,14 +1611,12 @@ Sent via Official Site`;
         
         let newXP = data.xp || 0;
         
-        // Grant 10 XP if first visit today
         if (lastVisit !== today) {
-            newXP += 10;
+            newXP += 10; // +10 XP за ежедневный вход
             await setDoc(userRef, { 
                 xp: newXP, 
                 lastVisitDate: today 
             }, { merge: true });
-            
             console.log("Daily XP Granted!"); 
         }
 
@@ -1631,7 +1646,7 @@ Sent via Official Site`;
         if(nextXp) nextXp.innerText = max;
     }
 
-    // --- CHAT SYSTEM ---
+    // --- ЧАТ СИСТЕМА ---
     let unsubscribeChat = null;
 
     function initChat(user) {
@@ -1641,17 +1656,18 @@ Sent via Official Site`;
 
         if(!chatFeed) return;
 
-        // Clean previous listeners
+        // Очищаем старый слушатель
         if(unsubscribeChat) unsubscribeChat(); 
 
-        // Send Message
+        // Отправка сообщения
         if(chatForm) {
             chatForm.onsubmit = async (e) => {
                 e.preventDefault();
                 const text = chatInput.value.trim();
                 if(!text) return;
                 
-                const nick = document.getElementById('nav-username').innerText || "User";
+                const nickEl = document.getElementById('nav-username');
+                const nick = nickEl ? nickEl.innerText : "User";
                 
                 try {
                     await addDoc(collection(db, "chat_messages"), {
@@ -1667,14 +1683,14 @@ Sent via Official Site`;
             };
         }
 
-        // Listen for messages
+        // Слушаем сообщения (последние 50)
         const q = query(collection(db, "chat_messages"), orderBy("timestamp", "desc"), limit(50));
 
         unsubscribeChat = onSnapshot(q, (snapshot) => {
             const msgs = [];
             snapshot.forEach(doc => msgs.push({id: doc.id, ...doc.data()}));
             
-            msgs.reverse(); // Show newest at bottom
+            msgs.reverse(); // Новые снизу
             
             chatFeed.innerHTML = msgs.map(msg => {
                 const isMine = msg.uid === user.uid;
