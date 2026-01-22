@@ -33,7 +33,7 @@
     
     .container { 
         max-width: 1200px; margin: 0 auto; padding-bottom: 50px; 
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;
+        display: none; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;
     }
     
     .full-width { grid-column: 1 / -1; }
@@ -95,39 +95,42 @@
     .item-info b { color: #fff; display: block; margin-bottom: 2px; }
     .item-sub { color: #888; font-size: 10px; }
 
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #000; }
-    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-
     #loginOverlay {
       position: fixed; inset: 0; background: #000; z-index: 9999;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
     .login-box { width: 300px; text-align: center; }
     .glitch-text { animation: glitch 2s infinite; color: var(--accent); font-family: var(--font-tech); font-size: 24px; margin-bottom: 20px; }
+    
+    #mainUI { display: none; }
   </style>
 </head>
 <body>
 
-  <div id="loginOverlay">
-    <div class="login-box">
-        <div class="glitch-text">ACCESS CONTROL</div>
-        <input type="password" id="adminPass" placeholder="ENTER PASSCODE" style="text-align: center; letter-spacing: 3px;">
-        <button class="action-btn" onclick="sysAuth()">UNLOCK SYSTEM</button>
-        <p id="loginError" style="color: #ff004c; font-size: 11px; margin-top: 15px; opacity: 0;">Access Denied</p>
-    </div>
+ <div id="loginOverlay">
+  <div class="login-box">
+      <div class="glitch-text">SECURE ACCESS</div>
+      <input type="email" id="adminEmail" placeholder="EMAIL" style="margin-bottom: 10px;">
+      <input type="password" id="adminPass" placeholder="PASSWORD">
+      <button class="action-btn" onclick="sysLogin()">AUTHENTICATE</button>
+      <p id="loginError" style="color: #ff004c; font-size: 11px; margin-top: 15px; opacity: 0;">Access Denied</p>
   </div>
+</div>
 
+<div id="mainUI">
   <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
       <h1>AIREX <span style="color:#fff; opacity:0.3;">//</span> ADMIN</h1>
-      <a href="index.html" target="_blank" style="text-decoration: none;">
-        <button class="action-btn" style="width: auto; padding: 8px 20px; margin:0; background: #333; font-size: 10px;">
-            ОТКРЫТЬ САЙТ <i class="fas fa-external-link-alt" style="margin-left:5px;"></i>
-        </button>
-    </a>
+      <div style="display: flex; gap: 10px;">
+          <button class="action-btn" onclick="sysLogout()" style="width: auto; padding: 8px 20px; margin:0; background: #555; font-size: 10px;">ВЫЙТИ</button>
+          <a href="index.html" target="_blank" style="text-decoration: none;">
+            <button class="action-btn" style="width: auto; padding: 8px 20px; margin:0; background: #333; font-size: 10px;">
+                ОТКРЫТЬ САЙТ <i class="fas fa-external-link-alt" style="margin-left:5px;"></i>
+            </button>
+          </a>
+      </div>
   </div>
 
-  <div class="container">
+  <div class="container" id="adminContainer" style="display: grid;">
 
     <div class="panel">
         <div class="panel-header">
@@ -157,14 +160,10 @@
             <h2><i class="fas fa-clock panel-icon"></i> ТАЙМЕР МАТЧА (MSK)</h2>
         </div>
         <div id="currentMatchInfo" style="font-size: 11px; color: #00ff88; margin-bottom: 10px; border: 1px solid #333; padding: 5px;">Нет данных</div>
-        
         <label>Имя соперника</label>
         <input type="text" id="tmEnemy" placeholder="Например: Saints">
-        
         <label>Дата и время (Вводите по МСК)</label>
         <input type="datetime-local" id="tmDate">
-        <div style="font-size: 9px; color: #666; margin-top: 5px;">* Таймер на сайте автоматически подстроится под обратный отсчет.</div>
-
         <button class="action-btn" onclick="updateMatch()">ОБНОВИТЬ ТАЙМЕР</button>
     </div>
 
@@ -176,7 +175,6 @@
                 <option value="roster_reserve">Резерв (Reserve)</option>
             </select>
         </div>
-        
         <div style="display: grid; grid-template-columns: 1.2fr 2fr; gap: 20px;">
             <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px;">
                 <h3 style="font-size: 12px; color: var(--accent);">ДАННЫЕ ИГРОКА</h3>
@@ -188,23 +186,16 @@
                 <input type="text" id="pImg" placeholder="https://...">
                 <label>Цитата</label>
                 <input type="text" id="pQuote" placeholder="Текст на лицевой стороне">
-                
                 <div class="row-inputs">
                     <div><label>K/D</label><input type="text" id="pKd" placeholder="1.50"></div>
                     <div><label>Ранг</label><input type="text" id="pRank" placeholder="Legend"></div>
                 </div>
-
                 <h3 style="font-size: 12px; color: var(--accent); margin-top:20px;">ТЕХ. ДАННЫЕ</h3>
-                <label>Устройство</label>
-                <input type="text" id="pDevice" placeholder="iPad Pro / iPhone 13">
-                <label>Настройки (Sens)</label>
-                <input type="text" id="pSettings" placeholder="Sens: 1.20">
-                <label>Оружие</label>
-                <input type="text" id="pWeapon" placeholder="M4 / AKR / AWM">
-
+                <label>Устройство</label><input type="text" id="pDevice" placeholder="iPad Pro">
+                <label>Настройки</label><input type="text" id="pSettings" placeholder="Sens: 1.20">
+                <label>Оружие</label><input type="text" id="pWeapon" placeholder="M4 / AKR">
                 <button class="action-btn" onclick="addPlayer()">СОХРАНИТЬ В БАЗУ</button>
             </div>
-
             <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px;">
                  <h3 style="font-size: 12px; color: #888; margin-bottom: 15px;">СПИСОК ИГРОКОВ</h3>
                  <div id="rosterList" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
@@ -216,13 +207,9 @@
         <div class="panel-header">
             <h2><i class="fas fa-route panel-icon"></i> ПУТЬ AIREX</h2>
         </div>
-        <label>Дата события</label>
-        <input type="text" id="rmDate" placeholder="01.01.2024">
-        <label>Заголовок</label>
-        <input type="text" id="rmTitle" placeholder="Создание команды">
-        <label>Описание</label>
-        <input type="text" id="rmDesc" placeholder="Краткое описание...">
-        
+        <label>Дата события</label><input type="text" id="rmDate" placeholder="01.01.2024">
+        <label>Заголовок</label><input type="text" id="rmTitle" placeholder="Создание команды">
+        <label>Описание</label><input type="text" id="rmDesc" placeholder="Краткое описание...">
         <button class="action-btn" onclick="addRoadmap()">ДОБАВИТЬ ТОЧКУ</button>
         <div class="data-list" id="roadmapList"></div>
     </div>
@@ -267,9 +254,12 @@
     </div>
 
   </div>
-  <script type="module">
+</div>
+
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
@@ -282,30 +272,35 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    const _REV_PASS = "6202xeria"; 
-
-    window.sysAuth = () => {
-        const input = document.getElementById('adminPass').value;
+    // --- АВТОРИЗАЦИЯ ---
+    window.sysLogin = async () => {
+        const email = document.getElementById('adminEmail').value;
+        const pass = document.getElementById('adminPass').value;
         const err = document.getElementById('loginError');
-        err.style.opacity = 0;
-        if (!input) return;
-        const inputRev = input.split('').reverse().join('');
-        if (inputRev === _REV_PASS) {
-            document.getElementById('loginOverlay').style.display = 'none';
-            sessionStorage.setItem('auth_token', _REV_PASS);
-            initAdminListeners();
-        } else {
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+        } catch (e) {
             err.style.opacity = 1;
-            err.innerText = "ПАРОЛЬ НЕВЕРНЫЙ!";
+            err.innerText = "ОШИБКА ДОСТУПА";
         }
     };
 
-    if(sessionStorage.getItem('auth_token') === _REV_PASS) {
-        document.getElementById('loginOverlay').style.display = 'none';
-        initAdminListeners();
-    }
+    window.sysLogout = () => signOut(auth);
 
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('mainUI').style.display = 'block';
+            initAdminListeners();
+        } else {
+            document.getElementById('loginOverlay').style.display = 'flex';
+            document.getElementById('mainUI').style.display = 'none';
+        }
+    });
+
+    // --- СЛУШАТЕЛИ ---
     function listenToDoc(collection, docName, callback) {
         onSnapshot(doc(db, collection, docName), (snap) => {
             if(snap.exists()) callback(snap.data());
@@ -314,7 +309,6 @@
     }
 
     function initAdminListeners() {
-        // Прослушка Новостей
         listenToDoc("siteData", "news", (data) => {
             const list = data.list || [];
             document.getElementById('newsList').innerHTML = list.map(n => `
@@ -325,7 +319,6 @@
             `).join('');
         });
 
-        // Прослушка Таймера
         listenToDoc("siteData", "match", (data) => {
             const info = document.getElementById('currentMatchInfo');
             info.innerText = data.enemy ? `LIVE: VS ${data.enemy} (${data.date})` : "Матч не установлен";
@@ -333,7 +326,6 @@
 
         setupRosterListener();
 
-        // Прослушка ПУТИ AIREX (Roadmap)
         listenToDoc("siteData", "about", (data) => {
             const list = data.roadmap || [];
             document.getElementById('roadmapList').innerHTML = list.map(r => `
@@ -344,20 +336,18 @@
             `).join('');
         });
 
-        // Прослушка МЕДИА
         listenToDoc("siteData", "media", (data) => {
             if(data.videoId) document.getElementById('vidId').value = data.videoId;
             const gallery = data.gallery || [];
             document.getElementById('galleryList').innerHTML = gallery.map(g => `
                 <div class="list-item">
                     <img src="${g.src}" style="width:30px; height:30px; object-fit:cover; margin-right:10px;">
-                    <span style="font-size:9px;">${g.cap || 'Без описания'}</span>
+                    <span style="font-size:9px;">${g.cap || 'IMG'}</span>
                     <button class="btn-del" onclick="window.deleteItem('media', ${g.id}, 'gallery')"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         });
 
-        // Прослушка ИСТОРИИ
         listenToDoc("siteData", "history", (data) => {
             const list = data.list || [];
             document.getElementById('historyList').innerHTML = list.map(h => `
@@ -368,69 +358,56 @@
             `).join('');
         });
 
-        // Прослушка ОТЗЫВОВ (Добавлено!)
         listenToDoc("siteData", "reviews", (data) => {
             const list = data.list || [];
             document.getElementById('reviewsList').innerHTML = list.map(r => `
                 <div class="list-item">
-                    <div class="item-info">
-                        <b>${r.nick} (Кому: ${r.target})</b>
-                        <div class="item-sub">${r.text}</div>
-                    </div>
+                    <div class="item-info"><b>${r.nick} (To: ${r.target})</b><div class="item-sub">${r.text}</div></div>
                     <button class="btn-del" onclick="window.deleteItem('reviews', ${r.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         });
     }
 
-    // --- ФУНКЦИИ ДОБАВЛЕНИЯ ---
-
+    // --- ФУНКЦИИ ---
     window.addNews = async () => {
         const title = document.getElementById('newsTitle').value;
-        const text = document.getElementById('newsText').value;
         if(!title) return alert("Введите заголовок!");
-        const item = { id: Date.now(), title, text, date: document.getElementById('newsDate').value || new Date().toLocaleDateString(), tag: document.getElementById('newsTag').value };
+        const item = { id: Date.now(), title, text: document.getElementById('newsText').value, date: document.getElementById('newsDate').value || new Date().toLocaleDateString(), tag: document.getElementById('newsTag').value };
         await updateArray("news", "list", item);
         alert("Новость добавлена!");
+        document.getElementById('newsTitle').value = ''; document.getElementById('newsText').value = '';
     };
 
     window.addRoadmap = async () => {
-        const date = document.getElementById('rmDate').value;
-        const title = document.getElementById('rmTitle').value;
-        const desc = document.getElementById('rmDesc').value;
-        if(!title || !date) return alert("Заполните дату и заголовок!");
-        const item = { id: Date.now(), date, title, desc };
+        const item = { id: Date.now(), date: document.getElementById('rmDate').value, title: document.getElementById('rmTitle').value, desc: document.getElementById('rmDesc').value };
+        if(!item.title) return alert("Заголовок!");
         await updateArray("about", "roadmap", item);
-        alert("Точка на пути добавлена!");
+        alert("Точка добавлена!");
     };
 
     window.addGallery = async () => {
         const src = document.getElementById('galUrl').value;
-        const cap = document.getElementById('galCap').value;
-        if(!src) return alert("Введите URL картинки!");
-        const item = { id: Date.now(), src, cap };
-        await updateArray("media", "gallery", item);
-        alert("Фото добавлено в галерею!");
+        if(!src) return alert("URL картинки!");
+        await updateArray("media", "gallery", { id: Date.now(), src, cap: document.getElementById('galCap').value });
+        alert("Фото добавлено!");
+        document.getElementById('galUrl').value = '';
     };
 
     window.updateVideo = async () => {
-        const id = document.getElementById('vidId').value;
-        await setDoc(doc(db, "siteData", "media"), { videoId: id }, { merge: true });
+        await setDoc(doc(db, "siteData", "media"), { videoId: document.getElementById('vidId').value }, { merge: true });
         alert("Видео обновлено!");
     };
 
     window.addHistory = async () => {
         const enemy = document.getElementById('hEnemy').value;
-        const tour = document.getElementById('hTour').value;
-        const our = document.getElementById('hOur').value;
-        const their = document.getElementById('hTheir').value;
-        if(!enemy) return alert("Введите соперника!");
-        const item = { id: Date.now(), enemy, tour, our, their, win: parseInt(our) > parseInt(their) };
+        if(!enemy) return alert("Соперник?");
+        const our = document.getElementById('hOur').value || 0;
+        const their = document.getElementById('hTheir').value || 0;
+        const item = { id: Date.now(), enemy, tour: document.getElementById('hTour').value, our, their, win: parseInt(our) > parseInt(their) };
         await updateArray("history", "list", item);
-        alert("Результат матча добавлен!");
+        alert("Результат сохранен!");
     };
-
-    // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
 
     async function updateArray(docName, arrayField, item) {
         const ref = doc(db, "siteData", docName);
@@ -440,59 +417,44 @@
     }
 
     window.deleteItem = async (docName, id, arrayField = "list") => {
-        if(!confirm("Удалить эту запись?")) return;
+        if(!confirm("Удалить запись?")) return;
         const ref = doc(db, "siteData", docName);
         const snap = await getDoc(ref);
         if(snap.exists()) {
-            let data = snap.data()[arrayField].filter(i => i.id !== id);
+            const currentList = snap.data()[arrayField] || [];
+            const data = currentList.filter(i => i.id !== id);
             await setDoc(ref, { [arrayField]: data }, { merge: true });
         }
     };
 
-    // Остальные функции (Roster, Таймер)
     window.updateMatch = async () => {
-        const enemy = document.getElementById('tmEnemy').value;
-        const date = document.getElementById('tmDate').value;
-        await setDoc(doc(db, "siteData", "match"), { enemy, date });
+        await setDoc(doc(db, "siteData", "match"), { enemy: document.getElementById('tmEnemy').value, date: document.getElementById('tmDate').value });
         alert("Таймер обновлен!");
     };
 
     let currentRosterType = "roster_main";
-    window.loadRoster = () => {
-        currentRosterType = document.getElementById('rosterType').value;
-        setupRosterListener();
-    };
+    window.loadRoster = () => { currentRosterType = document.getElementById('rosterType').value; setupRosterListener(); };
 
     function setupRosterListener() {
         onSnapshot(doc(db, "siteData", currentRosterType), (snap) => {
             const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
             document.getElementById('rosterList').innerHTML = list.map(p => `
-                <div class="list-item">
-                    <b>${p.nick}</b>
-                    <button class="btn-del" onclick="window.deletePlayer('${p.nick}')">X</button>
-                </div>
+                <div class="list-item"><b>${p.nick}</b><button class="btn-del" onclick="window.deletePlayer('${p.nick}')">X</button></div>
             `).join('');
         });
     }
 
     window.addPlayer = async () => {
         const nick = document.getElementById('pNick').value;
-        if(!nick) return alert("Введите ник!");
-        const p = {
-            nick, role: document.getElementById('pRole').value || "Player",
-            img: document.getElementById('pImg').value || "", 
-            quote: document.getElementById('pQuote').value || "",
-            device: document.getElementById('pDevice').value || "", 
-            settings: document.getElementById('pSettings').value || "",
-            weapon: document.getElementById('pWeapon').value || "",
-            stats: { kd: document.getElementById('pKd').value || "0.00", rank: document.getElementById('pRank').value || "-" }
-        };
+        if(!nick) return alert("Ник?");
+        const p = { nick, role: document.getElementById('pRole').value, img: document.getElementById('pImg').value, quote: document.getElementById('pQuote').value, device: document.getElementById('pDevice').value, settings: document.getElementById('pSettings').value, weapon: document.getElementById('pWeapon').value, stats: { kd: document.getElementById('pKd').value, rank: document.getElementById('pRank').value } };
         const ref = doc(db, "siteData", currentRosterType);
         const snap = await getDoc(ref);
         let list = snap.exists() ? (snap.data().list || []) : [];
         list.push(p);
         await setDoc(ref, { list });
         alert("Игрок добавлен!");
+        document.getElementById('pNick').value = '';
     };
 
     window.deletePlayer = async (nick) => {
@@ -500,12 +462,10 @@
         const ref = doc(db, "siteData", currentRosterType);
         const snap = await getDoc(ref);
         if(snap.exists()){
-            let list = snap.data().list.filter(p => p.nick !== nick);
+            let list = (snap.data().list || []).filter(p => p.nick !== nick);
             await setDoc(ref, { list });
         }
     };
-    
 </script>
-
 </body>
 </html>
