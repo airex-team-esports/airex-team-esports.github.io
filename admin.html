@@ -267,7 +267,7 @@
     </div>
 
   </div>
-<script type="module">
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
@@ -283,16 +283,14 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const _REV_PASS = "6202xeria"; // Пароль: airex0206
+    const _REV_PASS = "6202xeria"; 
 
-    // ФУНКЦИЯ АВТОРИЗАЦИИ
     window.sysAuth = () => {
         const input = document.getElementById('adminPass').value;
         const err = document.getElementById('loginError');
         err.style.opacity = 0;
         if (!input) return;
         const inputRev = input.split('').reverse().join('');
-
         if (inputRev === _REV_PASS) {
             document.getElementById('loginOverlay').style.display = 'none';
             sessionStorage.setItem('auth_token', _REV_PASS);
@@ -316,19 +314,18 @@
     }
 
     function initAdminListeners() {
+        // Прослушка Новостей
         listenToDoc("siteData", "news", (data) => {
             const list = data.list || [];
             document.getElementById('newsList').innerHTML = list.map(n => `
                 <div class="list-item">
-                    <div class="item-info">
-                        <b>${n.title}</b>
-                        <span class="item-sub">${n.date}</span>
-                    </div>
+                    <div class="item-info"><b>${n.title}</b><span class="item-sub">${n.date}</span></div>
                     <button class="btn-del" onclick="window.deleteItem('news', ${n.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         });
 
+        // Прослушка Таймера
         listenToDoc("siteData", "match", (data) => {
             const info = document.getElementById('currentMatchInfo');
             info.innerText = data.enemy ? `LIVE: VS ${data.enemy} (${data.date})` : "Матч не установлен";
@@ -336,6 +333,7 @@
 
         setupRosterListener();
 
+        // Прослушка ПУТИ AIREX (Roadmap)
         listenToDoc("siteData", "about", (data) => {
             const list = data.roadmap || [];
             document.getElementById('roadmapList').innerHTML = list.map(r => `
@@ -346,17 +344,20 @@
             `).join('');
         });
 
+        // Прослушка МЕДИА
         listenToDoc("siteData", "media", (data) => {
             if(data.videoId) document.getElementById('vidId').value = data.videoId;
             const gallery = data.gallery || [];
             document.getElementById('galleryList').innerHTML = gallery.map(g => `
                 <div class="list-item">
-                    <img src="${g.src}" style="width:30px; height:30px; object-fit:cover;">
+                    <img src="${g.src}" style="width:30px; height:30px; object-fit:cover; margin-right:10px;">
+                    <span style="font-size:9px;">${g.cap || 'Без описания'}</span>
                     <button class="btn-del" onclick="window.deleteItem('media', ${g.id}, 'gallery')"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         });
 
+        // Прослушка ИСТОРИИ
         listenToDoc("siteData", "history", (data) => {
             const list = data.list || [];
             document.getElementById('historyList').innerHTML = list.map(h => `
@@ -366,24 +367,89 @@
                 </div>
             `).join('');
         });
+
+        // Прослушка ОТЗЫВОВ (Добавлено!)
+        listenToDoc("siteData", "reviews", (data) => {
+            const list = data.list || [];
+            document.getElementById('reviewsList').innerHTML = list.map(r => `
+                <div class="list-item">
+                    <div class="item-info">
+                        <b>${r.nick} (Кому: ${r.target})</b>
+                        <div class="item-sub">${r.text}</div>
+                    </div>
+                    <button class="btn-del" onclick="window.deleteItem('reviews', ${r.id})"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        });
     }
 
-    // ДЕЙСТВИЯ (ОБЯЗАТЕЛЬНО ЧЕРЕЗ window.ИМЯ)
+    // --- ФУНКЦИИ ДОБАВЛЕНИЯ ---
+
     window.addNews = async () => {
         const title = document.getElementById('newsTitle').value;
         const text = document.getElementById('newsText').value;
         if(!title) return alert("Введите заголовок!");
-        const item = { 
-            id: Date.now(), 
-            title, 
-            text, 
-            date: document.getElementById('newsDate').value || new Date().toLocaleDateString(), 
-            tag: document.getElementById('newsTag').value 
-        };
+        const item = { id: Date.now(), title, text, date: document.getElementById('newsDate').value || new Date().toLocaleDateString(), tag: document.getElementById('newsTag').value };
         await updateArray("news", "list", item);
-        alert("Опубликовано!");
+        alert("Новость добавлена!");
     };
 
+    window.addRoadmap = async () => {
+        const date = document.getElementById('rmDate').value;
+        const title = document.getElementById('rmTitle').value;
+        const desc = document.getElementById('rmDesc').value;
+        if(!title || !date) return alert("Заполните дату и заголовок!");
+        const item = { id: Date.now(), date, title, desc };
+        await updateArray("about", "roadmap", item);
+        alert("Точка на пути добавлена!");
+    };
+
+    window.addGallery = async () => {
+        const src = document.getElementById('galUrl').value;
+        const cap = document.getElementById('galCap').value;
+        if(!src) return alert("Введите URL картинки!");
+        const item = { id: Date.now(), src, cap };
+        await updateArray("media", "gallery", item);
+        alert("Фото добавлено в галерею!");
+    };
+
+    window.updateVideo = async () => {
+        const id = document.getElementById('vidId').value;
+        await setDoc(doc(db, "siteData", "media"), { videoId: id }, { merge: true });
+        alert("Видео обновлено!");
+    };
+
+    window.addHistory = async () => {
+        const enemy = document.getElementById('hEnemy').value;
+        const tour = document.getElementById('hTour').value;
+        const our = document.getElementById('hOur').value;
+        const their = document.getElementById('hTheir').value;
+        if(!enemy) return alert("Введите соперника!");
+        const item = { id: Date.now(), enemy, tour, our, their, win: parseInt(our) > parseInt(their) };
+        await updateArray("history", "list", item);
+        alert("Результат матча добавлен!");
+    };
+
+    // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
+
+    async function updateArray(docName, arrayField, item) {
+        const ref = doc(db, "siteData", docName);
+        const snap = await getDoc(ref);
+        if (!snap.exists()) await setDoc(ref, { [arrayField]: [item] });
+        else await updateDoc(ref, { [arrayField]: arrayUnion(item) });
+    }
+
+    window.deleteItem = async (docName, id, arrayField = "list") => {
+        if(!confirm("Удалить эту запись?")) return;
+        const ref = doc(db, "siteData", docName);
+        const snap = await getDoc(ref);
+        if(snap.exists()) {
+            let data = snap.data()[arrayField].filter(i => i.id !== id);
+            await setDoc(ref, { [arrayField]: data }, { merge: true });
+        }
+    };
+
+    // Остальные функции (Roster, Таймер)
     window.updateMatch = async () => {
         const enemy = document.getElementById('tmEnemy').value;
         const date = document.getElementById('tmDate').value;
@@ -438,38 +504,7 @@
             await setDoc(ref, { list });
         }
     };
-
-    window.updateVideo = async () => {
-        const id = document.getElementById('vidId').value;
-        await setDoc(doc(db, "siteData", "media"), { videoId: id }, { merge: true });
-        alert("Видео обновлено!");
-    };
-
-    async function updateArray(docName, arrayField, item) {
-        const ref = doc(db, "siteData", docName);
-        try {
-            const snap = await getDoc(ref);
-            if (!snap.exists()) {
-                await setDoc(ref, { [arrayField]: [item] });
-            } else {
-                await updateDoc(ref, {
-                    [arrayField]: arrayUnion(item)
-                });
-            }
-        } catch (e) {
-            console.error("Ошибка обновления:", e);
-        }
-    }
-
-    window.deleteItem = async (docName, id, arrayField = "list") => {
-        if(!confirm("Удалить запись?")) return;
-        const ref = doc(db, "siteData", docName);
-        const snap = await getDoc(ref);
-        if(snap.exists()) {
-            let data = snap.data()[arrayField].filter(i => i.id !== id);
-            await setDoc(ref, { [arrayField]: data }, { merge: true });
-        }
-    };
+    
 </script>
 
 </body>
