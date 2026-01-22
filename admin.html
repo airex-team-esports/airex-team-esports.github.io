@@ -267,10 +267,9 @@
     </div>
 
   </div>
-
-  <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
@@ -284,8 +283,9 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const _REV_PASS = "6202xeria"; 
+    const _REV_PASS = "6202xeria"; // Пароль: airex0206
 
+    // ФУНКЦИЯ АВТОРИЗАЦИИ
     window.sysAuth = () => {
         const input = document.getElementById('adminPass').value;
         const err = document.getElementById('loginError');
@@ -321,10 +321,10 @@
             document.getElementById('newsList').innerHTML = list.map(n => `
                 <div class="list-item">
                     <div class="item-info">
-                        <b>${n.title} <span style="color:var(--accent); font-size:9px;">[${n.tag}]</span></b>
-                        <span class="item-sub">${n.date} // ${n.text.substring(0,30)}...</span>
+                        <b>${n.title}</b>
+                        <span class="item-sub">${n.date}</span>
                     </div>
-                    <button class="btn-del" onclick="deleteItem('news', ${n.id})"><i class="fas fa-trash"></i></button>
+                    <button class="btn-del" onclick="window.deleteItem('news', ${n.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         });
@@ -341,7 +341,7 @@
             document.getElementById('roadmapList').innerHTML = list.map(r => `
                 <div class="list-item">
                     <div class="item-info"><b>${r.date} - ${r.title}</b></div>
-                    <button class="btn-del" onclick="deleteItem('about', ${r.id}, 'roadmap')"><i class="fas fa-trash"></i></button>
+                    <button class="btn-del" onclick="window.deleteItem('about', ${r.id}, 'roadmap')"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         });
@@ -351,47 +351,44 @@
             const gallery = data.gallery || [];
             document.getElementById('galleryList').innerHTML = gallery.map(g => `
                 <div class="list-item">
-                    <img src="${g.src}" style="width:30px; height:30px; object-fit:cover; border-radius:4px;">
-                    <button class="btn-del" onclick="deleteItem('media', ${g.id}, 'gallery')"><i class="fas fa-trash"></i></button>
+                    <img src="${g.src}" style="width:30px; height:30px; object-fit:cover;">
+                    <button class="btn-del" onclick="window.deleteItem('media', ${g.id}, 'gallery')"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         });
 
         listenToDoc("siteData", "history", (data) => {
             const list = data.list || [];
-            document.getElementById('historyList').innerHTML = list.slice().reverse().map(h => `
+            document.getElementById('historyList').innerHTML = list.map(h => `
                 <div class="list-item">
                     <div class="item-info"><b>VS ${h.enemy} (${h.our}:${h.their})</b></div>
-                    <button class="btn-del" onclick="deleteItem('history', ${h.id})"><i class="fas fa-trash"></i></button>
-                </div>
-            `).join('');
-        });
-
-        listenToDoc("siteData", "reviews", (data) => {
-            const list = data.list || [];
-            document.getElementById('reviewsList').innerHTML = list.slice().reverse().map(r => `
-                <div class="list-item">
-                    <div class="item-info"><b>${r.nick}:</b> <span>${r.text}</span></div>
-                    <button class="btn-del" onclick="deleteItem('reviews', ${r.id})"><i class="fas fa-trash"></i></button>
+                    <button class="btn-del" onclick="window.deleteItem('history', ${h.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         });
     }
 
-    // ACTIONS
+    // ДЕЙСТВИЯ (ОБЯЗАТЕЛЬНО ЧЕРЕЗ window.ИМЯ)
     window.addNews = async () => {
         const title = document.getElementById('newsTitle').value;
         const text = document.getElementById('newsText').value;
-        if(!title) return alert("Заголовок!");
-        const item = { id: Date.now(), title, text, date: document.getElementById('newsDate').value, tag: document.getElementById('newsTag').value };
+        if(!title) return alert("Введите заголовок!");
+        const item = { 
+            id: Date.now(), 
+            title, 
+            text, 
+            date: document.getElementById('newsDate').value || new Date().toLocaleDateString(), 
+            tag: document.getElementById('newsTag').value 
+        };
         await updateArray("news", "list", item);
+        alert("Опубликовано!");
     };
 
     window.updateMatch = async () => {
         const enemy = document.getElementById('tmEnemy').value;
         const date = document.getElementById('tmDate').value;
         await setDoc(doc(db, "siteData", "match"), { enemy, date });
-        alert("Обновлено!");
+        alert("Таймер обновлен!");
     };
 
     let currentRosterType = "roster_main";
@@ -405,8 +402,8 @@
             const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
             document.getElementById('rosterList').innerHTML = list.map(p => `
                 <div class="list-item">
-                    <b>${p.nick} (${p.role})</b>
-                    <button class="btn-del" onclick="deletePlayer('${p.nick}')">X</button>
+                    <b>${p.nick}</b>
+                    <button class="btn-del" onclick="window.deletePlayer('${p.nick}')">X</button>
                 </div>
             `).join('');
         });
@@ -414,65 +411,58 @@
 
     window.addPlayer = async () => {
         const nick = document.getElementById('pNick').value;
-        if(!nick) return alert("Ник!");
+        if(!nick) return alert("Введите ник!");
         const p = {
             nick, role: document.getElementById('pRole').value || "Player",
-            img: document.getElementById('pImg').value, quote: document.getElementById('pQuote').value,
-            device: document.getElementById('pDevice').value, settings: document.getElementById('pSettings').value,
-            weapon: document.getElementById('pWeapon').value,
+            img: document.getElementById('pImg').value || "", 
+            quote: document.getElementById('pQuote').value || "",
+            device: document.getElementById('pDevice').value || "", 
+            settings: document.getElementById('pSettings').value || "",
+            weapon: document.getElementById('pWeapon').value || "",
             stats: { kd: document.getElementById('pKd').value || "0.00", rank: document.getElementById('pRank').value || "-" }
         };
         const ref = doc(db, "siteData", currentRosterType);
         const snap = await getDoc(ref);
-        let list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        let list = snap.exists() ? (snap.data().list || []) : [];
         list.push(p);
         await setDoc(ref, { list });
         alert("Игрок добавлен!");
     };
 
     window.deletePlayer = async (nick) => {
-        if(!confirm("Удалить?")) return;
+        if(!confirm("Удалить игрока?")) return;
         const ref = doc(db, "siteData", currentRosterType);
         const snap = await getDoc(ref);
-        let list = snap.data().list.filter(p => p.nick !== nick);
-        await setDoc(ref, { list });
-    };
-
-    window.addRoadmap = async () => {
-        const item = { id: Date.now(), date: document.getElementById('rmDate').value, title: document.getElementById('rmTitle').value, desc: document.getElementById('rmDesc').value };
-        await updateArray("about", "roadmap", item);
+        if(snap.exists()){
+            let list = snap.data().list.filter(p => p.nick !== nick);
+            await setDoc(ref, { list });
+        }
     };
 
     window.updateVideo = async () => {
-        await setDoc(doc(db, "siteData", "media"), { videoId: document.getElementById('vidId').value }, { merge: true });
-    };
-
-    window.addGallery = async () => {
-        const item = { id: Date.now(), src: document.getElementById('galUrl').value, caption: document.getElementById('galCap').value };
-        await updateArray("media", "gallery", item);
-    };
-
-    window.addHistory = async () => {
-        const item = { 
-            id: Date.now(), 
-            enemy: document.getElementById('hEnemy').value, 
-            tour: document.getElementById('hTour').value,
-            our: document.getElementById('hOur').value, 
-            their: document.getElementById('hTheir').value 
-        };
-        await updateArray("history", "list", item);
+        const id = document.getElementById('vidId').value;
+        await setDoc(doc(db, "siteData", "media"), { videoId: id }, { merge: true });
+        alert("Видео обновлено!");
     };
 
     async function updateArray(docName, arrayField, item) {
         const ref = doc(db, "siteData", docName);
-        const snap = await getDoc(ref);
-        let data = (snap.exists() && snap.data()[arrayField]) ? snap.data()[arrayField] : [];
-        data.push(item);
-        await setDoc(ref, { [arrayField]: data }, { merge: true });
+        try {
+            const snap = await getDoc(ref);
+            if (!snap.exists()) {
+                await setDoc(ref, { [arrayField]: [item] });
+            } else {
+                await updateDoc(ref, {
+                    [arrayField]: arrayUnion(item)
+                });
+            }
+        } catch (e) {
+            console.error("Ошибка обновления:", e);
+        }
     }
 
     window.deleteItem = async (docName, id, arrayField = "list") => {
-        if(!confirm("Удалить?")) return;
+        if(!confirm("Удалить запись?")) return;
         const ref = doc(db, "siteData", docName);
         const snap = await getDoc(ref);
         if(snap.exists()) {
@@ -480,6 +470,7 @@
             await setDoc(ref, { [arrayField]: data }, { merge: true });
         }
     };
-  </script>
+</script>
+
 </body>
 </html>
