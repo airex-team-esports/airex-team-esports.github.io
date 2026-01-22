@@ -5,17 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#020202">
   <meta name="description" content="Official Airex Team Esports Organization Site">
-  <meta name="robots" content="index, follow">
-  
-  <title>AIREX TEAM | Official Site</title>
+  <title>AIREX TEAM | Оффициальный сайт</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
   <style>
     /* --- CORE VARIABLES --- */
     :root {
@@ -65,7 +61,6 @@
       position: fixed; top: 0; inset-inline: 0; height: 72px;
       background: rgba(2, 2, 2, 0.85); 
       backdrop-filter: blur(25px) saturate(180%); 
-      -webkit-backdrop-filter: blur(25px) saturate(180%);
       border-bottom: 1px solid var(--glass-border); 
       z-index: 1000;
       display: flex; align-items: center; 
@@ -74,43 +69,14 @@
       justify-content: space-between;
     }
     
-    .nav-brand { 
-      display: flex; align-items: center; gap: 12px; 
-      flex-shrink: 0; 
-    }
-    .nav-brand img { 
-      height: 40px; width: auto; 
-      filter: drop-shadow(0 0 8px var(--accent-dim)); 
-      transition: transform 0.3s var(--ease-out);
-    }
+    .nav-brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; cursor: pointer; }
+    .nav-brand img { height: 40px; width: auto; filter: drop-shadow(0 0 8px var(--accent-dim)); transition: transform 0.3s var(--ease-out); }
     .nav-brand:hover img { transform: scale(1.05); }
-    
     .nav-brand h1 {
       font-family: var(--font-tech); font-size: 18px; font-weight: 800; margin: 0;
       text-transform: uppercase; letter-spacing: 2px;
       background: linear-gradient(135deg, #fff 40%, #888);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-
-    .nav-controls {
-        display: flex; align-items: center; gap: 15px;
-    }
-
-    /* Profile in Nav */
-    .user-profile-nav {
-        display: none; /* JS toggles this */
-        align-items: center; gap: 10px;
-        padding: 5px 15px;
-        background: rgba(255,255,255,0.05);
-        border-radius: 30px;
-        border: 1px solid var(--glass-border);
-        cursor: pointer; transition: 0.3s;
-    }
-    .user-profile-nav:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
-    .user-avatar {
-        width: 32px; height: 32px;
-        border-radius: 50%; object-fit: cover;
-        border: 1px solid var(--accent);
     }
 
     /* Hamburger Menu */
@@ -127,8 +93,7 @@
     .nav-dropdown {
       position: fixed; top: 75px; right: 20px; width: 220px;
       background: rgba(10, 10, 10, 0.95);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
       border-radius: 12px; padding: 10px;
       display: flex; flex-direction: column; gap: 5px;
       opacity: 0; visibility: hidden;
@@ -149,22 +114,9 @@
       cursor: pointer; transition: all 0.2s ease;
       text-align: left; width: 100%;
     }
-    .menu-item i { width: 20px; text-align: center; font-size: 14px; transition: 0.2s; }
-    .menu-item:hover { background: rgba(255, 255, 255, 0.05); color: #fff; padding-left: 20px; }
-    .menu-item:hover i { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
-    
-    .menu-item.active-tab {
-      background: var(--accent-dim); color: #fff;
-      border: 1px solid rgba(255, 0, 76, 0.2);
-    }
+    .menu-item:hover, .menu-item.active-tab { background: var(--accent-dim); color: #fff; }
     .menu-item.active-tab i { color: var(--accent); }
-
-    .menu-item.join-btn {
-      margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.1);
-      border-radius: 0 0 8px 8px; color: var(--accent);
-    }
-    .menu-item.join-btn:hover { background: var(--accent); color: #000; }
-    .menu-item.join-btn:hover i { color: #000; text-shadow: none; }
+    .menu-item.join-btn { margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.1); color: var(--accent); }
 
     /* --- LAYOUT & ANIMATION --- */
     .container { max-width: 900px; margin: 0 auto; padding: 20px 15px 80px 15px; }
@@ -179,15 +131,7 @@
       position: relative; overflow: hidden;
       box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     }
-
-    .card:hover { border-color: rgba(255,255,255,0.15); box-shadow: 0 15px 40px -10px rgba(0,0,0,0.7); }
-    .card::before {
-      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      opacity: 0.6;
-    }
-
-    h2, h3, h4 { font-family: var(--font-tech); color: #fff; margin: 0 0 15px 0; letter-spacing: 1px; text-transform: uppercase; }
+    h2, h3 { font-family: var(--font-tech); color: #fff; margin: 0 0 15px 0; letter-spacing: 1px; text-transform: uppercase; }
     p { line-height: 1.7; color: var(--text-gray); font-size: 14px; margin-bottom: 15px; margin-top: 0; font-weight: 300; }
     .text-center { text-align: center; }
     .text-accent { color: var(--accent); }
@@ -201,38 +145,17 @@
     }
     .hero-title {
       font-size: 38px; font-weight: 900; margin-bottom: 15px;
-      text-shadow: 0 0 30px var(--accent-glow);
       position: relative; display: inline-block; letter-spacing: 4px;
+      color: #fff;
     }
-    
-    /* Glitch Effect */
-    .glitch { position: relative; color: white; }
-    .glitch::before, .glitch::after {
-      content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: var(--bg-deep); opacity: 0.8;
-    }
-    .glitch::before {
-      left: 2px; text-shadow: -2px 0 #00ffff;
-      clip: rect(24px, 550px, 90px, 0);
-      animation: glitch-anim-2 3s infinite linear alternate-reverse;
-    }
-    .glitch::after {
-      left: -2px; text-shadow: -2px 0 #ff004c;
-      clip: rect(85px, 550px, 140px, 0);
-      animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
-    }
-    @keyframes glitch-anim-1 { 0% { clip: rect(20px, 9999px, 15px, 0); } 100% { clip: rect(50px, 9999px, 20px, 0); } }
-    @keyframes glitch-anim-2 { 0% { clip: rect(10px, 9999px, 80px, 0); } 100% { clip: rect(90px, 9999px, 10px, 0); } }
-
+    .glitch { position: relative; }
     #typing-text { font-family: var(--font-tech); color: var(--text-gray); min-height: 40px; font-size: 13px; letter-spacing: 1px; }
 
     /* --- STATS --- */
     .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
     .stat-card { 
-      background: rgba(255, 255, 255, 0.02); 
-      padding: 20px; text-align: center; 
+      background: rgba(255, 255, 255, 0.02); padding: 20px; text-align: center; 
       border-radius: 12px; border: 1px solid var(--glass-border);
-      position: relative; overflow: hidden;
     }
     .stat-val-main { 
       font-family: var(--font-tech); color: var(--accent); 
@@ -251,21 +174,16 @@
       font-size: 11px; font-family: var(--font-tech); margin-bottom: 20px; 
       letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;
     }
-    .status-live { color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.4); animation: blink 2s infinite; }
-    @keyframes blink { 50% { opacity: 0.5; } }
-
     .countdown { display: flex; justify-content: center; align-items: flex-end; gap: 12px; margin-bottom: 25px; font-family: var(--font-tech); }
     .cd-item { text-align: center; width: 50px; }
     .cd-num { font-size: 26px; color: #fff; font-weight: 700; line-height: 1; }
     .cd-lbl { font-size: 9px; color: var(--accent); margin-top: 6px; font-weight: 600; }
-
+    
     .match-teams { 
       display: flex; justify-content: space-between; align-items: center; 
       border-top: 1px solid var(--glass-border); padding-top: 20px; position: relative;
     }
-    .team-block { text-align: center; flex: 1; }
     .team-name { font-family: var(--font-tech); font-size: 20px; font-weight: 700; margin-bottom: 5px; }
-    .team-sub { font-size: 10px; color: var(--text-gray); text-transform: uppercase; }
     .team-vs { 
       color: var(--accent); font-weight: 900; font-family: var(--font-tech); 
       font-size: 24px; font-style: italic; opacity: 0.8;
@@ -283,235 +201,84 @@
       cursor: pointer; width: 100%; border-radius: 4px;
     }
     .btn-glitch:hover { background: var(--accent); box-shadow: 0 0 25px var(--accent-glow); transform: translateY(-2px); }
-    .btn-glitch:active { transform: scale(0.98); }
-    
-    .pulse-btn { animation: neon-pulse 3s infinite ease-in-out; }
-    @keyframes neon-pulse { 
-      0%, 100% { box-shadow: 0 0 10px rgba(255,0,76,0.3); } 
-      50% { box-shadow: 0 0 25px rgba(255,0,76,0.6), 0 0 5px rgba(255,255,255,0.5); } 
-    }
-    
     .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; color: var(--text-gray); }
-    .btn-secondary:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: #fff; box-shadow: none; }
 
-    /* --- ROSTER STYLES --- */
-    .roster-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 15px; margin-top: 10px; }
-    .player-wrapper { width: 100%; height: 320px; perspective: 1000px; cursor: pointer; }
+    /* --- FORMS --- */
+    .form-group { margin-bottom: 15px; }
+    .form-label { display: block; color: var(--accent); font-size: 11px; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .form-input, textarea.form-input {
+      width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--glass-border);
+      color: #fff; padding: 14px; border-radius: 8px; outline: none; transition: 0.3s; font-family: var(--font-main);
+    }
+
+    /* --- ОБНОВЛЕННЫЙ ROSTER --- */
+    .roster-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
+    .player-wrapper { width: 100%; height: 320px; perspective: 1000px; }
     .player-card-inner { 
       position: relative; width: 100%; height: 100%; 
-      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; 
+      transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; 
     }
     .player-card-inner.is-flipped { transform: rotateY(180deg); }
     
     .player-front, .player-back {
       position: absolute; inset: 0; -webkit-backface-visibility: hidden; backface-visibility: hidden;
-      border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); 
-      background: rgba(20,20,20,0.6); backdrop-filter: blur(8px);
+      border-radius: 20px; overflow: hidden; border: 1px solid var(--glass-border);
+      display: flex; flex-direction: column; padding: 20px;
     }
-    .player-front { 
-      padding: 15px; display: flex; flex-direction: column; justify-content: space-between; z-index: 2;
-      background: linear-gradient(160deg, rgba(25,25,25,0.9) 0%, rgba(10,10,10,0.95) 100%);
-    }
-    .player-back { transform: rotateY(180deg); background: #000; }
-    .player-back img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
-    .player-wrapper:hover .player-back img { opacity: 1; scale: 1.05; }
 
-    .p-nick { 
-      font-size: 22px; font-weight: 700; margin: 0;
-      background: linear-gradient(90deg, #fff, #bbb); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    /* Лицевая сторона */
+    .player-front {
+      background: linear-gradient(165deg, #111 0%, #050505 100%);
+      justify-content: space-between;
+      border: 1px solid rgba(255, 0, 76, 0.2);
     }
-    .p-role { color: var(--accent); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
-    .p-quote { font-style: italic; color: #777; font-size: 11px; line-height: 1.4; border-left: 2px solid var(--accent); padding-left: 8px; }
+    .p-header { display: flex; align-items: center; gap: 12px; }
+    .p-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+    .p-nick { font-size: 20px; font-weight: 800; font-family: var(--font-tech); color: #fff; margin: 0; }
+    .p-role { font-size: 9px; color: var(--accent); font-weight: 700; text-transform: uppercase; }
+    .p-quote { font-size: 11px; color: #888; font-style: italic; margin-top: 15px; line-height: 1.4; border-left: 2px solid var(--accent); padding-left: 10px; }
 
-    .stats-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
-      margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);
+    /* Обратная сторона */
+    .player-back {
+      background: #0a0a0a;
+      transform: rotateY(180deg);
+      border: 1px solid var(--accent);
+      justify-content: center;
+      text-align: center;
     }
-    .stat-item {
-      background: rgba(0,0,0,0.4); padding: 8px 4px; text-align: center;
-      border-radius: 4px; transition: 0.2s; border: 1px solid transparent;
-    }
-    .stat-item:hover { border-color: var(--accent); background: rgba(255,0,76,0.05); }
-    .stat-item.rank-full {
-      grid-column: 1 / -1; 
-      background: linear-gradient(90deg, rgba(0,0,0,0.6), rgba(0,204,255,0.15), rgba(0,0,0,0.6));
-      border: 1px solid rgba(0,204,255,0.2); margin-bottom: 4px;
-    }
-    .stat-val { font-family: var(--font-tech); font-weight: 700; font-size: 14px; color: #fff; }
-    .stat-label { font-size: 8px; color: #666; text-transform: uppercase; margin-top: 2px; }
-    .s-kd { color: var(--success); } .s-hs { color: #ff0055; } .s-rnk { color: #00ccff; letter-spacing: 1px; }
+    .back-title { font-family: var(--font-tech); color: var(--accent); font-size: 12px; margin-bottom: 15px; letter-spacing: 1px; }
+    .info-item { margin-bottom: 12px; }
+    .info-label { font-size: 8px; color: #555; text-transform: uppercase; display: block; }
+    .info-value { font-size: 13px; color: #eee; font-weight: 600; }
 
-    /* --- AUTH & FORMS --- */
-    #auth-barrier {
-        position: fixed; inset: 0; z-index: 10000;
-        background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
-        display: flex; align-items: center; justify-content: center;
-        backdrop-filter: blur(20px); transition: 0.5s ease;
-    }
-    .auth-card {
-        width: 100%; max-width: 400px; padding: 30px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid var(--glass-border); border-radius: 20px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    }
-    .auth-tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
-    .auth-tab { cursor: pointer; opacity: 0.5; font-family: var(--font-tech); font-size: 14px; transition: 0.3s; flex: 1; text-align: center; }
-    .auth-tab.active { opacity: 1; color: var(--accent); border-bottom: 2px solid var(--accent); margin-bottom: -11px; }
 
-    .form-group { margin-bottom: 15px; }
-    .form-label { display: block; color: var(--accent); font-size: 11px; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-    .form-input {
-      width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--glass-border);
-      color: #fff; padding: 14px; border-radius: 8px; outline: none; transition: 0.3s; font-family: var(--font-main);
-    }
-    .form-input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(255,0,76,0.15); background: rgba(10,10,10,0.8); }
-    select.form-input { appearance: none; -webkit-appearance: none; }
+    /* --- REVIEWS --- */
+    .reviews-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+    .review-card { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 20px; border-radius: 12px; position: relative; }
+    .r-header { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+    .r-nick { font-family: var(--font-tech); font-size: 14px; font-weight: 700; color: #fff; }
+    .r-text { font-size: 13px; color: #ccc; line-height: 1.5; font-style: italic; }
 
-    /* Google Button Style */
-    .btn-google {
-        background: white; color: #111; 
-        border-color: rgba(255,255,255,0.5); 
-        margin-top: 10px; width: 100%;
-        display: flex; align-items: center; justify-content: center; gap: 10px;
-    }
-    .btn-google:hover { background: #f1f1f1; transform: translateY(-2px); box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+    /* --- ROADMAP --- */
+    .roadmap-container { position: relative; padding-left: 30px; margin: 20px 0; }
+    .roadmap-line { position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--accent) 0%, rgba(255,255,255,0.1) 100%); }
+    .rm-item { position: relative; margin-bottom: 30px; }
+    .rm-dot { position: absolute; left: -30px; top: 0; width: 14px; height: 14px; background: var(--bg-deep); border: 2px solid var(--accent); border-radius: 50%; z-index: 2; }
+    .rm-date { font-family: var(--font-tech); color: var(--accent); font-size: 10px; margin-bottom: 5px; display: block; }
+    .rm-title { color: #fff; font-weight: 700; font-size: 14px; margin-bottom: 2px; }
 
-    /* --- GALLERY LIGHTBOX --- */
-    .lightbox {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.95); 
-      backdrop-filter: blur(10px); z-index: 2000; 
-      display: none; flex-direction: column; align-items: center; justify-content: center;
-      opacity: 0; transition: opacity 0.3s;
-    }
-    .lightbox.active { display: flex; opacity: 1; }
-    .lightbox-img { max-width: 95%; max-height: 70vh; border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,0.8); border: 1px solid #333; }
-    .lightbox-nav { 
-        position: absolute; color: #fff; font-size: 40px; cursor: pointer; padding: 20px; 
-        opacity: 0.5; transition: 0.3s; top: 50%; transform: translateY(-50%); 
-    }
-    .lightbox-nav:hover { opacity: 1; color: var(--accent); text-shadow: 0 0 15px var(--accent); }
-    .lb-prev { left: 10px; } .lb-next { right: 10px; }
-    .lightbox-close { 
-        position: absolute; top: 20px; right: 30px; font-size: 35px; cursor: pointer; color: #fff; opacity: 0.6; transition: 0.3s; 
-    }
-    .lightbox-close:hover { opacity: 1; color: var(--accent); transform: rotate(90deg); }
-    .lightbox-caption { margin-top: 15px; color: #ccc; font-family: var(--font-tech); letter-spacing: 1px; font-size: 14px; }
-
-    /* --- FOOTER & MISC --- */
-    .donate-card { border: 1px dashed var(--accent); background: linear-gradient(45deg, rgba(255,0,76,0.05) 0%, transparent 100%); }
-    .result-row { 
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 13px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: var(--font-tech);
-    }
-    .result-row:last-child { border-bottom: none; }
-    .res-win { color: var(--success); font-weight: 700; text-shadow: 0 0 10px rgba(0,255,163,0.3); }
-    .res-lose { color: var(--accent); font-weight: 700; text-shadow: 0 0 10px rgba(255,0,76,0.3); }
+    /* --- GALLERY --- */
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+    .gallery-item { height: 120px; background-size: cover; background-position: center; border-radius: 8px; cursor: pointer; }
+    
+    /* --- LOADING TEXT --- */
     .loading-text { color: var(--text-gray); font-size: 12px; letter-spacing: 1px; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-  
-    /* --- ROADMAP (TIMELINE) --- */
-    .roadmap-container {
-        position: relative; padding-left: 30px; margin: 20px 0;
-    }
-    .roadmap-line {
-        position: absolute; left: 6px; top: 0; bottom: 0; width: 2px;
-        background: linear-gradient(180deg, var(--accent) 0%, rgba(255,255,255,0.1) 100%);
-        box-shadow: 0 0 10px var(--accent-glow);
-    }
-    .rm-item {
-        position: relative; margin-bottom: 40px;
-    }
-    .rm-dot {
-        position: absolute; left: -30px; top: 0; width: 14px; height: 14px;
-        background: var(--bg-deep); border: 2px solid var(--accent); border-radius: 50%;
-        z-index: 2; box-shadow: 0 0 10px var(--accent);
-    }
-    .rm-date {
-        font-family: var(--font-tech); color: var(--accent); font-size: 10px; margin-bottom: 5px;
-        display: block; letter-spacing: 1px;
-    }
-    .rm-content {
-        background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
-        padding: 15px; border-radius: 0 12px 12px 12px;
-        backdrop-filter: blur(5px);
-    }
-    .rm-title { color: #fff; font-weight: 700; font-size: 14px; margin-bottom: 5px; }
-
-    /* --- FAN XP SYSTEM --- */
-    .xp-bar-container {
-        width: 100%; height: 6px; background: rgba(255,255,255,0.1);
-        border-radius: 10px; margin: 10px 0; overflow: hidden; position: relative;
-    }
-    .xp-fill {
-        height: 100%; background: var(--success); width: 0%;
-        transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 0 10px var(--success);
-    }
-    .rank-badge {
-        display: inline-block; padding: 5px 12px; border: 1px solid var(--accent);
-        background: rgba(255, 0, 76, 0.1); color: #fff;
-        font-family: var(--font-tech); font-size: 10px; border-radius: 4px;
-        margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;
-        animation: neon-pulse 3s infinite;
-    }
-
-    /* --- AMBIENT PLAYER --- */
-    #ambient-player {
-        position: fixed; bottom: 20px; right: 20px; z-index: 9000;
-        display: flex; align-items: center; gap: 10px;
-        background: rgba(0,0,0,0.8); padding: 8px 12px; border-radius: 50px;
-        border: 1px solid var(--glass-border); backdrop-filter: blur(10px);
-        transition: 0.3s;
-    }
-    #ambient-player:hover { border-color: var(--accent); }
-    .music-waves {
-        display: flex; gap: 3px; height: 15px; align-items: flex-end;
-    }
-    .wave {
-        width: 3px; background: var(--accent); animation: wave 1s infinite ease-in-out;
-    }
-    .wave:nth-child(2) { animation-delay: 0.1s; height: 60%; }
-    .wave:nth-child(3) { animation-delay: 0.2s; height: 30%; }
-    @keyframes wave { 0%, 100% { height: 20%; } 50% { height: 100%; } }
-    .play-state-icon { color: #fff; font-size: 14px; cursor: pointer; width: 20px; text-align: center; }
-
-    /* --- LIVE CHAT --- */
-    .chat-window {
-        height: 60vh; background: rgba(0,0,0,0.3); border-radius: 12px;
-        border: 1px solid var(--glass-border); display: flex; flex-direction: column;
-        overflow: hidden;
-    }
-    .chat-messages {
-        flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px;
-    }
-    .chat-msg {
-        max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 12px; line-height: 1.4;
-        position: relative; animation: slideIn 0.3s ease; word-wrap: break-word;
-    }
-    .chat-msg.msg-own {
-        align-self: flex-end; background: rgba(255, 0, 76, 0.2); border: 1px solid rgba(255, 0, 76, 0.3);
-        color: #fff; border-bottom-right-radius: 0;
-    }
-    .chat-msg.msg-other {
-        align-self: flex-start; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-        color: #ddd; border-bottom-left-radius: 0;
-    }
-    .msg-author { font-size: 9px; color: var(--accent); font-weight: 700; margin-bottom: 2px; display: block; }
-    .msg-time { font-size: 8px; opacity: 0.4; float: right; margin-left: 8px; margin-top: 2px; }
-    .chat-input-area {
-        padding: 10px; background: rgba(0,0,0,0.6); border-top: 1px solid var(--glass-border);
-        display: flex; gap: 10px;
-    }
-    @keyframes slideIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
 
   </style>
 
   <script>
-    // Anti-inspect and basic protection
     document.addEventListener('contextmenu', event => event.preventDefault());
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) { e.preventDefault(); }
-    });
   </script>
 </head>
 <body>
@@ -522,123 +289,33 @@
     </div>
     <i class="fas fa-play play-state-icon" id="music-btn" onclick="toggleAmbient()"></i>
     <audio id="bg-music" loop>
-        <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_734891122a.mp3?filename=cyberpunk-city-11017.mp3" type="audio/mpeg">
+        <source src="music.mp3" type="audio/mpeg">
     </audio>
 </div>
 
-<div id="auth-barrier">
-  <div class="auth-card">
-    <div class="text-center" style="margin-bottom: 25px;">
-        <div style="position: relative; display: inline-block;">
-            <img src="https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg" 
-                 style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; box-shadow: 0 0 20px var(--accent-glow);">
-        </div>
-        <h2 class="font-tech" style="font-size: 22px; margin-top: 15px; letter-spacing: 2px;">AIREX ACCESS</h2>
-        <div style="font-size: 10px; opacity: 0.5; text-transform: uppercase;">Система авторизации игрока</div>
-    </div>
-
-    <div class="auth-tabs">
-        <div class="auth-tab active" id="tab-login" onclick="window.switchAuth('login')">ВХОД</div>
-        <div class="auth-tab" id="tab-reg" onclick="window.switchAuth('reg')">РЕГИСТРАЦИЯ</div>
-    </div>
-
-    <form id="auth-form">
-        <div class="form-group">
-            <input type="email" id="auth-email" class="form-input" placeholder="Email" required autocomplete="email">
-        </div>
-        <div class="form-group">
-            <input type="password" id="auth-pass" class="form-input" placeholder="Пароль" required minlength="6" autocomplete="current-password">
-        </div>
-        <button type="submit" id="auth-submit-btn" class="btn-glitch" style="margin-top: 10px; width: 100%;">
-            ВОЙТИ В СИСТЕМУ
-        </button>
-    </form>
-
-    <div style="display:flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-        <button onclick="window.loginGoogle()" class="btn-glitch btn-google">
-            <i class="fab fa-google"></i> ВОЙТИ ЧЕРЕЗ GOOGLE
-        </button>
-        
-        <div id="tg-auth-container" style="display: flex; justify-content: center; min-height: 40px;"></div>
-    </div>
-  </div>
-</div>
-
-<div id="profile-modal" class="lightbox" style="display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9);">
-    <div class="card" style="max-width: 400px; width: 90%;">
-        <h3 class="font-tech">НАСТРОЙКИ АККАУНТА</h3>
-        
-        <div style="text-align: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--glass-border);">
-            <div class="rank-badge" id="user-rank-display">LOADING RANK...</div>
-            <div style="display: flex; justify-content: space-between; font-size: 10px; color: #888;">
-                <span>XP: <span id="current-xp">0</span></span>
-                <span>NEXT: <span id="next-rank-xp">100</span></span>
-            </div>
-            <div class="xp-bar-container">
-                <div class="xp-fill" id="xp-bar-fill"></div>
-            </div>
-            <p style="font-size: 9px; color: #555; margin: 5px 0 0 0;">Заходи каждый день, чтобы прокачивать уровень!</p>
-        </div>
-
-        <div class="form-group">
-            <label class="form-label">Никнейм в системе</label>
-            <input type="text" id="set-nick" class="form-input">
-        </div>
-        <div class="form-group">
-            <label class="form-label">Ссылка на аватар (URL)</label>
-            <input type="text" id="set-avatar" class="form-input">
-        </div>
-        <div style="display: flex; gap: 10px; margin-top: 20px;">
-            <button onclick="window.saveProfile()" class="btn-glitch" style="flex: 1;">СОХРАНИТЬ</button>
-            <button onclick="window.logout()" class="btn-glitch" style="flex: 1; background: #333; border-color: #555;">ВЫЙТИ</button>
-        </div>
-        <button onclick="document.getElementById('profile-modal').style.display='none'" style="margin-top: 15px; background: none; border: none; color: #555; cursor: pointer; width: 100%; font-size: 12px; text-transform: uppercase;">Закрыть</button>
-    </div>
-</div>
 <div class="bg-logo"></div>
 
 <nav class="navbar">
-    <div class="nav-brand">
+    <div class="nav-brand" onclick="location.reload()">
       <img src="logo.png" alt="AX" onerror="this.style.display='none'"> 
       <h1>Airex<span style="color:var(--text-gray); font-weight:400;">Team</span></h1>
     </div>
 
     <div class="nav-controls">
-        <div class="user-profile-nav" id="user-nav-btn" onclick="document.getElementById('profile-modal').style.display='flex'">
-            <img src="" id="nav-avatar" class="user-avatar" alt="User">
-            <span id="nav-username" style="font-size: 12px; font-weight: bold;">User</span>
-        </div>
-
         <button class="menu-toggle" id="menuBtn" onclick="toggleMenu()">
             <i class="fas fa-bars"></i>
         </button>
     </div>
 
     <div class="nav-dropdown" id="navDropdown">
-      <button class="menu-item active-tab" onclick="selectTab('home', this)">
-          <i class="fas fa-home"></i> Главная
-      </button>
-      <button class="menu-item" onclick="selectTab('team', this)">
-          <i class="fas fa-users"></i> Состав
-      </button>
-      <button class="menu-item" onclick="selectTab('about', this)">
-          <i class="fas fa-shield-alt"></i> Инфо
-      </button>
-      <button class="menu-item" onclick="selectTab('chat', this)">
-          <i class="fas fa-comments"></i> Live Chat
-      </button>
-      <button class="menu-item" onclick="selectTab('news', this)">
-          <i class="fas fa-bolt"></i> Новости
-      </button>
-      <button class="menu-item" onclick="selectTab('media', this)">
-          <i class="fas fa-play-circle"></i> Медиа
-      </button>
-      <button class="menu-item" onclick="selectTab('history', this)">
-          <i class="fas fa-trophy"></i> Матчи
-      </button>
-      <button class="menu-item join-btn" onclick="selectTab('join', this)">
-          <i class="fas fa-user-plus"></i> Вступить
-      </button>
+      <button class="menu-item active-tab" onclick="selectTab('home', this)"><i class="fas fa-home"></i> Главная</button>
+      <button class="menu-item" onclick="selectTab('team', this)"><i class="fas fa-users"></i> Состав</button>
+      <button class="menu-item" onclick="selectTab('about', this)"><i class="fas fa-shield-alt"></i> Инфо</button>
+      <button class="menu-item" onclick="selectTab('news', this)"><i class="fas fa-bolt"></i> Новости</button>
+      <button class="menu-item" onclick="selectTab('media', this)"><i class="fas fa-play-circle"></i> Медиа</button>
+      <button class="menu-item" onclick="selectTab('history', this)"><i class="fas fa-trophy"></i> Матчи</button>
+      <button class="menu-item" onclick="selectTab('reviews', this)"><i class="fas fa-star"></i> Отзывы</button>
+      <button class="menu-item join-btn" onclick="selectTab('join', this)"><i class="fas fa-user-plus"></i> Вступить</button>
     </div>
 </nav>
 
@@ -647,191 +324,97 @@
     <section id="home" class="active">
       <div class="card hero-card">
         <h2 class="glitch hero-title" data-text="AIREX TEAM">AIREX TEAM</h2>
-        <p style="font-size: 16px; color: #ddd;">Professional Standoff 2 Esports Organization</p>
+        <p style="font-size: 16px; color: #ddd;">Профиссональная организация киберспорта, по дицеплине Standoff 2 </p>
         <div id="typing-text"></div>
         <div style="margin-top: 25px;">
            <button class="btn-glitch" onclick="selectTab('join', document.querySelector('.join-btn'))">
-             СТАТЬ ЧАСТЬЮ КОМАНДЫ <i class="fas fa-chevron-right" style="margin-left:8px; font-size:10px;"></i>
+             Предложить кандитуру <i class="fas fa-chevron-right" style="margin-left:8px; font-size:10px;"></i>
            </button>
         </div>
       </div>
       
       <div class="stats-row">
         <div class="stat-card">
-          <div class="stat-val-main">0</div>
-          <div class="stat-lbl">Трофеев</div>
+          <div class="stat-val-main">0</div><div class="stat-lbl">Трофеев</div>
         </div>
         <div class="stat-card">
-          <div id="win-rate-val" class="stat-val-main">0%</div>
-          <div class="stat-lbl">Win Rate</div>
+          <div class="stat-val-main">0%</div><div class="stat-lbl">Рейтинг победы</div>
         </div>
       </div>
 
       <div class="card match-card">
         <div class="match-header">
-          <span class="text-accent" style="font-weight:700;"><i class="fas fa-crosshairs"></i> NEXT MATCH</span>
+          <span class="text-accent" style="font-weight:700;"><i class="fas fa-crosshairs"></i> Следущий матч</span>
           <span id="match-status" class="status-live">COUNTDOWN</span>
         </div>
         
         <div id="countdown" class="countdown">
-          <div class="cd-item"><div id="days" class="cd-num">00</div><div class="cd-lbl">ДН</div></div>
-          <div class="cd-num" style="color:var(--glass-border); font-weight:300;">:</div>
-          <div class="cd-item"><div id="hours" class="cd-num">00</div><div class="cd-lbl">ЧАС</div></div>
-          <div class="cd-num" style="color:var(--glass-border); font-weight:300;">:</div>
-          <div class="cd-item"><div id="minutes" class="cd-num">00</div><div class="cd-lbl">МИН</div></div>
-          <div class="cd-num" style="color:var(--glass-border); font-weight:300;">:</div>
-          <div class="cd-item"><div id="seconds" class="cd-num">00</div><div class="cd-lbl">СЕК</div></div>
+           <div class="loading-text" style="font-size:14px; color:#fff;">ОЖИДАНИЕ АНОНСА...</div>
         </div>
 
         <div class="match-teams">
           <div class="team-block">
-             <div class="team-name">ARXtm</div>
+             <div class="team-name">ARX</div>
              <div class="team-sub">Airex Team</div>
           </div>
           <div class="team-vs">VS</div>
           <div class="team-block">
-            <div class="team-name" style="color:var(--text-gray);">RNFOR</div>
+            <div class="team-name" id="enemy-name-display">TBA</div>
             <div class="team-sub">Opponent</div>
           </div>
         </div>
       </div> 
   
       <div class="card">
-          <h3><i class="fab fa-telegram-plane text-accent" style="margin-right:8px;"></i> LIVE NEWS</h3>
-          <div id="dynamic-tg-widget" style="min-height: 200px; display:flex; align-items:center; justify-content:center;">
-             <span class="loading-text">CONNECTING TO HQ...</span>
+          <h3><i class="fas fa-bolt text-accent" style="margin-right:8px;"></i> LIVE НОВОСТИ</h3>
+          <div id="home-news-feed">
+             <div class="text-center loading-text">СИНХРОНИЗАЦИЯ...</div>
           </div>
+          <button class="btn-glitch btn-secondary" onclick="selectTab('news', document.querySelectorAll('.menu-item')[3])" style="margin-top:15px;">
+            ЧИТАТЬ ВСЕ НОВОСТИ
+          </button>
       </div>
 
      <div class="card donate-card text-center">
       <h3 style="font-size: 16px; margin-bottom: 8px;">ПОДДЕРЖКА КОМАНДЫ</h3>
-      <p style="font-size: 12px; margin-bottom: 20px;">Твой вклад приближает нас к новым победам.</p>
-      <a href="https://dalink.to/airex_team" target="_blank" class="btn-glitch pulse-btn" style="border:none; background: var(--accent); width: auto; display: inline-flex;">
+      <a href="https://dalink.to/airex_team" target="_blank" class="btn-glitch" style="border:none; background: var(--accent); width: auto; display: inline-flex;">
         <i class="fas fa-heart" style="font-size: 14px; margin-right: 8px;"></i> ОТПРАВИТЬ ДОНАТ
       </a>
     </div>
-
-    <div class="card">
-      <h3><i class="fas fa-history text-accent" style="margin-right: 10px;"></i> Последние игры</h3>
-      <div id="latest-results-container">
-          <p class="text-center loading-text">ЗАГРУЗКА ДАННЫХ...</p>
-      </div>
-      <button class="btn-glitch btn-secondary" onclick="selectTab('history', document.querySelectorAll('.menu-item')[5])">
-        ВСЯ ИСТОРИЯ
-      </button>
-    </div>
-    </section>
-
-    <section id="roadmap-sec">
-       <div class="card">
-           <h3><i class="fas fa-route text-accent"></i> ПУТЬ AIREX</h3>
-           <p style="font-size:12px;">Наша история от создания до легенды.</p>
-           
-           <div class="roadmap-container">
-               <div class="roadmap-line"></div>
-               
-               <div class="rm-item">
-                   <div class="rm-dot"></div>
-                   <div class="rm-content">
-                       <span class="rm-date">01.01.2024</span>
-                       <div class="rm-title">INITIATION</div>
-                       <div style="font-size: 12px; color: #aaa;">Основание Airex Team. Сбор первого состава.</div>
-                   </div>
-               </div>
-
-               <div class="rm-item">
-                   <div class="rm-dot"></div>
-                   <div class="rm-content">
-                       <span class="rm-date">15.06.2025</span>
-                       <div class="rm-title">FIRST BLOOD</div>
-                       <div style="font-size: 12px; color: #aaa;">Победа на турнире CyberStandoff Major (Tier-3).</div>
-                   </div>
-               </div>
-
-               <div class="rm-item">
-                   <div class="rm-dot" style="background: var(--bg-deep); border-color: #fff;"></div>
-                   <div class="rm-content" style="border-color: rgba(255,255,255,0.2);">
-                       <span class="rm-date">FUTURE</span>
-                       <div class="rm-title">GLOBAL ELITE</div>
-                       <div style="font-size: 12px; color: #aaa;">Выход на международную арену. Цель зафиксирована.</div>
-                   </div>
-               </div>
-           </div>
-       </div>
-    </section>
-
-    <section id="chat">
-        <div class="text-center" style="margin-bottom: 15px;">
-            <h2 class="font-tech">CLAN CHAT</h2>
-            <p style="font-size: 10px; opacity: 0.6;">Только для авторизованных фанатов</p>
-        </div>
-        
-        <div class="chat-window">
-            <div class="chat-messages" id="chat-feed">
-                <div style="text-align:center; margin-top: 50px; color: #444;">
-                    <i class="fas fa-lock"></i><br>Войдите в аккаунт, чтобы видеть чат
-                </div>
-            </div>
-            
-            <form id="chat-form" class="chat-input-area">
-                <input type="text" id="chat-input" class="form-input" 
-                       style="padding: 10px; border-radius: 50px; font-size: 12px;" 
-                       placeholder="Написать сообщение..." autocomplete="off">
-                <button type="submit" class="btn-glitch" style="width: 50px; border-radius: 50%; padding: 0;">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </form>
-        </div>
     </section>
 
     <section id="team">
-      <div class="text-center" style="margin-bottom: 25px;">
-        <h2 class="font-tech" style="text-shadow: 0 0 20px rgba(255,255,255,0.1);">MAIN ROSTER</h2>
-        <p style="font-size: 12px; opacity: 0.6;">(Нажми на карту игрока)</p>
+      <div class="text-center" style="margin-bottom: 30px;">
+        <h2 class="font-tech" style="color: var(--accent);">MAIN ROSTER</h2>
+        <p style="font-size: 11px; opacity: 0.5;">Нажми на карту игрока для инфо</p>
       </div>
       <div class="roster-grid" id="dynamic-roster">
-          <div class="text-center" style="grid-column: 1/-1;">
-              <span class="loading-text">LOADING ROSTER DATA...</span>
           </div>
+
+      <div class="text-center" style="margin-top: 60px; margin-bottom: 30px;">
+        <h2 class="font-tech" style="opacity: 0.7;">RESERVE ROSTER</h2>
       </div>
-      
-      <div class="text-center" style="margin-top: 50px; margin-bottom: 25px;">
-        <h3 class="font-tech" style="opacity: 0.7; font-size: 18px;">RESERVE / ACADEMY</h3>
-      </div>
-      <div class="roster-grid" id="reserve-roster">
-      </div>
+      <div class="roster-grid" id="dynamic-roster-reserve">
+          </div>
     </section>
 
+
     <section id="about">
-      <div class="card">
-        <h3><i class="fas fa-shield-alt text-accent" style="margin-right:10px;"></i> О НАС</h3>
-        <p>
-          <strong style="color: #fff;">Airex Team</strong> — это не просто клан, это киберспортивная экосистема. 
-          Мы объединяем талантливых игроков, стремящихся к доминированию в Standoff 2. 
-          Дисциплина, тактика и бесконечное совершенствование — наши главные принципы.
-        </p>
-        <p>Мы создаем историю каждой игрой, каждым турниром и каждым хайлайтом.</p>
-      </div>
+       <div class="card">
+           <h3><i class="fas fa-route text-accent"></i> ПУТЬ AIREX</h3>
+           <div class="roadmap-container" id="roadmap-container">
+               <div class="roadmap-line"></div>
+               <div class="text-center loading-text">ЗАГРУЗКА ИСТОРИИ...</div>
+           </div>
+       </div>
 
       <div class="card text-center">
-        <h3>НАШИ РЕСУРСЫ</h3>
-        <p style="font-size: 12px; margin-bottom: 20px;">Подписывайся, чтобы следить за нами 24/7</p>
-        
-        <div class="social-row" style="display: flex; justify-content: center; gap: 25px; flex-wrap: wrap;">
-          <a href="https://t.me/airex_team" target="_blank" class="social-icon si-tg"><i class="fab fa-telegram"></i></a>
-          <a href="https://www.tiktok.com/@airex_team" target="_blank" class="social-icon si-tt"><i class="fab fa-tiktok"></i></a>
-          <a href="https://vk.ru/airex_team" target="_blank" class="social-icon si-vk"><i class="fab fa-vk"></i></a>
-          <a href="https://youtube.com/@airex_team.official" target="_blank" class="social-icon si-yt"><i class="fab fa-youtube"></i></a>
-          <a href="https://www.twitch.tv/airex_team" target="_blank" class="social-icon si-tw"><i class="fab fa-twitch"></i></a>
+        <h3>НАШИ СОЦСЕТИ</h3>
+        <div class="social-row" style="display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin-top:20px; font-size: 30px;">
+          <a href="https://t.me/airex_team_esports" target="_blank" style="color:#fff;"><i class="fab fa-telegram"></i></a>
+          <a href="https://www.tiktok.com/@airex_team" target="_blank" style="color:#fff;"><i class="fab fa-tiktok"></i></a>
+          <a href="https://youtube.com/@airex_team.official" target="_blank" style="color:#fff;"><i class="fab fa-youtube"></i></a>
         </div>
-        <style>
-          .social-icon { 
-            font-size: 24px; color: #fff; opacity: 0.6; transition: 0.3s; 
-            width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
-            border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid transparent;
-          }
-          .social-icon:hover { opacity: 1; transform: translateY(-5px) scale(1.1); border-color: var(--accent); background: var(--accent-dim); box-shadow: 0 0 15px var(--accent-glow); }
-        </style>
       </div>
     </section>
 
@@ -841,7 +424,7 @@
       </div>
       <div id="dynamic-news-container">
           <div class="card text-center">
-              <span class="loading-text">ЗАГРУЗКА НОВОСТЕЙ...</span>
+              <span class="loading-text">ЗАГРУЗКА...</span>
           </div>
       </div>
     </section>
@@ -849,897 +432,380 @@
     <section id="media">
         <div class="card">
           <h3>📸 ГАЛЕРЕЯ</h3>
-          <p style="font-size: 12px;">Моменты славы и рабочие будни.</p>
-          
-          <div class="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px;">
-            <div class="gallery-item" style="background-image: url('https://i.postimg.cc/X7JxT5Wp/IMG_20260103_231729_893.jpg');" data-src="https://i.postimg.cc/X7JxT5Wp/IMG_20260103_231729_893.jpg" data-caption="ACE by Nazzzy">
-              <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
-            </div>
-            <div class="gallery-item" style="background-image: url('https://i.postimg.cc/VL643twC/IMG-20260103-231733-964.jpg');" data-src="https://i.postimg.cc/VL643twC/IMG-20260103-231733-964.jpg" data-caption="ACE by ToDay">
-              <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
-            </div>
-            <div class="gallery-item" style="background-image: url('https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg'); background-position: top;" data-src="https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg" data-caption="Main Roster 2026">
-               <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
-            </div>
+          <div class="gallery-grid" id="gallery-container">
+             <div class="loading-text">Загрузка фото...</div>
           </div>
-    
-          <style>
-            .gallery-item {
-                height: 120px; background-size: cover; background-position: center; 
-                border-radius: 8px; border: 1px solid var(--glass-border); 
-                cursor: pointer; position: relative; overflow: hidden; transition: 0.3s;
-            }
-            .gallery-item:hover { border-color: var(--accent); transform: scale(1.02); }
-            .gallery-overlay {
-                position: absolute; inset: 0; background: rgba(0,0,0,0.5); 
-                display: flex; align-items: center; justify-content: center;
-                opacity: 0; transition: 0.3s; color: #fff; font-size: 20px;
-            }
-            .gallery-item:hover .gallery-overlay { opacity: 1; }
-          </style>
         </div>
     
         <div class="card">
-          <h3>🎥 HIGHLIGHTS</h3>
-          <div class="video-wrapper" data-video-id="Cq3ej9jtyIY" style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; border: 1px solid var(--glass-border); background: #000; cursor: pointer;">
-            <div style="width:100%; height:100%; background: url('https://img.youtube.com/vi/Cq3ej9jtyIY/maxresdefault.jpg') center/cover; opacity: 0.8; transition: 0.3s;"></div>
-            <div class="play-btn-overlay" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
-                <div style="width: 60px; height: 60px; background: rgba(255,0,76,0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; box-shadow: 0 0 20px var(--accent-glow);">▶</div>
+          <h3>🎥 ВИДЕО</h3>
+          <div id="video-container" style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; border: 1px solid var(--glass-border); background: #000;">
+            <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+                <span class="loading-text">Видео не установлено</span>
             </div>
           </div>
-          <a href="https://youtube.com/@airex_team.official" target="_blank" class="btn-glitch btn-secondary" style="margin-top: 15px;">
-            <i class="fab fa-youtube" style="margin-right: 8px;"></i> ПЕРЕЙТИ НА КАНАЛ
-          </a>
         </div> 
-    </section>
-
-    <section id="join">
-      <div class="card">
-        <div class="text-center">
-            <h3 style="font-size: 24px; margin-bottom: 5px;">JOIN AIREX</h3>
-            <p style="font-size: 13px;">Готов проверить себя? Заполни анкету.</p>
-        </div>
-        
-        <form onsubmit="sendToTelegram(event)" autocomplete="off" style="margin-top: 20px;">
-          <div class="form-group">
-            <label class="form-label">Никнейм</label>
-            <input type="text" id="nick" class="form-input" placeholder="Твой ник" required>
-          </div>
-          <div class="form-row" style="display: flex; gap: 15px;">
-            <div class="form-group" style="flex: 1;">
-              <label class="form-label">Возраст</label>
-              <input type="number" id="age" class="form-input" placeholder="16" required>
-            </div>
-            <div class="form-group" style="flex: 1;">
-              <label class="form-label">K/D (Ranked)</label>
-              <input type="number" step="0.01" id="kd" class="form-input" placeholder="1.50" required>
-            </div>
-          </div> 
-          <div class="form-group">
-            <label class="form-label">Желаемая роль</label>
-            <select id="role" class="form-input">
-              <option value="Рифлер">Рифлер (Rifler)</option>
-              <option value="Снайпер">Снайпер (AWP)</option>
-              <option value="Капитан">Капитан (IGL)</option>
-              <option value="Саппорт">Саппорт (Support)</option>
-              <option value="Опен-Фрагер">Энтри (Entry)</option> 
-              <option value="Любой">Универсал</option> 
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Часов в игре</label>
-            <input type="text" id="hours" class="form-input" placeholder="Например: 2500ч" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Максимальный ранг</label>
-            <input type="text" id="best_rank" class="form-input" placeholder="Elite / Master / Legend" required> 
-          </div>
-          
-          <button type="submit" class="btn-glitch pulse-btn" style="margin-top: 20px; font-size: 14px;">
-            ОТПРАВИТЬ ЗАЯВКУ <i class="fas fa-paper-plane" style="margin-left: 10px;"></i>
-          </button>
-        </form>
-      </div>
     </section>
 
     <section id="history">
         <div class="text-center" style="margin-bottom: 30px;">
-          <h2 class="glitch hero-title" style="font-size: 28px;" data-text="MATCH HISTORY">MATCH HISTORY</h2>
-          <p style="font-size: 12px; opacity: 0.6;">Хронология наших сражений</p>
+          <h2 class="font-tech">MATCH HISTORY</h2>
         </div>
-    
         <div id="full-history-container">
           <div class="text-center" style="padding: 40px;">
-              <i class="fas fa-circle-notch fa-spin text-accent" style="font-size: 30px;"></i>
-              <p style="margin-top: 15px; font-size: 12px;">СИНХРОНИЗАЦИЯ С БАЗОЙ...</p>
+              <span class="loading-text">СИНХРОНИЗАЦИЯ...</span>
           </div>
         </div>
-        
-        <style>
-            .history-card {
-                background: rgba(20, 20, 20, 0.6);
-                border: 1px solid var(--glass-border);
-                border-radius: 12px; padding: 20px; margin-bottom: 12px;
-                display: flex; align-items: center; justify-content: space-between;
-                position: relative; overflow: hidden; backdrop-filter: blur(10px);
-            }
-            .history-card::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; }
-            .history-card.win-border::before { background: var(--success); box-shadow: 0 0 15px var(--success); }
-            .history-card.lose-border::before { background: var(--accent); box-shadow: 0 0 15px var(--accent); }
-            
-            .h-opponent { font-family: var(--font-tech); font-size: 16px; color: #fff; font-weight: 700; }
-            .h-tour { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; display: block; }
-            .h-score { font-family: var(--font-tech); font-size: 20px; font-weight: 700; letter-spacing: 1px; }
-            .h-status { font-size: 9px; text-transform: uppercase; font-weight: 800; margin-top: 5px; }
-            .text-win { color: var(--success); } .text-lose { color: var(--accent); }
-        </style>
     </section>
 
+    <section id="reviews">
+        <div class="text-center" style="margin-bottom: 20px;">
+            <h2 class="font-tech">ОТЗЫВЫ</h2>
+        </div>
+
+        <div class="card">
+            <h3>ОСТАВИТЬ ОТЗЫВ</h3>
+            <form id="review-form" onsubmit="window.submitReview(event)">
+                <div class="form-group">
+                    <label class="form-label">Ваш Nick</label>
+                    <input type="text" id="rev-nick" class="form-input" placeholder="Nick" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Кому отзыв?</label>
+                    <select id="rev-target" class="form-input">
+                        <option value="Всей команде">Всей команде</option>
+                        <option value="Капитану">Капитану</option>
+                        <option value="Менеджеру">Менеджеру</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Текст</label>
+                    <textarea id="rev-text" class="form-input" placeholder="..." required></textarea>
+                </div>
+                <button type="submit" class="btn-glitch">ОТПРАВИТЬ ОТЗЫВ</button>
+            </form>
+        </div>
+
+        <div class="reviews-grid" id="reviews-container"></div>
+    </section>
+
+ <section id="join">
+  <div class="card">
+    <div class="text-center">
+        <h3 style="font-size: 24px; margin-bottom: 5px;">JOIN AIREX</h3>
+    </div>
+    <form onsubmit="sendToTelegram(event)" autocomplete="off" style="margin-top: 20px;">
+      <div class="form-group">
+        <label class="form-label">Никнейм</label>
+        <input type="text" id="nick" class="form-input" placeholder="Ваш ник" required>
+      </div>
+      <div style="display: flex; gap: 15px;">
+        <div class="form-group" style="flex: 1;">
+            <label class="form-label">Возраст</label>
+            <input type="number" id="age" class="form-input" placeholder="16" required>
+        </div>
+        <div class="form-group" style="flex: 1;">
+            <label class="form-label">K/D</label>
+            <input type="number" step="0.01" id="kd" class="form-input" placeholder="1.50" required>
+        </div>
+      </div> 
+      <div class="form-group">
+        <label class="form-label">Роль</label>
+        <select id="role" class="form-input">
+            <option>Рифлер</option>
+            <option>Снайпер</option>
+            <option>Капитан</option>
+            <option>Энтри-Фрагер</option>
+            <option>Опен-Фрагер</option>
+            <option>Саппорт</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ранг</label>
+        <input type="text" id="best_rank" class="form-input" placeholder="Legend / Phoenix" required>
+      </div>
+      <button type="submit" class="btn-glitch">ОТПРАВИТЬ В ЛИЧКУ TG</button>
+    </form>
+  </div>
+</section>
+
+
     <footer style="text-align: center; padding: 40px 20px; color: #444; font-size: 10px; font-family: var(--font-tech); text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 40px;">
-        <p style="margin: 0;">© 2026 AIREX TEAM INC. ALL RIGHTS RESERVED.</p>
-        <p style="margin: 5px 0 0 0; opacity: 0.5;">DESIGNED FOR CHAMPIONS</p>
+        <p style="margin: 0;">© 2026 AIREX TEAM.</p>
     </footer>
 
 </div> 
 
-<div class="lightbox" id="lightbox">
-    <div class="lightbox-close">&times;</div>
-    <div class="lightbox-nav lb-prev">&#10094;</div>
-    <div class="lightbox-nav lb-next">&#10095;</div>
-    <img src="" class="lightbox-img" id="lightboxImg">
-    <div class="lightbox-caption" id="lightboxCaption"></div>
-</div>
-<script>
-    // --- UI КОНФИГУРАЦИЯ ---
-    const CONF = { 
-        tg: { channel: 'airex_team', id: 638 }, 
-        match: new Date("2026-01-07T18:00:00+03:00") // Дата матча (по умолчанию)
-    };
-    
-    // Вспомогательные функции для выбора элементов
-    const $ = (s) => document.querySelector(s);
-    const $$ = (s) => document.querySelectorAll(s);
-
-    // --- ЛОГИКА МЕНЮ И ВКЛАДОК ---
-    function toggleMenu() {
-      const menuBtn = document.getElementById('menuBtn');
-      const dropdown = document.getElementById('navDropdown');
-      if (menuBtn && dropdown) {
-          menuBtn.classList.toggle('active');
-          dropdown.classList.toggle('active');
-          const icon = menuBtn.querySelector('i');
-          if (icon) icon.className = menuBtn.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
-      }
-    }
-
-    // Закрытие меню при клике вне его
-    document.addEventListener('click', (e) => {
-      const dropdown = document.getElementById('navDropdown');
-      const menuBtn = document.getElementById('menuBtn');
-      if (dropdown && dropdown.classList.contains('active') && !dropdown.contains(e.target) && !menuBtn.contains(e.target)) {
-        toggleMenu();
-      }
-    });
-
-    // Переключение вкладок
-    window.selectTab = (id, btn) => {
-      $$('section').forEach(s => {
-          s.style.opacity = '0';
-          s.style.transform = 'translateY(15px)';
-          setTimeout(() => s.classList.remove('active'), 200);
-      });
-      
-      setTimeout(() => {
-          const target = $('#' + id);
-          if(target) {
-              target.classList.add('active');
-              void target.offsetWidth; // force reflow для анимации
-              target.style.opacity = '1';
-              target.style.transform = 'translateY(0)';
-          }
-      }, 200);
-      
-      // Обновление активного класса в меню
-      $$('.menu-item').forEach(b => b.classList.remove('active-tab'));
-      if(btn) btn.classList.add('active-tab');
-      
-      const dropdown = document.getElementById('navDropdown');
-      if (dropdown && dropdown.classList.contains('active')) toggleMenu();
-
-      // Остановка видео, если уходим с вкладки Media
-      if (id !== 'media') {
-        const v = $('.video-wrapper');
-        if (v && v.dataset.loaded) {
-          const vidId = v.dataset.videoId;
-          v.innerHTML = `<div style="width:100%; height:100%; background: url('https://img.youtube.com/vi/${vidId}/maxresdefault.jpg') center/cover; opacity: 0.8;"></div><div class="play-btn-overlay" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;"><div style="width: 60px; height: 60px; background: rgba(255,0,76,0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">▶</div></div>`;
-          delete v.dataset.loaded;
-        }
-      }
-      window.scrollTo({top: 0, behavior: 'smooth'});
-    };
-
-    // --- ТАЙМЕР ОБРАТНОГО ОТСЧЕТА ---
-    function updateCountdown() {
-      const diff = CONF.match - new Date();
-      if (diff < 0) {
-        if($('#countdown')) $('#countdown').innerHTML = "<div class='text-center' style='color:#00ff88; font-size:18px; font-weight:bold; animation: pulse 1s infinite;'>🟢 LIVE MATCH IS ON</div>";
-        if($('#match-status')) $('#match-status').innerText = "LIVE NOW";
-        return;
-      }
-      const set = (id, v) => { if($('#'+id)) $('#'+id).innerText = Math.floor(v).toString().padStart(2, '0'); };
-      set('days', diff / (864e5));
-      set('hours', (diff % 864e5) / 36e5);
-      set('minutes', (diff % 36e5) / 6e4);
-      set('seconds', (diff % 6e4) / 1e3);
-    }
-    setInterval(updateCountdown, 1000);
-
-    // --- ЭФФЕКТ ПЕЧАТНОЙ МАШИНКИ ---
-    let tIdx = 0; 
-    const txt = "Создаем историю. Побеждаем красиво. Airex Team.";
-    function typeW() {
-      const el = $('#typing-text');
-      if (el && tIdx < txt.length) { 
-          el.innerHTML += txt.charAt(tIdx++); 
-          setTimeout(typeW, 40); 
-      }
-    }
-
-    // --- МУЗЫКАЛЬНЫЙ ПЛЕЕР ---
-    window.toggleAmbient = function() {
-        const audio = document.getElementById('bg-music');
-        const icon = document.getElementById('music-btn');
-        const anim = document.getElementById('music-anim');
-        
-        if (audio.paused) {
-            audio.volume = 0.3; 
-            const playPromise = audio.play();
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    icon.className = "fas fa-pause play-state-icon";
-                    anim.style.opacity = '1';
-                    icon.style.color = "var(--accent)";
-                }).catch(error => {
-                    console.log("Auto-play prevented by browser policy");
-                });
-            }
-        } else {
-            audio.pause();
-            icon.className = "fas fa-play play-state-icon";
-            anim.style.opacity = '0';
-            icon.style.color = "#fff";
-        }
-    };
-
-    // --- ИНИЦИАЛИЗАЦИЯ ПОСЛЕ ЗАГРУЗКИ ---
-    document.addEventListener('DOMContentLoaded', () => {
-      // Логика галереи (Lightbox)
-      const lb = $('#lightbox'), lbImg = $('#lightboxImg'), lbCap = $('#lightboxCaption');
-      let curIdx = 0;
-      const items = Array.from($$('.gallery-item'));
-      
-      const updateLb = () => {
-         if(!items[curIdx]) return;
-         lbImg.src = items[curIdx].dataset.src;
-         lbCap.innerText = items[curIdx].dataset.caption;
-      };
-      
-      items.forEach((item, i) => {
-        item.addEventListener('click', () => {
-          curIdx = i; updateLb(); lb.classList.add('active'); 
-          document.body.style.overflow = 'hidden'; 
-        });
-      });
-      
-      if($('.lightbox-close')) $('.lightbox-close').onclick = () => { lb.classList.remove('active'); document.body.style.overflow = ''; };
-      if($('.lb-next')) $('.lb-next').onclick = (e) => { e.stopPropagation(); curIdx = (curIdx + 1) % items.length; updateLb(); };
-      if($('.lb-prev')) $('.lb-prev').onclick = (e) => { e.stopPropagation(); curIdx = (curIdx - 1 + items.length) % items.length; updateLb(); };
-      lb.onclick = (e) => { if(e.target === lb) $('.lightbox-close').click(); };
-
-      // Загрузка видео Youtube по клику (экономия трафика)
-      const videoWrap = $('.video-wrapper');
-      if(videoWrap) {
-        videoWrap.addEventListener('click', function() {
-          if(this.dataset.loaded) return;
-          this.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${this.dataset.videoId}?autoplay=1&rel=0" frameborder="0" allowfullscreen></iframe>`;
-          this.dataset.loaded = true;
-        });
-      }
-
-      setTimeout(typeW, 800);
-      
-      // Виджет Telegram новостей
-      const c = $('#dynamic-tg-widget');
-      if (c) {
-          const s = document.createElement('script');
-          s.src = 'https://telegram.org/js/telegram-widget.js?22';
-          s.dataset.telegramPost = `${CONF.tg.channel}/${CONF.tg.id}`;
-          s.dataset.width = '100%';
-          s.dataset.color = 'E91E63'; 
-          s.dataset.dark = '1';
-          s.dataset.userpic = 'true';
-          c.innerHTML = '';
-          c.appendChild(s);
-      }
-    });
-
-    // --- КОПИРОВАНИЕ ЗАЯВКИ ---
-    window.sendToTelegram = (e) => {
-      e.preventDefault();
-      const val = id => document.getElementById(id) ? document.getElementById(id).value : '—';
-      
-      const resumeText = 
-`🚀 ЗАЯВКА В AIREX
----------------------------
-👤 Ник: ${val('nick')}
-🔞 Возраст: ${val('age')}
-🔫 Роль: ${val('role')}
-📊 K/D: ${val('kd')}
-⏳ Часов: ${val('hours')}
-🏆 Ранг: ${val('best_rank')}
----------------------------
-Sent via Official Site`;
-
-      navigator.clipboard.writeText(resumeText).then(() => {
-          const btn = e.target.querySelector('button');
-          const oldText = btn.innerHTML;
-          btn.innerHTML = "✅ СКОПИРОВАНО!";
-          btn.style.background = "#00ff88";
-          btn.style.borderColor = "#00ff88";
-          
-          setTimeout(() => {
-             alert("✅ Анкету скопировано! Сейчас откроется бот — просто нажми «Вставить» и отправь.");
-             window.open("https://t.me/airex_invite", "_blank");
-             btn.innerHTML = oldText;
-             btn.style.background = "";
-             btn.style.borderColor = "";
-          }, 800);
-      });
-    };
-</script>
-
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { 
-        getAuth, 
-        createUserWithEmailAndPassword, 
-        signInWithEmailAndPassword, 
-        signInAnonymously,
-        onAuthStateChanged,
-        GoogleAuthProvider,
-        signInWithPopup,
-        signOut 
-    } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-    import { 
-        getFirestore, 
-        doc, 
-        setDoc, 
-        getDoc, 
-        onSnapshot, 
-        addDoc, 
-        collection, 
-        query, 
-        orderBy, 
-        limit, 
-        serverTimestamp 
-    } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getFirestore, doc, onSnapshot, getDoc, setDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    // --- КОНФИГУРАЦИЯ FIREBASE ---
+    // --- FIREBASE CONFIG (ИЗ ТВОЕЙ АДМИНКИ) ---
     const firebaseConfig = {
-        apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
-        authDomain: "airexsite.firebaseapp.com",
-        projectId: "airexsite",
-        storageBucket: "airexsite.firebasestorage.app",
-        messagingSenderId: "276640665598",
-        appId: "1:276640665598:web:d7400bd5962995efb43aaf"
+      apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
+      authDomain: "airexsite.firebaseapp.com",
+      projectId: "airexsite",
+      storageBucket: "airexsite.firebasestorage.app",
+      messagingSenderId: "276640665598",
+      appId: "1:276640665598:web:d7400bd5962995efb43aaf"
     };
 
-    // Инициализация
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // --- ЛОГИКА АВТОРИЗАЦИИ ---
-    let authMode = 'login';
-
-    window.switchAuth = (mode) => {
-        authMode = mode;
-        const loginTab = document.getElementById('tab-login');
-        const regTab = document.getElementById('tab-reg');
-        const submitBtn = document.getElementById('auth-submit-btn');
-
-        if(loginTab) loginTab.classList.toggle('active', mode === 'login');
-        if(regTab) regTab.classList.toggle('active', mode === 'reg');
-        if(submitBtn) submitBtn.innerText = mode === 'login' ? 'ВОЙТИ В СИСТЕМУ' : 'СОЗДАТЬ АККАУНТ';
-    };
-
-    const authForm = document.getElementById('auth-form');
-    if(authForm) {
-        authForm.onsubmit = async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('auth-email').value;
-            const pass = document.getElementById('auth-pass').value;
-            const btn = document.getElementById('auth-submit-btn');
-
-            const originalText = btn.innerText;
-            btn.innerText = "ОБРАБОТКА...";
-            btn.disabled = true;
-
-            try {
-                if (authMode === 'reg') {
-                    const res = await createUserWithEmailAndPassword(auth, email, pass);
-                    // Создаем профиль в БД
-                    await setDoc(doc(db, "users", res.user.uid), {
-                        nick: email.split('@')[0],
-                        avatar: "https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg",
-                        role: "Fan",
-                        createdAt: new Date().toISOString(),
-                        xp: 0
-                    });
-                    alert("Аккаунт успешно создан!");
-                } else {
-                    await signInWithEmailAndPassword(auth, email, pass);
-                }
-            } catch (err) {
-                console.error(err);
-                let errorMsg = "Ошибка: " + err.message;
-                if (err.code === 'auth/email-already-in-use') errorMsg = "Этот Email уже занят";
-                if (err.code === 'auth/weak-password') errorMsg = "Пароль слишком простой (мин. 6 символов)";
-                if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') errorMsg = "Неверный Email или пароль";
-                alert(errorMsg);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = originalText;
-            }
-        };
-    }
-
-    // Вход через Google
-    window.loginGoogle = async () => {
-        const provider = new GoogleAuthProvider();
-        provider.addScope('profile');
-        provider.addScope('email');
-
-        try {
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-            
-            const userDocRef = doc(db, "users", user.uid);
-            const userDocSnap = await getDoc(userDocRef);
-
-            if (!userDocSnap.exists()) {
-                await setDoc(userDocRef, {
-                    nick: user.displayName || "G-User",
-                    avatar: user.photoURL || "https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg",
-                    role: "Fan",
-                    createdAt: new Date().toISOString(),
-                    authType: "Google",
-                    xp: 0
-                });
-            }
-        } catch (error) {
-            console.error("Google Auth Error:", error);
-            alert(`Ошибка входа Google: ${error.message}`);
-        }
-    };
-
-
-    // Callback для Telegram виджета
-    window.onTelegramAuth = async (tgUser) => {
-        const btn = document.getElementById('auth-submit-btn');
-        if(btn) btn.innerText = "ВХОД ЧЕРЕЗ TELEGRAM...";
-
-        try {
-            const userCred = await signInAnonymously(auth);
-            const uid = userCred.user.uid;
-
-            await setDoc(doc(db, "users", uid), {
-                nick: tgUser.first_name + (tgUser.last_name ? " " + tgUser.last_name : ""),
-                avatar: tgUser.photo_url || "https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg",
-                tgId: tgUser.id,
-                role: "Fan",
-                connectedAt: new Date().toISOString(),
-                xp: 50
-            }, { merge: true });
-
-            alert("Успешный вход через Telegram!");
-        } catch (error) {
-            console.error(error);
-            alert("Ошибка Telegram Auth: " + error.message);
-        }
-    };
-
-    // Выход
-    window.logout = () => {
-        signOut(auth);
-        location.reload();
-    };
-
-    // Сохранение профиля
-    window.saveProfile = async () => {
-        const user = auth.currentUser;
-        if (!user) return;
-        const newNick = document.getElementById('set-nick').value;
-        const newAvatar = document.getElementById('set-avatar').value;
-        try {
-            await setDoc(doc(db, "users", user.uid), { nick: newNick, avatar: newAvatar }, { merge: true });
-            alert("Профиль обновлен!");
-            document.getElementById('profile-modal').style.display = 'none';
-        } catch (e) {
-            alert("Ошибка сохранения: " + e.message);
-        }
-    };
-
-    // Переменная для отписки от слушателя профиля
-    let unsubscribeUserListener = null;
-
-    // --- СЛУШАТЕЛЬ СОСТОЯНИЯ АВТОРИЗАЦИИ (ГЛАВНАЯ ЛОГИКА) ---
-    onAuthStateChanged(auth, async (user) => {
-        const barrier = document.getElementById('auth-barrier');
-        const userNav = document.getElementById('user-nav-btn');
+    // --- 1. СИНХРОНИЗАЦИЯ НОВОСТЕЙ ---
+    onSnapshot(doc(db, "siteData", "news"), (snap) => {
+        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
         
-        if (user) {
-            // --- ЕСЛИ ПОЛЬЗОВАТЕЛЬ ВОШЕЛ ---
-            if(barrier) {
-                barrier.style.opacity = '0';
-                setTimeout(() => barrier.style.display = 'none', 500);
-            }
-            if(userNav) userNav.style.display = 'flex';
-            
-            // Начисление XP и Запуск Чата
-            checkDailyXP(user.uid);
-            initChat(user);
-            
-            // Отменяем старую подписку, если есть
-            if (unsubscribeUserListener) unsubscribeUserListener();
-
-            // Подписываемся на изменения профиля в реальном времени
-            unsubscribeUserListener = onSnapshot(doc(db, "users", user.uid), (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    
-                    // Обновляем UI навигации
-                    const navName = document.getElementById('nav-username');
-                    const navAv = document.getElementById('nav-avatar');
-                    if(navName) navName.innerText = data.nick || "Игрок";
-                    if(navAv) navAv.src = data.avatar || "https://i.postimg.cc/vTT1YfG7/IMG-20260103-235549-598.jpg";
-                    
-                    // Обновляем поля в модальном окне
-                    const inpNick = document.getElementById('set-nick');
-                    const inpAv = document.getElementById('set-avatar');
-                    if(inpNick) inpNick.value = data.nick || "";
-                    if(inpAv) inpAv.value = data.avatar || "";
-                    
-                    // Обновляем XP
-                    updateXPUI(data.xp || 0);
-                }
-            }, (error) => {
-                console.log("Ошибка получения профиля:", error);
-            });
-
-        } else {
-            // --- ЕСЛИ ПОЛЬЗОВАТЕЛЬ ВЫШЕЛ ---
-            if(barrier) {
-                barrier.style.display = 'flex';
-                barrier.style.opacity = '1';
-            }
-            if(userNav) userNav.style.display = 'none';
-
-            if (unsubscribeUserListener) {
-                unsubscribeUserListener();
-                unsubscribeUserListener = null;
-            }
-            
-            // Добавляем виджет Telegram для входа (если его нет)
-            const tgContainer = document.getElementById('tg-auth-container');
-            if(tgContainer && tgContainer.innerHTML === "") {
-                const script = document.createElement('script');
-                script.async = true;
-                script.src = "https://telegram.org/js/telegram-widget.js?22";
-                script.setAttribute('data-telegram-login', 'airex_teamBot'); 
-                script.setAttribute('data-size', 'large');
-                script.setAttribute('data-radius', '10');
-                script.setAttribute('data-onauth', 'onTelegramAuth(user)');
-                script.setAttribute('data-request-access', 'write');
-                tgContainer.appendChild(script);
-            }
-        }
-    });
-
-    // --- ЛОГИКА ДАННЫХ САЙТА (МАТЧИ, СОСТАВ, ИСТОРИЯ) ---
-    
-    // Переворот карточки
-    window.flipCard = (el) => {
-         const inner = el.querySelector('.player-card-inner');
-         if(inner) inner.classList.toggle('is-flipped');
-    };
-
-    const renderPlayer = (p) => {
-        const kd = p.kd || (p.stats ? p.stats.kd : "0.00");
-        const hs = p.hs || (p.stats ? p.stats.hs : "0%");
-        const rank = p.rank || (p.stats ? p.stats.rank : "Unknown");
-        const imgUrl = p.img || 'https://via.placeholder.com/300x400/000000/ffffff?text=No+Image';
-
-        return `
-        <div class="player-wrapper" onclick="flipCard(this)">
-          <div class="player-card-inner">
-            <div class="player-front">
-              <div class="player-info-container" style="height:100%; display:flex; flex-direction:column;">
-                <div>
-                  <h4 class="p-nick">${p.nick}</h4>
-                  <div class="p-role">${p.role}</div>
-                  <div class="p-quote">"${p.quote || 'Ready to win'}"</div>
+        // Главная страница (Short Feed)
+        const homeFeed = document.getElementById('home-news-feed');
+        if(homeFeed) {
+            homeFeed.innerHTML = list.length ? list.slice(0, 3).map(n => `
+                <div style="padding: 8px 0; border-bottom: 1px dashed #333;">
+                    <span style="color:var(--accent); font-size:9px;">${n.date}</span> <span style="font-size:11px; font-weight:600;">${n.title}</span>
                 </div>
-                <div class="stats-grid">
-                  <div class="stat-item rank-full">
-                    <div class="stat-val s-rnk">${rank}</div>
-                    <div class="stat-label">Rank</div>
-                  </div>
-                  <div class="stat-item">
-                    <div class="stat-val s-kd">${kd}</div>
-                    <div class="stat-label">K/D</div>
-                  </div>
-                  <div class="stat-item">
-                    <div class="stat-val s-hs">${hs}</div>
-                    <div class="stat-label">HS%</div>
-                  </div>
+            `).join('') : '<div class="text-center" style="font-size:10px;">Новостей нет</div>';
+        }
+
+        // Страница новостей (Full Feed)
+        const fullFeed = document.getElementById('dynamic-news-container');
+        if(fullFeed) {
+            fullFeed.innerHTML = list.map(n => `
+                <div style="border-bottom:1px solid rgba(255,255,255,0.05); padding: 15px 0;">
+                    <div style="font-size:10px; color:var(--accent); font-weight:700;">${n.date} <span style="color:#fff; opacity:0.5;">[${n.tag}]</span></div>
+                    <div style="font-weight:700; font-size:16px; margin: 5px 0;">${n.title}</div>
+                    <div style="font-size:12px; color:#aaa;">${n.text}</div>
                 </div>
-              </div>
-            </div>
-            <div class="player-back">
-              <img src="${imgUrl}" alt="${p.nick}" loading="lazy">
-            </div>
-          </div>
-        </div>`;
-    };
-
-    // 1. Получение данных о матче
-    onSnapshot(doc(db, "siteData", "match"), (docSnap) => {
-        if(docSnap.exists()) {
-            const data = docSnap.data();
-            const enemyBlocks = document.querySelectorAll('.team-name');
-            if(enemyBlocks.length > 1) enemyBlocks[1].innerText = data.enemy || "TBA";
-            
-            if(data.date) {
-              let timeString = data.date;
-              if (timeString.length === 16) timeString += ":00"; 
-              window.CONF.match = new Date(timeString + "+03:00");
-            }
-        }
-    });
-
-    // 2. Получение состава
-    onSnapshot(doc(db, "siteData", "roster"), (docSnap) => {
-        const container = document.getElementById('dynamic-roster');
-        if(docSnap.exists() && container) {
-            const players = docSnap.data().list || [];
-            if(players.length === 0) {
-                 container.innerHTML = '<p class="text-center" style="grid-column:1/-1;">Roster is empty</p>';
-            } else {
-                container.innerHTML = players.map(p => renderPlayer(p)).join('');
-            }
-        }
-    });
-
-    // 3. Получение истории
-    onSnapshot(doc(db, "siteData", "history"), (docSnap) => {
-        if(docSnap.exists()) {
-            const matches = docSnap.data().list || [];
-            const fullHistory = document.getElementById('full-history-container');
-            const latestWidget = document.getElementById('latest-results-container');
-            const winRateEl = document.getElementById('win-rate-val'); 
-            
-            if(matches.length === 0) {
-               if(fullHistory) fullHistory.innerHTML = "<p class='text-center'>No matches recorded</p>";
-               if(latestWidget) latestWidget.innerHTML = "<p class='text-center'>No matches</p>";
-               return;
-            }
-
-            const wins = matches.filter(m => parseInt(m.ourScore) > parseInt(m.enemyScore)).length;
-            if(winRateEl) winRateEl.innerText = Math.round((wins / matches.length) * 100) + '%';
-
-            const reversedMatches = [...matches].reverse();
-
-            if(fullHistory) {
-                fullHistory.innerHTML = reversedMatches.map(m => {
-                    const isWin = parseInt(m.ourScore) > parseInt(m.enemyScore);
-                    return `
-                    <div class="history-card ${isWin ? 'win-border' : 'lose-border'}">
-                        <div style="flex:1;">
-                            <span class="h-tour">${m.tournament || 'Showmatch'}</span>
-                            <span class="h-opponent">vs ${m.enemy}</span>
-                        </div>
-                        <div class="h-result" style="text-align:right;">
-                            <div class="h-score">${m.ourScore} : ${m.enemyScore}</div>
-                            <div class="h-status ${isWin ? 'text-win' : 'text-lose'}">${isWin ? 'WIN' : 'LOSE'}</div>
-                        </div>
-                    </div>`;
-                }).join('');
-            }
-
-            if(latestWidget) {
-                latestWidget.innerHTML = reversedMatches.slice(0, 3).map(m => {
-                    const isWin = parseInt(m.ourScore) > parseInt(m.enemyScore);
-                    return `
-                    <div class="result-row">
-                        <span>vs ${m.enemy}</span>
-                        <span class="${isWin ? 'res-win' : 'res-lose'}">${m.ourScore} : ${m.enemyScore}</span>
-                    </div>`;
-                }).join('');
-            }
-        }
-    });
-
-    // 4. Получение новостей
-    onSnapshot(doc(db, "siteData", "news"), (docSnap) => {
-        const container = document.getElementById('dynamic-news-container');
-        if(docSnap.exists() && container) {
-            const newsList = docSnap.data().list || [];
-            if(newsList.length === 0) {
-                container.innerHTML = '<div class="card text-center"><p>Новостей пока нет.</p></div>';
-                return;
-            }
-            container.innerHTML = newsList.map(item => `
-              <div class="card">
-                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                     <span style="font-size: 10px; background: var(--accent); color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: 700;">${item.tag || 'NEWS'}</span>
-                     <span style="font-size: 10px; color: var(--text-gray);">${item.date || ''}</span>
-                  </div>
-                  <h3 style="margin-bottom: 10px;">${item.title}</h3>
-                  <p>${item.text}</p>
-              </div>
             `).join('');
         }
     });
 
-    // --- XP СИСТЕМА (РАНГИ) ---
-    const RANKS = [
-        { name: "Пользователь", max: 100 },
-        { name: "Активный", max: 300 },
-        { name: "Супер Актив", max: 800 },
-        { name: "LEGEND AIREX", max: 5000 }
-    ];
-
-    async function checkDailyXP(uid) {
-        const userRef = doc(db, "users", uid);
-        const snap = await getDoc(userRef);
-        if(!snap.exists()) return;
-
-        const data = snap.data();
-        const today = new Date().toDateString();
-        const lastVisit = data.lastVisitDate;
-        
-        let newXP = data.xp || 0;
-        
-        if (lastVisit !== today) {
-            newXP += 10; // +10 XP за ежедневный вход
-            await setDoc(userRef, { 
-                xp: newXP, 
-                lastVisitDate: today 
-            }, { merge: true });
-            console.log("Daily XP Granted!"); 
+    // --- 2. СИНХРОНИЗАЦИЯ ТАЙМЕРА МАТЧА ---
+    let timerInterval;
+    onSnapshot(doc(db, "siteData", "match"), (snap) => {
+        if(snap.exists()) {
+            const data = snap.data();
+            document.getElementById('enemy-name-display').innerText = data.enemy || "TBA";
+            if(data.date) startTimer(data.date);
         }
+    });
 
-        updateXPUI(newXP);
+    function startTimer(isoDate) {
+        if(timerInterval) clearInterval(timerInterval);
+        const target = new Date(isoDate).getTime();
+        
+        timerInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const diff = target - now;
+            
+            if(diff < 0) {
+                document.getElementById('match-status').innerText = "LIVE / FINISHED";
+                document.getElementById('countdown').innerHTML = "<span style='font-size:16px; font-weight:bold; color:red;'>МАТЧ УЖЕ ИДЕТ ИЛИ ЗАВЕРШЕН</span>";
+                return;
+            }
+            
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            document.getElementById('countdown').innerHTML = `
+               <div class="cd-item"><div class="cd-num">${d}</div><div class="cd-lbl">ДН</div></div>
+               <div style="font-size:20px; padding-bottom:15px;">:</div>
+               <div class="cd-item"><div class="cd-num">${h}</div><div class="cd-lbl">ЧАС</div></div>
+               <div style="font-size:20px; padding-bottom:15px;">:</div>
+               <div class="cd-item"><div class="cd-num">${m}</div><div class="cd-lbl">МИН</div></div>
+            `;
+            document.getElementById('match-status').innerText = "COUNTDOWN";
+        }, 1000);
     }
 
-    function updateXPUI(xp) {
-        let rName = RANKS[0].name;
-        let max = 100;
-        
-        if (xp < 100) { rName = RANKS[0].name; max = 100; }
-        else if (xp < 300) { rName = RANKS[1].name; max = 300; }
-        else if (xp < 800) { rName = RANKS[2].name; max = 800; }
-        else { rName = RANKS[3].name; max = 5000; }
-
-        let progress = (xp / max) * 100;
-        if(progress > 100) progress = 100;
-
-        const xpBar = document.getElementById('xp-bar-fill');
-        const rankTxt = document.getElementById('user-rank-display');
-        const curXp = document.getElementById('current-xp');
-        const nextXp = document.getElementById('next-rank-xp');
-
-        if(xpBar) xpBar.style.width = `${progress}%`;
-        if(rankTxt) rankTxt.innerText = rName;
-        if(curXp) curXp.innerText = xp;
-        if(nextXp) nextXp.innerText = max;
-    }
-
-    // --- ЧАТ СИСТЕМА ---
-    let unsubscribeChat = null;
-
-    function initChat(user) {
-        const chatFeed = document.getElementById('chat-feed');
-        const chatForm = document.getElementById('chat-form');
-        const chatInput = document.getElementById('chat-input');
-
-        if(!chatFeed) return;
-
-        // Очищаем старый слушатель
-        if(unsubscribeChat) unsubscribeChat(); 
-
-        // Отправка сообщения
-        if(chatForm) {
-            chatForm.onsubmit = async (e) => {
-                e.preventDefault();
-                const text = chatInput.value.trim();
-                if(!text) return;
-                
-                const nickEl = document.getElementById('nav-username');
-                const nick = nickEl ? nickEl.innerText : "User";
-                
-                try {
-                    await addDoc(collection(db, "chat_messages"), {
-                        text: text,
-                        uid: user.uid,
-                        nick: nick,
-                        timestamp: serverTimestamp()
-                    });
-                    chatInput.value = '';
-                } catch(e) {
-                    console.error("Chat Error", e);
-                }
-            };
-        }
-
-        // Слушаем сообщения (последние 50)
-        const q = query(collection(db, "chat_messages"), orderBy("timestamp", "desc"), limit(50));
-
-        unsubscribeChat = onSnapshot(q, (snapshot) => {
-            const msgs = [];
-            snapshot.forEach(doc => msgs.push({id: doc.id, ...doc.data()}));
-            
-            msgs.reverse(); // Новые снизу
-            
-            chatFeed.innerHTML = msgs.map(msg => {
-                const isMine = msg.uid === user.uid;
-                const time = msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
-                
-                return `
-                <div class="chat-msg ${isMine ? 'msg-own' : 'msg-other'}">
-                    <span class="msg-author">${msg.nick}</span>
-                    ${msg.text}
-                    <span class="msg-time">${time}</span>
+    // Функция для создания карточки (универсальная)
+    const createPlayerCard = (p) => `
+        <div class="player-wrapper" onclick="this.querySelector('.player-card-inner').classList.toggle('is-flipped')">
+            <div class="player-card-inner">
+                <div class="player-front">
+                    <div class="p-header">
+                        <img src="${p.img}" class="p-avatar" onerror="this.src='https://placehold.co/100?text=AX'">
+                        <div>
+                            <div class="p-role">${p.role}</div>
+                            <h3 class="p-nick">${p.nick}</h3>
+                        </div>
+                    </div>
+                    <div class="p-quote">"${p.quote}"</div>
+                    <div class="stats-grid">
+                        <div class="stat-item"><div class="stat-val" style="color:#00ffa3;">${p.stats.kd}</div><div class="stat-label">KD</div></div>
+                        <div class="stat-item"><div class="stat-val" style="color:#ff0055;">${p.stats.rank}</div><div class="stat-label">RANK</div></div>
+                    </div>
                 </div>
-                `;
-            }).join('');
+                <div class="player-back">
+                    <div class="back-title">SETUP & SETTINGS</div>
+                    <div class="info-item">
+                        <span class="info-label">Device</span>
+                        <span class="info-value">${p.device || 'N/A'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Settings</span>
+                        <span class="info-value">${p.settings || 'N/A'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Favorite Weapon</span>
+                        <span class="info-value"><i class="fas fa-gun"></i> ${p.weapon || 'N/A'}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Загрузка ОСНОВНОГО состава
+    onSnapshot(doc(db, "siteData", "roster_main"), (snap) => {
+        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        document.getElementById('dynamic-roster').innerHTML = list.map(p => createPlayerCard(p)).join('');
+    });
+
+    // Загрузка РЕЗЕРВНОГО состава
+    onSnapshot(doc(db, "siteData", "roster_reserve"), (snap) => {
+        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        document.getElementById('dynamic-roster-reserve').innerHTML = list.map(p => createPlayerCard(p)).join('');
+    });
+
+
+    // --- 4. ПУТЬ AIREX (Timeline) ---
+    onSnapshot(doc(db, "siteData", "about"), (snap) => {
+        const list = (snap.exists() && snap.data().roadmap) ? snap.data().roadmap : [];
+        const cont = document.getElementById('roadmap-container');
+        if(cont) {
+            cont.innerHTML = '<div class="roadmap-line"></div>' + list.map(r => `
+                <div class="rm-item">
+                    <div class="rm-dot"></div>
+                    <div class="rm-content">
+                        <span class="rm-date">${r.date}</span>
+                        <div class="rm-title">${r.title}</div>
+                        <div style="font-size: 11px; color: #aaa;">${r.desc}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    });
+
+    // --- 5. МЕДИА (Видео и Галерея) ---
+    onSnapshot(doc(db, "siteData", "media"), (snap) => {
+        if(!snap.exists()) return;
+        const d = snap.data();
+        if(d.videoId) {
+            document.getElementById('video-container').innerHTML = `
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/${d.videoId}" frameborder="0" allowfullscreen></iframe>
+            `;
+        }
+        if(d.gallery) {
+            document.getElementById('gallery-container').innerHTML = d.gallery.map(g => `
+                <div class="gallery-item" style="background-image:url('${g.src}')"></div>
+            `).join('');
+        }
+    });
+
+    // --- 6. ИСТОРИЯ ИГР ---
+    onSnapshot(doc(db, "siteData", "history"), (snap) => {
+        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        const container = document.getElementById('full-history-container');
+        
+        container.innerHTML = list.slice().reverse().map(m => `
+            <div style="background:rgba(255,255,255,0.03); padding:15px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border-left: 3px solid ${m.win ? '#00ffa3' : '#ff004c'};">
+                <div>
+                    <div style="font-size:9px; color:#888; text-transform:uppercase;">${m.tour}</div>
+                    <div style="font-family:var(--font-tech); font-weight:700; font-size:14px;">VS ${m.enemy}</div>
+                </div>
+                <div style="font-family:var(--font-tech); font-size:18px; font-weight:700;">${m.our} : ${m.their}</div>
+            </div>
+        `).join('');
+    });
+
+    // --- 7. ОТЗЫВЫ ---
+    onSnapshot(doc(db, "siteData", "reviews"), (snap) => {
+        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        document.getElementById('reviews-container').innerHTML = list.slice().reverse().map(r => `
+            <div class="review-card">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <div style="font-weight:700; color:var(--accent); font-size:13px;">${r.nick}</div>
+                    <div style="font-size:10px; color:#666;">TO: ${r.target}</div>
+                </div>
+                <div class="r-text">"${r.text}"</div>
+            </div>
+        `).join('');
+    });
+
+    window.submitReview = async (e) => {
+        e.preventDefault();
+        const nick = document.getElementById('rev-nick').value;
+        const target = document.getElementById('rev-target').value;
+        const text = document.getElementById('rev-text').value;
+
+        try {
+            const ref = doc(db, "siteData", "reviews");
+            const snap = await getDoc(ref);
+            if(!snap.exists()) await setDoc(ref, { list: [] });
             
-            chatFeed.scrollTop = chatFeed.scrollHeight;
-        });
-    }
-  // --- 1. ИСПРАВЛЕНИЕ МУЗЫКИ ---
-window.toggleAmbient = function() {
-    const audio = document.getElementById('bg-music');
-    const btn = document.getElementById('music-btn');
-    const anim = document.getElementById('music-anim');
-    
-    if (audio.paused) {
-        audio.play().catch(e => console.log("Нужен клик для старта"));
-        btn.className = 'fas fa-pause';
-        if(anim) anim.style.opacity = '1';
-    } else {
-        audio.pause();
-        btn.className = 'fas fa-play';
-        if(anim) anim.style.opacity = '0';
-    }
-};
+            await updateDoc(ref, { list: arrayUnion({ id: Date.now(), nick, target, text }) });
+            alert("Отзыв отправлен!"); e.target.reset();
+        } catch(err) { alert("Ошибка: " + err.message); }
+    };
 
-// --- 2. ИСПРАВЛЕНИЕ ЧАТА (Заменяет замок на сообщения) ---
-async function initChat(user) {
-    const chatFeed = document.getElementById('chat-feed');
-    const chatForm = document.getElementById('chat-form');
-    
-    // Убираем замок
-    chatFeed.innerHTML = '<div class="loading-text">Загрузка сообщений...</div>';
-    
-    // Здесь должна быть логика слушателя Firebase (onSnapshot)
-    // которую мы обсуждали ранее. Убедитесь, что она у вас вставлена!
-}
+    // --- UI HELPERS ---
+    window.selectTab = (tabId, btn) => {
+        document.querySelectorAll('section').forEach(s => { s.classList.remove('active'); s.style.opacity = '0'; });
+        const t = document.getElementById(tabId);
+        if(t) { setTimeout(() => { t.classList.add('active'); requestAnimationFrame(() => t.style.opacity = '1'); }, 100); }
+        document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active-tab'));
+        if(btn) btn.classList.add('active-tab');
+        document.getElementById('navDropdown').classList.remove('active');
+    };
+    window.toggleMenu = () => document.getElementById('navDropdown').classList.toggle('active');
 
-// --- 3. ИСПРАВЛЕНИЕ ТЕЛЕГРАМА ---
-window.loginTelegram = function() {
-    alert("Для работы Telegram-входа нужно настроить виджет в BotFather и вставить его скрипт в Auth Card.");
+    // --- TYPING EFFECT ---
+    const typeText = "ДОМИНИРУЙ. РАЗВИВАЙСЯ. ПОБЕЖДАЙ. ";
+    let typeIdx = 0;
+    function typeWriter() {
+        if(typeIdx < typeText.length) {
+            document.getElementById('typing-text').innerHTML += typeText.charAt(typeIdx);
+            typeIdx++; setTimeout(typeWriter, 100);
+        }
+    }
+    window.onload = typeWriter;
+
+    // --- MUSIC ---
+    window.toggleAmbient = () => {
+        const audio = document.getElementById('bg-music');
+        const btn = document.getElementById('music-btn');
+        const anim = document.getElementById('music-anim');
+        if (audio.paused) { audio.play(); btn.className = 'fas fa-pause play-state-icon'; anim.style.opacity = '1'; }
+        else { audio.pause(); btn.className = 'fas fa-play play-state-icon'; anim.style.opacity = '0'; }
+    };
+  
+    window.sendToTelegram = (event) => {
+    event.preventDefault(); // Чтобы страница не перезагружалась
+
+    // Собираем данные из полей
+    const nick = document.getElementById('nick').value;
+    const age = document.getElementById('age').value;
+    const kd = document.getElementById('kd').value;
+    const role = document.getElementById('role').value;
+    const rank = document.getElementById('best_rank').value;
+
+    // Формируем красивое сообщение
+    // %0A — это перенос строки в ссылках
+    const message = `🔥 *НОВАЯ ЗАЯВКА В AIREX TEAM*%0A` +
+                    `----------------------------%0A` + 
+                    `👤 *Ник:* ${nick}%0A` +
+                    `🔞 *Возраст:* ${age}%0A` +
+                    `📊 *K/D:* ${kd}%0A` +
+                    `🎮 *Роль:* ${role}%0A` +
+                    `🏆 *Макс. Ранг:* ${rank}%0A` +
+                    `----------------------------`;
+
+    // Твоя ссылка в личку
+    const tgUrl = `https://t.me/kas_0ff?text=${message}`;
+
+    // Открываем чат в новом окне
+    window.open(tgUrl, '_blank');
 };
 
 </script>
