@@ -274,6 +274,83 @@
     /* --- LOADING TEXT --- */
     .loading-text { color: var(--text-gray); font-size: 12px; letter-spacing: 1px; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+/* --- УЛУЧШЕННЫЙ ПЛЕЕР --- */
+#ambient-player {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 0, 76, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 10px 18px;
+    border-radius: 50px;
+    border: 1px solid var(--accent);
+    box-shadow: 0 0 20px var(--accent-dim);
+    transition: all 0.3s ease;
+}
+
+#ambient-player:hover {
+    box-shadow: 0 0 30px var(--accent-glow);
+    transform: scale(1.05);
+}
+
+.play-state-icon {
+    font-size: 18px;
+    color: #fff;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--accent-glow);
+    transition: 0.3s;
+    /* Анимация пульсации, пока не нажали */
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(255, 0, 76, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(255, 0, 76, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 0, 76, 0); }
+}
+
+/* Стили для волн музыки */
+.music-waves {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 20px;
+}
+
+.wave {
+    width: 3px;
+    background: var(--accent);
+    border-radius: 10px;
+    animation: wave-anim 1s ease-in-out infinite;
+}
+
+.wave:nth-child(2) { animation-delay: 0.2s; }
+.wave:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes wave-anim {
+    0%, 100% { height: 5px; }
+    50% { height: 20px; }
+}
+
+/* Текст рядом с кнопкой */
+.player-label {
+    font-family: var(--font-tech);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #fff;
+    text-transform: uppercase;
+}
 
   </style>
 
@@ -284,10 +361,15 @@
 <body>
 
 <div id="ambient-player">
-    <div class="music-waves" id="music-anim" style="opacity: 0;">
-        <div class="wave"></div><div class="wave"></div><div class="wave"></div>
+    <div class="player-label" id="player-status">Ambient: Off</div>
+    <div class="music-waves" id="music-anim" style="display: none;">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
     </div>
-    <i class="fas fa-play play-state-icon" id="music-btn" onclick="toggleAmbient()"></i>
+    <div class="play-state-icon" id="music-btn" onclick="toggleAmbient()">
+        <i class="fas fa-play" id="btn-icon"></i>
+    </div>
     <audio id="bg-music" loop>
         <source src="music.mp3" type="audio/mpeg">
     </audio>
@@ -773,12 +855,29 @@
 
     // --- MUSIC ---
     window.toggleAmbient = () => {
-        const audio = document.getElementById('bg-music');
-        const btn = document.getElementById('music-btn');
-        const anim = document.getElementById('music-anim');
-        if (audio.paused) { audio.play(); btn.className = 'fas fa-pause play-state-icon'; anim.style.opacity = '1'; }
-        else { audio.pause(); btn.className = 'fas fa-play play-state-icon'; anim.style.opacity = '0'; }
-    };
+    const audio = document.getElementById('bg-music');
+    const btnIcon = document.getElementById('btn-icon');
+    const btn = document.getElementById('music-btn');
+    const anim = document.getElementById('music-anim');
+    const status = document.getElementById('player-status');
+
+    if (audio.paused) {
+        audio.play();
+        btnIcon.className = 'fas fa-pause';
+        btn.style.animation = 'none'; // Убираем пульсацию при игре
+        anim.style.display = 'flex';
+        status.innerText = 'Ambient: On';
+        status.style.color = 'var(--accent)';
+    } else {
+        audio.pause();
+        btnIcon.className = 'fas fa-play';
+        btn.style.animation = 'pulse-red 2s infinite'; // Возвращаем пульсацию
+        anim.style.display = 'none';
+        status.innerText = 'Ambient: Off';
+        status.style.color = '#fff';
+    }
+};
+
   
     window.sendToTelegram = (event) => {
     event.preventDefault(); // Чтобы страница не перезагружалась
