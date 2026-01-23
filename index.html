@@ -356,6 +356,75 @@
     text-transform: uppercase;
 }
 
+    /* --- HUD NOTIFICATIONS --- */
+    #notify-container {
+      position: fixed; top: 90px; right: 20px;
+      z-index: 10000; display: flex; flex-direction: column; gap: 10px;
+      pointer-events: none; /* Чтобы можно было кликать сквозь пустое место */
+    }
+
+    .hud-toast {
+      background: rgba(10, 10, 10, 0.9);
+      border-left: 3px solid var(--accent);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-right: 1px solid rgba(255,255,255,0.1);
+      padding: 15px 20px; min-width: 280px;
+      color: #fff; font-family: var(--font-tech);
+      position: relative; overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+      transform: translateX(100%); opacity: 0;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: auto;
+      display: flex; align-items: center; gap: 15px;
+    }
+    
+    .hud-toast.active { transform: translateX(0); opacity: 1; }
+    
+    .hud-toast.success { border-left-color: #00ffa3; }
+    .hud-toast.error { border-left-color: #ff004c; }
+    .hud-toast.info { border-left-color: #00ccff; }
+
+    .toast-icon { font-size: 20px; }
+    .hud-toast.success .toast-icon { color: #00ffa3; }
+    .hud-toast.error .toast-icon { color: #ff004c; }
+    .hud-toast.info .toast-icon { color: #00ccff; }
+
+    .toast-content { display: flex; flex-direction: column; }
+    .toast-title { font-size: 11px; font-weight: 700; text-transform: uppercase; opacity: 0.7; letter-spacing: 1px; }
+    .toast-msg { font-size: 13px; font-weight: 500; margin-top: 2px; }
+
+    /* Полоска времени */
+    .toast-progress {
+      position: absolute; bottom: 0; left: 0; height: 2px;
+      background: rgba(255,255,255,0.5); width: 100%;
+      animation: progress-burn linear forwards;
+    }
+    @keyframes progress-burn { from { width: 100%; } to { width: 0%; } }
+
+    /* --- BADGE SYSTEM --- */
+    /* Точка на гамбургере */
+    .menu-toggle { position: relative; }
+    .menu-toggle.has-update::after {
+        content: ''; position: absolute; top: 10px; right: 8px;
+        width: 8px; height: 8px; background: var(--accent);
+        border-radius: 50%; border: 2px solid var(--bg-deep);
+        box-shadow: 0 0 10px var(--accent);
+        animation: pulse-dot 2s infinite;
+    }
+
+    /* Точка внутри меню на пунктах */
+    .menu-item { position: relative; }
+    .menu-item.has-update::after {
+        content: ''; position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+        width: 6px; height: 6px; background: #00ffa3; /* Зеленая точка внутри */
+        border-radius: 50%;
+        box-shadow: 0 0 8px #00ffa3;
+    }
+
+    @keyframes pulse-dot { 0% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.3); } 100% { opacity: 0.5; transform: scale(1); } }
+
   </style>
 
   <script>
@@ -396,6 +465,7 @@
     <div class="nav-dropdown" id="navDropdown">
       <button class="menu-item active-tab" onclick="selectTab('home', this)"><i class="fas fa-home"></i> Главная</button>
       <button class="menu-item" onclick="selectTab('team', this)"><i class="fas fa-users"></i> Состав</button>
+      <button class="menu-item" onclick="selectTab('practice', this)"><i class="fas fa-crosshairs"></i> Праки</button>
       <button class="menu-item" onclick="selectTab('about', this)"><i class="fas fa-shield-alt"></i> Инфо</button>
       <button class="menu-item" onclick="selectTab('news', this)"><i class="fas fa-bolt"></i> Новости</button>
       <button class="menu-item" onclick="selectTab('media', this)"><i class="fas fa-play-circle"></i> Медиа</button>
@@ -403,6 +473,7 @@
       <button class="menu-item" onclick="selectTab('reviews', this)"><i class="fas fa-star"></i> Отзывы</button>
       <button class="menu-item join-btn" onclick="selectTab('join', this)"><i class="fas fa-user-plus"></i> Вступить</button>
     </div>
+    
 </nav>
 
 <div class="container">
@@ -482,6 +553,77 @@
       </div>
       <div class="roster-grid" id="dynamic-roster-reserve">
           </div>
+    </section>
+
+    <section id="practice">
+      <div class="text-center" style="margin-bottom: 30px;">
+        <h2 class="font-tech" style="color: var(--accent);">Регистрация прака</h2>
+        <p style="font-size: 11px; opacity: 0.7;">Забей стрелу AIREX TEAM</p>
+      </div>
+
+      <div class="card">
+        <form id="prac-form" onsubmit="submitPrac(event)">
+            
+            <div class="form-group" style="background: rgba(255, 0, 76, 0.05); padding: 15px; border: 1px dashed var(--accent); border-radius: 8px;">
+                <label class="form-label" style="font-size:12px;">1. Выберите доступный слот</label>
+                <select id="prac-slot-select" class="form-input" required style="font-weight: 700;">
+                    <option value="" disabled selected>Загрузка расписания...</option>
+                </select>
+                <div id="no-slots-msg" style="display:none; font-size:10px; color:#aaa; margin-top:5px;">Нет свободных слотов на данный момент.</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Название клана</label>
+                <input type="text" id="pc-clan" class="form-input" placeholder="Team Name" required>
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label class="form-label">Ник Капитана</label>
+                    <input type="text" id="pc-cap" class="form-input" required>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label class="form-label">ID Капитана</label>
+                    <input type="number" id="pc-id" class="form-input" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Связь (TG/vk)</label>
+                <input type="text" id="pc-contact" class="form-input" placeholder="@username" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Формат игры</label>
+                <div style="display: flex; gap: 10px; margin-top: 5px;">
+                    <label style="color:#fff; cursor:pointer;"><input type="radio" name="format" value="BO1" checked> BO1</label>
+                    <label style="color:#fff; cursor:pointer;"><input type="radio" name="format" value="BO2"> BO2</label>
+                    <label style="color:#fff; cursor:pointer;"><input type="radio" name="format" value="BO3"> BO3</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Желаемые карты</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 5px; font-size: 12px; color: #ccc;">
+                    <label><input type="checkbox" class="map-check" value="Sandstone"> Sandstone</label>
+                    <label><input type="checkbox" class="map-check" value="Rust"> Rust</label>
+                    <label><input type="checkbox" class="map-check" value="Dune"> Dune</label>
+                    <label><input type="checkbox" class="map-check" value="Hanami"> Hanami</label>
+                    <label><input type="checkbox" class="map-check" value="Breeze"> Breeze</label>
+                    <label><input type="checkbox" class="map-check" value="Province"> Province</label>
+                    <label><input type="checkbox" class="map-check" value="Sakura"> Sakura</label>
+                    <label><input type="checkbox" class="map-check" value="Zone 9"> Zone 9</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Состав (Line-up)</label>
+                <textarea id="pc-lineup" class="form-input" rows="3" placeholder="Nick 1, Nick 2, Nick 3, Nick 4, Nick 5 (Замены: Nick...)"></textarea>
+            </div>
+
+            <button type="submit" class="btn-glitch" style="margin-top: 10px;">ПОДТВЕРДИТЬ РЕГИСТРАЦИЮ</button>
+        </form>
+      </div>
     </section>
 
 
@@ -753,6 +895,99 @@
         const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
         document.getElementById('dynamic-roster-reserve').innerHTML = list.map(p => createPlayerCard(p)).join('');
     });
+  
+      // --- СИСТЕМА ПРАКОВ (CLIENT SIDE) ---
+    
+    // 1. Загрузка свободных слотов в Select
+    let availableSlots = []; // Храним локально, чтобы потом проверить
+
+    onSnapshot(doc(db, "siteData", "practices"), (snap) => {
+        const select = document.getElementById('prac-slot-select');
+        const msg = document.getElementById('no-slots-msg');
+        
+        if (!snap.exists() || !snap.data().list || snap.data().list.length === 0) {
+            select.innerHTML = '<option disabled>Нет слотов</option>';
+            return;
+        }
+
+        const allSlots = snap.data().list;
+        // Фильтруем: показываем только статус "open" И время еще не прошло
+        const now = new Date();
+        availableSlots = allSlots.filter(s => s.status === 'open' && new Date(s.isoDate) > now);
+
+        if (availableSlots.length === 0) {
+            select.style.display = 'none';
+            msg.style.display = 'block';
+        } else {
+            select.style.display = 'block';
+            msg.style.display = 'none';
+            select.innerHTML = '<option value="" disabled selected>-- Выберите время --</option>' + 
+                availableSlots.map(s => `<option value="${s.id}">${s.displayTime}</option>`).join('');
+        }
+    });
+
+    // 2. Логика отправки формы
+    window.submitPrac = async (e) => {
+        e.preventDefault();
+        
+        const slotId = parseInt(document.getElementById('prac-slot-select').value);
+        if(!slotId) return alert("Пожалуйста, выберите время прака!");
+
+        // Сбор данных карт
+        const checkedMaps = [];
+        document.querySelectorAll('.map-check:checked').forEach(cb => checkedMaps.push(cb.value));
+        
+        const formData = {
+            clanName: document.getElementById('pc-clan').value,
+            captain: document.getElementById('pc-cap').value,
+            capId: document.getElementById('pc-id').value,
+            contact: document.getElementById('pc-contact').value,
+            format: document.querySelector('input[name="format"]:checked').value,
+            maps: checkedMaps,
+            lineup: document.getElementById('pc-lineup').value
+        };
+
+        const submitBtn = e.target.querySelector('button');
+        submitBtn.innerHTML = "ПРОВЕРКА СЛОТА...";
+        submitBtn.disabled = true;
+
+        try {
+            // ТРАНЗАКЦИЯ: Читаем базу заново, чтобы убедиться, что слот не заняли 1 секунду назад
+            const ref = doc(db, "siteData", "practices");
+            const snap = await getDoc(ref);
+            
+            if(!snap.exists()) throw new Error("Ошибка базы данных");
+
+            let list = snap.data().list;
+            const slotIndex = list.findIndex(s => s.id === slotId);
+
+            if (slotIndex === -1) {
+                throw new Error("Слот был удален администратором.");
+            }
+
+            if (list[slotIndex].status !== 'open') {
+                throw new Error("Упс! Этот слот только что заняли другие. Выберите другое время.");
+            }
+
+            // Если все ок - занимаем слот
+            list[slotIndex].status = 'booked';
+            list[slotIndex].team = formData;
+
+            await updateDoc(ref, { list: list });
+
+            alert(`✅ РЕГИСТРАЦИЯ УСПЕШНА!\nЖдем вас ${list[slotIndex].displayTime}.\nМы напишем вам по указанным контактам.`);
+            
+            // Очистка формы
+            e.target.reset();
+            window.location.reload(); // Перезагрузка для обновления UI
+
+        } catch (err) {
+            alert("ОШИБКА: " + err.message);
+            submitBtn.innerHTML = "ПОДТВЕРДИТЬ РЕГИСТРАЦИЮ";
+            submitBtn.disabled = false;
+        }
+    };
+
 
 
     // --- 4. ПУТЬ AIREX (Timeline) ---
@@ -911,6 +1146,135 @@
     window.open(tgUrl, '_blank');
 };
 
+    // --- HUD NOTIFY SYSTEM ---
+    window.showNotify = (msg, type = 'info') => {
+        const container = document.getElementById('notify-container');
+        
+        // Создаем элементы
+        const toast = document.createElement('div');
+        toast.className = `hud-toast ${type}`;
+        
+        let icon = 'fa-info-circle';
+        let title = 'INFO';
+        if(type === 'success') { icon = 'fa-check-circle'; title = 'SUCCESS'; }
+        if(type === 'error') { icon = 'fa-exclamation-triangle'; title = 'ERROR'; }
+
+        toast.innerHTML = `
+            <i class="fas ${icon} toast-icon"></i>
+            <div class="toast-content">
+                <span class="toast-title">${title}</span>
+                <span class="toast-msg">${msg}</span>
+            </div>
+            <div class="toast-progress" style="animation-duration: 4000ms;"></div>
+        `;
+
+        container.appendChild(toast);
+
+        // Анимация входа (небольшая задержка для CSS transition)
+        requestAnimationFrame(() => { toast.classList.add('active'); });
+
+        // Удаление
+        setTimeout(() => {
+            toast.classList.remove('active');
+            setTimeout(() => toast.remove(), 400); // Ждем окончания анимации исчезновения
+        }, 4000);
+        
+        // (Опционально) Звук уведомления можно добавить сюда
+    };
+
+    // ПЕРЕОПРЕДЕЛЯЕМ стандартный alert, чтобы все было красиво
+    window.alert = (msg) => window.showNotify(msg, 'info');
+    // --- SMART BADGE LOGIC ---
+    
+    // Функция проверки: есть ли что-то новое?
+    // sectionKey: ключ в localStorage (напр. 'last_seen_news')
+    // latestId: ID или Timestamp самой свежей записи из базы
+    // btnId: ID кнопки в меню, где показать точку
+    const checkUpdateBadge = (sectionKey, latestId, btnId) => {
+        const lastSeen = localStorage.getItem('last_seen_' + sectionKey) || 0;
+        const btn = document.getElementById(btnId);
+        
+        if (latestId > lastSeen) {
+            // Есть обнова!
+            if(btn) btn.classList.add('has-update');
+            updateGlobalBadge();
+        } else {
+            if(btn) btn.classList.remove('has-update');
+            updateGlobalBadge();
+        }
+    };
+
+    // Обновляет главную точку на гамбургере
+    const updateGlobalBadge = () => {
+        const hasAnyUpdate = document.querySelectorAll('.menu-item.has-update').length > 0;
+        const burger = document.getElementById('menuBtn');
+        if(hasAnyUpdate) burger.classList.add('has-update');
+        else burger.classList.remove('has-update');
+    };
+
+    // --- ОБНОВЛЯЕМ ТЕКУЩИЕ СЛУШАТЕЛИ FIREBASE ---
+    // (Нужно слегка модифицировать твои существующие onSnapshot)
+
+    // Пример для НОВОСТЕЙ:
+    onSnapshot(doc(db, "siteData", "news"), (snap) => {
+        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        
+        // ... твой код рендеринга новостей ...
+        
+        // ПРОВЕРКА НА ОБНОВЛЕНИЕ
+        if(list.length > 0) {
+            // Берем ID самой последней новости (предполагаем, что id = Date.now())
+            // Сортируем чтобы найти макс ID
+            const latest = Math.max(...list.map(i => i.id));
+            checkUpdateBadge('news', latest, 'btn-news');
+        }
+    });
+
+    // Пример для МАТЧЕЙ (History):
+    onSnapshot(doc(db, "siteData", "history"), (snap) => {
+        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        
+        // ... твой код рендеринга ...
+
+        if(list.length > 0) {
+            const latest = Math.max(...list.map(i => i.id));
+            checkUpdateBadge('history', latest, 'btn-history');
+        }
+    });
+    
+    // Пример для МЕДИА:
+    onSnapshot(doc(db, "siteData", "media"), (snap) => {
+       // ... код рендеринга ...
+       const d = snap.data();
+       // Для галереи берем ID последней фотки
+       if(d.gallery && d.gallery.length > 0) {
+           const latest = Math.max(...d.gallery.map(i => i.id));
+           checkUpdateBadge('media', latest, 'btn-media');
+       }
+    });
+
+    // --- МОДИФИКАЦИЯ ФУНКЦИИ ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК ---
+    // Когда мы открываем вкладку, мы "прочитываем" обновления
+    window.selectTab = (tabId, btn) => {
+        // Стандартная логика переключения
+        document.querySelectorAll('section').forEach(s => { s.classList.remove('active'); s.style.opacity = '0'; });
+        const t = document.getElementById(tabId);
+        if(t) { setTimeout(() => { t.classList.add('active'); requestAnimationFrame(() => t.style.opacity = '1'); }, 100); }
+        document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active-tab'));
+        if(btn) btn.classList.add('active-tab');
+        document.getElementById('navDropdown').classList.remove('active');
+
+        // НОВАЯ ЛОГИКА: Снятие бейджика
+        if(btn && btn.classList.contains('has-update')) {
+            btn.classList.remove('has-update');
+            updateGlobalBadge(); // Проверяем, остались ли еще точки
+            
+            // Сохраняем "сейчас" как время просмотра
+            localStorage.setItem('last_seen_' + tabId, Date.now());
+        }
+    };
+
 </script>
+<div id="notify-container"></div>
 </body>
-</html>
+  </html>
