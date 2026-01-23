@@ -230,6 +230,29 @@
         <div class="data-list" id="galleryList"></div>
     </div>
 
+    <div class="panel full-width" style="border-color: var(--accent);">
+        <div class="panel-header">
+            <h2><i class="fas fa-crosshairs panel-icon"></i> СИСТЕМА ПРАКОВ (BOOKING)</h2>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+            <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px;">
+                <h3 style="font-size: 12px; color: var(--accent);">СОЗДАТЬ СЛОТ</h3>
+                <label>Выберите дату и время прака</label>
+                <input type="datetime-local" id="pracDateInput">
+                <button class="action-btn" onclick="createPracSlot()" style="margin-top: 15px;">ОТКРЫТЬ НАБОР</button>
+                <p style="font-size: 10px; color: #888; margin-top: 10px;">* Слот появится на сайте как "Свободно".</p>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px;">
+                 <h3 style="font-size: 12px; color: #fff; margin-bottom: 15px;">АКТИВНЫЕ СЛОТЫ</h3>
+                 <div id="pracAdminList" style="display: grid; gap: 10px; max-height: 250px; overflow-y: auto;">
+                     </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="panel">
         <div class="panel-header">
             <h2><i class="fas fa-trophy panel-icon"></i> ИСТОРИЯ ИГР</h2>
@@ -309,6 +332,37 @@
     }
 
     function initAdminListeners() {
+
+        // Слушатель праков
+        listenToDoc("siteData", "practices", (data) => {
+            const list = data.list || [];
+            // Сортируем по времени
+            list.sort((a, b) => new Date(a.isoDate) - new Date(b.isoDate));
+
+            document.getElementById('pracAdminList').innerHTML = list.map(p => {
+                const statusColor = p.status === 'booked' ? '#ff004c' : '#00ffa3';
+                const statusText = p.status === 'booked' ? `ЗАНЯТО: ${p.team.clanName}` : 'ОЖИДАНИЕ...';
+                
+                // Если занято, показываем кнопку инфо
+                const infoBtn = p.status === 'booked' 
+                    ? `<button class="btn-del" style="border-color:#fff; color:#fff;" onclick="alert('Капитан: ${p.team.captain}\\nКонтакты: ${p.team.contact}\\nФормат: ${p.team.format}\\nКарты: ${p.team.maps.join(', ')}')"><i class="fas fa-info"></i></button>` 
+                    : '';
+
+                return `
+                <div class="list-item" style="border-left: 3px solid ${statusColor};">
+                    <div class="item-info">
+                        <b style="font-size:14px;">${p.displayTime}</b>
+                        <div class="item-sub" style="color:${statusColor}; font-weight:700;">${statusText}</div>
+                    </div>
+                    <div style="display:flex; gap:5px;">
+                        ${infoBtn}
+                        <button class="btn-del" onclick="window.deletePracSlot(${p.id})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+            }).join('');
+        });
+
+
         listenToDoc("siteData", "news", (data) => {
             const list = data.list || [];
             document.getElementById('newsList').innerHTML = list.map(n => `
