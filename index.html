@@ -623,6 +623,13 @@
 
             <button type="submit" class="btn-glitch" style="margin-top: 10px;">ПОДТВЕРДИТЬ РЕГИСТРАЦИЮ</button>
         </form>
+              <div class="card" style="margin-top: 30px; border-color: rgba(255,255,255,0.1);">
+          <h3 style="font-size: 14px; color: var(--text-gray);"><i class="fas fa-list-ul"></i> ПОДТВЕРЖДЕННЫЕ ИГРЫ</h3>
+          <div id="public-booked-list">
+              <div class="loading-text" style="text-align: center; padding: 10px;">Загрузка расписания...</div>
+          </div>
+      </div>
+
       </div>
     </section>
 
@@ -901,30 +908,46 @@
     // 1. Загрузка свободных слотов в Select
     let availableSlots = []; // Храним локально, чтобы потом проверить
 
-    onSnapshot(doc(db, "siteData", "practices"), (snap) => {
+        onSnapshot(doc(db, "siteData", "practices"), (snap) => {
         const select = document.getElementById('prac-slot-select');
         const msg = document.getElementById('no-slots-msg');
+        const publicList = document.getElementById('public-booked-list'); // Добавили это
         
-        if (!snap.exists() || !snap.data().list || snap.data().list.length === 0) {
-            select.innerHTML = '<option disabled>Нет слотов</option>';
-            return;
-        }
+        if (!snap.exists() || !snap.data().list) return;
 
         const allSlots = snap.data().list;
-        // Фильтруем: показываем только статус "open" И время еще не прошло
-        const now = new Date();
-        availableSlots = allSlots.filter(s => s.status === 'open' && new Date(s.isoDate) > now);
+        allSlots.sort((a, b) => new Date(a.isoDate) - new Date(b.isoDate));
 
-        if (availableSlots.length === 0) {
+        // 1. Обновляем выпадающий список (только свободные)
+        const openSlots = allSlots.filter(s => s.status === 'open' && new Date(s.isoDate) > new Date());
+        
+        if (openSlots.length === 0) {
             select.style.display = 'none';
             msg.style.display = 'block';
         } else {
             select.style.display = 'block';
             msg.style.display = 'none';
             select.innerHTML = '<option value="" disabled selected>-- Выберите время --</option>' + 
-                availableSlots.map(s => `<option value="${s.id}">${s.displayTime}</option>`).join('');
+                openSlots.map(s => `<option value="${s.id}">${s.displayTime}</option>`).join('');
+        }
+
+        // 2. Обновляем публичный список (только забронированные)
+        const bookedSlots = allSlots.filter(s => s.status === 'booked');
+        if (bookedSlots.length === 0) {
+            publicList.innerHTML = '<div style="font-size:12px; color:#555; text-align:center;">Пока нет забронированных игр</div>';
+        } else {
+            publicList.innerHTML = bookedSlots.map(s => `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div>
+                        <div style="font-family:var(--font-tech); font-size:13px; color:#fff;">${s.team.clanName}</div>
+                        <div style="font-size:10px; color:var(--accent);">${s.displayTime}</div>
+                    </div>
+                    <div style="font-size:10px; padding:4px 8px; background:rgba(255,0,76,0.1); color:var(--accent); border-radius:4px; border:1px solid var(--accent-dim);">ЗАНЯТО</div>
+                </div>
+            `).join('');
         }
     });
+
 
     // 2. Логика отправки формы
     window.submitPrac = async (e) => {
