@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#020202">
-  <meta name="description" content="Official Airex Team Esports Organization Site">
-  <title>AIREX TEAM | Оффициальный сайт</title>
+  <meta name="description" content="Официальный сайт киберспортивной организации Airex Team.">
+  <title>AIREX TEAM | Официальный сайт</title>
+  
   <meta property="og:title" content="AIREX TEAM | Esports Organization">
-<meta property="og:description" content="Официальный сайт команды AIREX по Standoff 2. Побеждай вместе с нами!">
-<meta property="og:image" content="https://airex-team-esports.github.io/logo.png">
-<meta property="og:type" content="website">
+  <meta property="og:description" content="Официальный сайт команды AIREX по Standoff 2. Побеждай вместе с нами!">
+  <meta property="og:image" content="logo.png">
+  <meta property="og:type" content="website">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -278,89 +279,87 @@
     /* --- LOADING TEXT --- */
     .loading-text { color: var(--text-gray); font-size: 12px; letter-spacing: 1px; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-/* --- УЛУЧШЕННЫЙ ПЛЕЕР --- */
-#ambient-player {
-    position: fixed;
-    bottom: 25px;
-    left: 25px;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background: rgba(255, 0, 76, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 10px 18px;
-    border-radius: 50px;
-    border: 1px solid var(--accent);
-    box-shadow: 0 0 20px var(--accent-dim);
-    transition: all 0.3s ease;
-}
+    
+    /* --- УЛУЧШЕННЫЙ ПЛЕЕР --- */
+    #ambient-player {
+        position: fixed;
+        bottom: 25px;
+        left: 25px;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: rgba(255, 0, 76, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 10px 18px;
+        border-radius: 50px;
+        border: 1px solid var(--accent);
+        box-shadow: 0 0 20px var(--accent-dim);
+        transition: all 0.3s ease;
+    }
 
-#ambient-player:hover {
-    box-shadow: 0 0 30px var(--accent-glow);
-    transform: scale(1.05);
-}
+    #ambient-player:hover {
+        box-shadow: 0 0 30px var(--accent-glow);
+        transform: scale(1.05);
+    }
 
-.play-state-icon {
-    font-size: 18px;
-    color: #fff;
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--accent);
-    border-radius: 50%;
-    box-shadow: 0 0 15px var(--accent-glow);
-    transition: 0.3s;
-    /* Анимация пульсации, пока не нажали */
-    animation: pulse-red 2s infinite;
-}
+    .play-state-icon {
+        font-size: 18px;
+        color: #fff;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--accent);
+        border-radius: 50%;
+        box-shadow: 0 0 15px var(--accent-glow);
+        transition: 0.3s;
+        animation: pulse-red 2s infinite;
+    }
 
-@keyframes pulse-red {
-    0% { box-shadow: 0 0 0 0 rgba(255, 0, 76, 0.7); }
-    70% { box-shadow: 0 0 0 15px rgba(255, 0, 76, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(255, 0, 76, 0); }
-}
+    @keyframes pulse-red {
+        0% { box-shadow: 0 0 0 0 rgba(255, 0, 76, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(255, 0, 76, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 0, 76, 0); }
+    }
 
-/* Стили для волн музыки */
-.music-waves {
-    display: flex;
-    align-items: flex-end;
-    gap: 3px;
-    height: 20px;
-}
+    .music-waves {
+        display: flex;
+        align-items: flex-end;
+        gap: 3px;
+        height: 20px;
+    }
 
-.wave {
-    width: 3px;
-    background: var(--accent);
-    border-radius: 10px;
-    animation: wave-anim 1s ease-in-out infinite;
-}
+    .wave {
+        width: 3px;
+        background: var(--accent);
+        border-radius: 10px;
+        animation: wave-anim 1s ease-in-out infinite;
+    }
 
-.wave:nth-child(2) { animation-delay: 0.2s; }
-.wave:nth-child(3) { animation-delay: 0.4s; }
+    .wave:nth-child(2) { animation-delay: 0.2s; }
+    .wave:nth-child(3) { animation-delay: 0.4s; }
 
-@keyframes wave-anim {
-    0%, 100% { height: 5px; }
-    50% { height: 20px; }
-}
+    @keyframes wave-anim {
+        0%, 100% { height: 5px; }
+        50% { height: 20px; }
+    }
 
-/* Текст рядом с кнопкой */
-.player-label {
-    font-family: var(--font-tech);
-    font-size: 10px;
-    letter-spacing: 1px;
-    color: #fff;
-    text-transform: uppercase;
-}
+    .player-label {
+        font-family: var(--font-tech);
+        font-size: 10px;
+        letter-spacing: 1px;
+        color: #fff;
+        text-transform: uppercase;
+    }
 
     /* --- HUD NOTIFICATIONS --- */
     #notify-container {
       position: fixed; top: 90px; right: 20px;
       z-index: 10000; display: flex; flex-direction: column; gap: 10px;
-      pointer-events: none; /* Чтобы можно было кликать сквозь пустое место */
+      pointer-events: none;
     }
 
     .hud-toast {
@@ -381,7 +380,6 @@
     }
     
     .hud-toast.active { transform: translateX(0); opacity: 1; }
-    
     .hud-toast.success { border-left-color: #00ffa3; }
     .hud-toast.error { border-left-color: #ff004c; }
     .hud-toast.info { border-left-color: #00ccff; }
@@ -395,7 +393,6 @@
     .toast-title { font-size: 11px; font-weight: 700; text-transform: uppercase; opacity: 0.7; letter-spacing: 1px; }
     .toast-msg { font-size: 13px; font-weight: 500; margin-top: 2px; }
 
-    /* Полоска времени */
     .toast-progress {
       position: absolute; bottom: 0; left: 0; height: 2px;
       background: rgba(255,255,255,0.5); width: 100%;
@@ -404,7 +401,6 @@
     @keyframes progress-burn { from { width: 100%; } to { width: 0%; } }
 
     /* --- BADGE SYSTEM --- */
-    /* Точка на гамбургере */
     .menu-toggle { position: relative; }
     .menu-toggle.has-update::after {
         content: ''; position: absolute; top: 10px; right: 8px;
@@ -414,17 +410,15 @@
         animation: pulse-dot 2s infinite;
     }
 
-    /* Точка внутри меню на пунктах */
     .menu-item { position: relative; }
     .menu-item.has-update::after {
         content: ''; position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
-        width: 6px; height: 6px; background: #00ffa3; /* Зеленая точка внутри */
+        width: 6px; height: 6px; background: #00ffa3;
         border-radius: 50%;
         box-shadow: 0 0 8px #00ffa3;
     }
 
     @keyframes pulse-dot { 0% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.3); } 100% { opacity: 0.5; transform: scale(1); } }
-
   </style>
 
   <script>
@@ -463,29 +457,28 @@
     </div>
 
     <div class="nav-dropdown" id="navDropdown">
-      <button class="menu-item active-tab" onclick="selectTab('home', this)"><i class="fas fa-home"></i> Главная</button>
-      <button class="menu-item" onclick="selectTab('team', this)"><i class="fas fa-users"></i> Состав</button>
-      <button class="menu-item" onclick="selectTab('practice', this)"><i class="fas fa-crosshairs"></i> Праки</button>
-      <button class="menu-item" onclick="selectTab('about', this)"><i class="fas fa-shield-alt"></i> Инфо</button>
-      <button class="menu-item" onclick="selectTab('news', this)"><i class="fas fa-bolt"></i> Новости</button>
-      <button class="menu-item" onclick="selectTab('media', this)"><i class="fas fa-play-circle"></i> Медиа</button>
-      <button class="menu-item" onclick="selectTab('history', this)"><i class="fas fa-trophy"></i> Матчи</button>
-      <button class="menu-item" onclick="selectTab('reviews', this)"><i class="fas fa-star"></i> Отзывы</button>
+      <button class="menu-item active-tab" id="btn-home" onclick="selectTab('home', this)"><i class="fas fa-home"></i> Главная</button>
+      <button class="menu-item" id="btn-team" onclick="selectTab('team', this)"><i class="fas fa-users"></i> Состав</button>
+      <button class="menu-item" id="btn-practice" onclick="selectTab('practice', this)"><i class="fas fa-crosshairs"></i> Праки</button>
+      <button class="menu-item" id="btn-about" onclick="selectTab('about', this)"><i class="fas fa-shield-alt"></i> Инфо</button>
+      <button class="menu-item" id="btn-news" onclick="selectTab('news', this)"><i class="fas fa-bolt"></i> Новости</button>
+      <button class="menu-item" id="btn-media" onclick="selectTab('media', this)"><i class="fas fa-play-circle"></i> Медиа</button>
+      <button class="menu-item" id="btn-history" onclick="selectTab('history', this)"><i class="fas fa-trophy"></i> Матчи</button>
+      <button class="menu-item" id="btn-reviews" onclick="selectTab('reviews', this)"><i class="fas fa-star"></i> Отзывы</button>
       <button class="menu-item join-btn" onclick="selectTab('join', this)"><i class="fas fa-user-plus"></i> Вступить</button>
     </div>
     
 </nav>
-
 <div class="container">
 
     <section id="home" class="active">
       <div class="card hero-card">
         <h2 class="glitch hero-title" data-text="AIREX TEAM">AIREX TEAM</h2>
-        <p style="font-size: 16px; color: #ddd;">Профиссональная организация киберспорта, по дицеплине Standoff 2 </p>
+        <p style="font-size: 16px; color: #ddd;">Профессиональная киберспортивная организация по дисциплине Standoff 2</p>
         <div id="typing-text"></div>
         <div style="margin-top: 25px;">
            <button class="btn-glitch" onclick="selectTab('join', document.querySelector('.join-btn'))">
-             Предложить кандитуру <i class="fas fa-chevron-right" style="margin-left:8px; font-size:10px;"></i>
+             Предложить кандидатуру <i class="fas fa-chevron-right" style="margin-left:8px; font-size:10px;"></i>
            </button>
         </div>
       </div>
@@ -501,7 +494,7 @@
 
       <div class="card match-card">
         <div class="match-header">
-          <span class="text-accent" style="font-weight:700;"><i class="fas fa-crosshairs"></i> Следущий матч</span>
+          <span class="text-accent" style="font-weight:700;"><i class="fas fa-crosshairs"></i> Следующий матч</span>
           <span id="match-status" class="status-live">COUNTDOWN</span>
         </div>
         
@@ -527,14 +520,14 @@
           <div id="home-news-feed">
              <div class="text-center loading-text">СИНХРОНИЗАЦИЯ...</div>
           </div>
-          <button class="btn-glitch btn-secondary" onclick="selectTab('news', document.querySelectorAll('.menu-item')[3])" style="margin-top:15px;">
+          <button class="btn-glitch btn-secondary" onclick="selectTab('news', document.getElementById('btn-news'))" style="margin-top:15px;">
             ЧИТАТЬ ВСЕ НОВОСТИ
           </button>
       </div>
 
      <div class="card donate-card text-center">
       <h3 style="font-size: 16px; margin-bottom: 8px;">Поддержи команду донатом!</h3>
-      <a href="https://dalink.to/airex_team_esports" target="_blank" class="btn-glitch" style="border:none; background: var(--accent); width: auto; display: inline-flex;">
+      <a href="https://dalink.to/airex_team_esports" target="_blank" rel="noopener noreferrer" class="btn-glitch" style="border:none; background: var(--accent); width: auto; display: inline-flex;">
         <i class="fas fa-heart" style="font-size: 14px; margin-right: 8px;"></i> ОТПРАВИТЬ ДОНАТ
       </a>
     </div>
@@ -646,9 +639,9 @@
       <div class="card text-center">
         <h3>НАШИ СОЦСЕТИ</h3>
         <div class="social-row" style="display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin-top:20px; font-size: 30px;">
-          <a href="https://t.me/airex_team_esports" target="_blank" style="color:#fff;"><i class="fab fa-telegram"></i></a>
-          <a href="https://www.tiktok.com/@airex_team" target="_blank" style="color:#fff;"><i class="fab fa-tiktok"></i></a>
-          <a href="https://youtube.com/@airex_team.official" target="_blank" style="color:#fff;"><i class="fab fa-youtube"></i></a>
+          <a href="https://t.me/airex_team_esports" target="_blank" rel="noopener noreferrer" style="color:#fff;"><i class="fab fa-telegram"></i></a>
+          <a href="https://www.tiktok.com/@airex_team" target="_blank" rel="noopener noreferrer" style="color:#fff;"><i class="fab fa-tiktok"></i></a>
+          <a href="https://youtube.com/@airex_team.official" target="_blank" rel="noopener noreferrer" style="color:#fff;"><i class="fab fa-youtube"></i></a>
         </div>
       </div>
     </section>
@@ -764,7 +757,6 @@
   </div>
 </section>
 
-
     <footer style="text-align: center; padding: 40px 20px; color: #444; font-size: 10px; font-family: var(--font-tech); text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 40px;">
         <p style="margin: 0;">© 2026 AIREX TEAM.</p>
     </footer>
@@ -775,7 +767,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getFirestore, doc, onSnapshot, getDoc, setDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    // --- FIREBASE CONFIG (ИЗ ТВОЕЙ АДМИНКИ) ---
+    // --- FIREBASE CONFIG ---
     const firebaseConfig = {
       apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
       authDomain: "airexsite.firebaseapp.com",
@@ -788,11 +780,11 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // --- 1. СИНХРОНИЗАЦИЯ НОВОСТЕЙ ---
+    // --- 1. СИНХРОНИЗАЦИЯ НОВОСТЕЙ + BADGE ---
     onSnapshot(doc(db, "siteData", "news"), (snap) => {
         const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
         
-        // Главная страница (Short Feed)
+        // Render Home Feed
         const homeFeed = document.getElementById('home-news-feed');
         if(homeFeed) {
             homeFeed.innerHTML = list.length ? list.slice(0, 3).map(n => `
@@ -802,7 +794,7 @@
             `).join('') : '<div class="text-center" style="font-size:10px;">Новостей нет</div>';
         }
 
-        // Страница новостей (Full Feed)
+        // Render Full Feed
         const fullFeed = document.getElementById('dynamic-news-container');
         if(fullFeed) {
             fullFeed.innerHTML = list.map(n => `
@@ -812,6 +804,12 @@
                     <div style="font-size:12px; color:#aaa;">${n.text}</div>
                 </div>
             `).join('');
+        }
+
+        // BADGE CHECK (Используем ID, который мы добавили в HTML)
+        if(list.length > 0) {
+            const latest = Math.max(...list.map(i => i.id || 0));
+            checkUpdateBadge('news', latest, 'btn-news');
         }
     });
 
@@ -854,13 +852,13 @@
         }, 1000);
     }
 
-    // Функция для создания карточки (универсальная)
+    // --- 3. СОСТАВЫ (Roster) ---
     const createPlayerCard = (p) => `
         <div class="player-wrapper" onclick="this.querySelector('.player-card-inner').classList.toggle('is-flipped')">
             <div class="player-card-inner">
                 <div class="player-front">
                     <div class="p-header">
-                        <img src="${p.img}" class="p-avatar" onerror="this.src='https://placehold.co/100?text=AX'">
+                        <img src="${p.img}" class="p-avatar" onerror="this.src='logo.png'">
                         <div>
                             <div class="p-role">${p.role}</div>
                             <h3 class="p-nick">${p.nick}</h3>
@@ -891,34 +889,27 @@
         </div>
     `;
 
-    // Загрузка ОСНОВНОГО состава
     onSnapshot(doc(db, "siteData", "roster_main"), (snap) => {
         const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
         document.getElementById('dynamic-roster').innerHTML = list.map(p => createPlayerCard(p)).join('');
     });
 
-    // Загрузка РЕЗЕРВНОГО состава
     onSnapshot(doc(db, "siteData", "roster_reserve"), (snap) => {
         const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
         document.getElementById('dynamic-roster-reserve').innerHTML = list.map(p => createPlayerCard(p)).join('');
     });
   
-      // --- СИСТЕМА ПРАКОВ (CLIENT SIDE) ---
-    
-    // 1. Загрузка свободных слотов в Select
-    let availableSlots = []; // Храним локально, чтобы потом проверить
-
-        onSnapshot(doc(db, "siteData", "practices"), (snap) => {
+    // --- 4. СИСТЕМА ПРАКОВ ---
+    onSnapshot(doc(db, "siteData", "practices"), (snap) => {
         const select = document.getElementById('prac-slot-select');
         const msg = document.getElementById('no-slots-msg');
-        const publicList = document.getElementById('public-booked-list'); // Добавили это
+        const publicList = document.getElementById('public-booked-list');
         
         if (!snap.exists() || !snap.data().list) return;
 
         const allSlots = snap.data().list;
         allSlots.sort((a, b) => new Date(a.isoDate) - new Date(b.isoDate));
 
-        // 1. Обновляем выпадающий список (только свободные)
         const openSlots = allSlots.filter(s => s.status === 'open' && new Date(s.isoDate) > new Date());
         
         if (openSlots.length === 0) {
@@ -931,7 +922,6 @@
                 openSlots.map(s => `<option value="${s.id}">${s.displayTime}</option>`).join('');
         }
 
-        // 2. Обновляем публичный список (только забронированные)
         const bookedSlots = allSlots.filter(s => s.status === 'booked');
         if (bookedSlots.length === 0) {
             publicList.innerHTML = '<div style="font-size:12px; color:#555; text-align:center;">Пока нет забронированных игр</div>';
@@ -948,15 +938,12 @@
         }
     });
 
-
-    // 2. Логика отправки формы
     window.submitPrac = async (e) => {
         e.preventDefault();
         
         const slotId = parseInt(document.getElementById('prac-slot-select').value);
         if(!slotId) return alert("Пожалуйста, выберите время прака!");
 
-        // Сбор данных карт
         const checkedMaps = [];
         document.querySelectorAll('.map-check:checked').forEach(cb => checkedMaps.push(cb.value));
         
@@ -975,45 +962,32 @@
         submitBtn.disabled = true;
 
         try {
-            // ТРАНЗАКЦИЯ: Читаем базу заново, чтобы убедиться, что слот не заняли 1 секунду назад
             const ref = doc(db, "siteData", "practices");
             const snap = await getDoc(ref);
-            
             if(!snap.exists()) throw new Error("Ошибка базы данных");
 
             let list = snap.data().list;
             const slotIndex = list.findIndex(s => s.id === slotId);
 
-            if (slotIndex === -1) {
-                throw new Error("Слот был удален администратором.");
-            }
+            if (slotIndex === -1) throw new Error("Слот был удален.");
+            if (list[slotIndex].status !== 'open') throw new Error("Этот слот уже заняли!");
 
-            if (list[slotIndex].status !== 'open') {
-                throw new Error("Упс! Этот слот только что заняли другие. Выберите другое время.");
-            }
-
-            // Если все ок - занимаем слот
             list[slotIndex].status = 'booked';
             list[slotIndex].team = formData;
 
             await updateDoc(ref, { list: list });
-
-            alert(`✅ РЕГИСТРАЦИЯ УСПЕШНА!\nЖдем вас ${list[slotIndex].displayTime}.\nМы напишем вам по указанным контактам.`);
-            
-            // Очистка формы
+            window.showNotify("РЕГИСТРАЦИЯ УСПЕШНА!", "success");
             e.target.reset();
-            window.location.reload(); // Перезагрузка для обновления UI
+            setTimeout(() => window.location.reload(), 2000);
 
         } catch (err) {
-            alert("ОШИБКА: " + err.message);
+            window.showNotify(err.message, "error");
             submitBtn.innerHTML = "ПОДТВЕРДИТЬ РЕГИСТРАЦИЮ";
             submitBtn.disabled = false;
         }
     };
 
-
-
-    // --- 4. ПУТЬ AIREX (Timeline) ---
+    // --- 5. МЕДИА И ИСТОРИЯ ---
     onSnapshot(doc(db, "siteData", "about"), (snap) => {
         const list = (snap.exists() && snap.data().roadmap) ? snap.data().roadmap : [];
         const cont = document.getElementById('roadmap-container');
@@ -1031,7 +1005,6 @@
         }
     });
 
-    // --- 5. МЕДИА (Видео и Галерея) ---
     onSnapshot(doc(db, "siteData", "media"), (snap) => {
         if(!snap.exists()) return;
         const d = snap.data();
@@ -1044,10 +1017,13 @@
             document.getElementById('gallery-container').innerHTML = d.gallery.map(g => `
                 <div class="gallery-item" style="background-image:url('${g.src}')"></div>
             `).join('');
+            
+            // BADGE CHECK MEDIA
+            const latest = Math.max(...d.gallery.map(i => i.id || 0));
+            checkUpdateBadge('media', latest, 'btn-media');
         }
     });
 
-    // --- 6. ИСТОРИЯ ИГР ---
     onSnapshot(doc(db, "siteData", "history"), (snap) => {
         const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
         const container = document.getElementById('full-history-container');
@@ -1061,9 +1037,15 @@
                 <div style="font-family:var(--font-tech); font-size:18px; font-weight:700;">${m.our} : ${m.their}</div>
             </div>
         `).join('');
+
+        // BADGE CHECK HISTORY
+        if(list.length > 0) {
+            const latest = Math.max(...list.map(i => i.id || 0));
+            checkUpdateBadge('history', latest, 'btn-history');
+        }
     });
 
-    // --- 7. ОТЗЫВЫ ---
+    // --- 6. ОТЗЫВЫ ---
     onSnapshot(doc(db, "siteData", "reviews"), (snap) => {
         const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
         document.getElementById('reviews-container').innerHTML = list.slice().reverse().map(r => `
@@ -1089,91 +1071,118 @@
             if(!snap.exists()) await setDoc(ref, { list: [] });
             
             await updateDoc(ref, { list: arrayUnion({ id: Date.now(), nick, target, text }) });
-            alert("Отзыв отправлен!"); e.target.reset();
-        } catch(err) { alert("Ошибка: " + err.message); }
+            window.showNotify("Отзыв отправлен!", "success");
+            e.target.reset();
+        } catch(err) { window.showNotify("Ошибка: " + err.message, "error"); }
     };
 
-    // --- UI HELPERS ---
+    // --- UI LOGIC ---
+    
+    // Переключение вкладок с удалением бейджика
     window.selectTab = (tabId, btn) => {
         document.querySelectorAll('section').forEach(s => { s.classList.remove('active'); s.style.opacity = '0'; });
         const t = document.getElementById(tabId);
         if(t) { setTimeout(() => { t.classList.add('active'); requestAnimationFrame(() => t.style.opacity = '1'); }, 100); }
+        
         document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active-tab'));
-        if(btn) btn.classList.add('active-tab');
+        if(btn) {
+            btn.classList.add('active-tab');
+            // Если есть бейдж, убираем его и сохраняем дату просмотра
+            if(btn.classList.contains('has-update')) {
+                btn.classList.remove('has-update');
+                localStorage.setItem('last_seen_' + tabId, Date.now());
+                updateGlobalBadge();
+            }
+        }
         document.getElementById('navDropdown').classList.remove('active');
     };
+    
     window.toggleMenu = () => document.getElementById('navDropdown').classList.toggle('active');
 
-    // --- TYPING EFFECT ---
+    // BADGE SYSTEM LOGIC
+    window.checkUpdateBadge = (sectionKey, latestId, btnId) => {
+        const lastSeen = parseInt(localStorage.getItem('last_seen_' + sectionKey) || '0');
+        const btn = document.getElementById(btnId);
+        
+        if (btn && latestId > lastSeen) {
+            btn.classList.add('has-update');
+            updateGlobalBadge();
+        } else if (btn) {
+            btn.classList.remove('has-update');
+            updateGlobalBadge();
+        }
+    };
+
+    window.updateGlobalBadge = () => {
+        const hasAnyUpdate = document.querySelectorAll('.menu-item.has-update').length > 0;
+        const burger = document.getElementById('menuBtn');
+        if(burger) {
+            if(hasAnyUpdate) burger.classList.add('has-update');
+            else burger.classList.remove('has-update');
+        }
+    };
+
+    // Typing Effect
     const typeText = "ДОМИНИРУЙ. РАЗВИВАЙСЯ. ПОБЕЖДАЙ. ";
     let typeIdx = 0;
     function typeWriter() {
         if(typeIdx < typeText.length) {
-            document.getElementById('typing-text').innerHTML += typeText.charAt(typeIdx);
+            const el = document.getElementById('typing-text');
+            if(el) el.innerHTML += typeText.charAt(typeIdx);
             typeIdx++; setTimeout(typeWriter, 100);
         }
     }
     window.onload = typeWriter;
 
-    // --- MUSIC ---
+    // Music Player
     window.toggleAmbient = () => {
-    const audio = document.getElementById('bg-music');
-    const btnIcon = document.getElementById('btn-icon');
-    const btn = document.getElementById('music-btn');
-    const anim = document.getElementById('music-anim');
-    const status = document.getElementById('player-status');
+        const audio = document.getElementById('bg-music');
+        const btnIcon = document.getElementById('btn-icon');
+        const btn = document.getElementById('music-btn');
+        const anim = document.getElementById('music-anim');
+        const status = document.getElementById('player-status');
 
-    if (audio.paused) {
-        audio.play();
-        btnIcon.className = 'fas fa-pause';
-        btn.style.animation = 'none'; // Убираем пульсацию при игре
-        anim.style.display = 'flex';
-        status.innerText = 'Ambient: On';
-        status.style.color = 'var(--accent)';
-    } else {
-        audio.pause();
-        btnIcon.className = 'fas fa-play';
-        btn.style.animation = 'pulse-red 2s infinite'; // Возвращаем пульсацию
-        anim.style.display = 'none';
-        status.innerText = 'Ambient: Off';
-        status.style.color = '#fff';
-    }
-};
-
+        if (audio.paused) {
+            audio.play().catch(e => console.log("Auto-play prevented"));
+            btnIcon.className = 'fas fa-pause';
+            btn.style.animation = 'none';
+            anim.style.display = 'flex';
+            status.innerText = 'Ambient: On';
+            status.style.color = 'var(--accent)';
+        } else {
+            audio.pause();
+            btnIcon.className = 'fas fa-play';
+            btn.style.animation = 'pulse-red 2s infinite';
+            anim.style.display = 'none';
+            status.innerText = 'Ambient: Off';
+            status.style.color = '#fff';
+        }
+    };
   
     window.sendToTelegram = (event) => {
-    event.preventDefault(); // Чтобы страница не перезагружалась
+        event.preventDefault(); 
+        const nick = document.getElementById('nick').value;
+        const age = document.getElementById('age').value;
+        const kd = document.getElementById('kd').value;
+        const role = document.getElementById('role').value;
+        const rank = document.getElementById('best_rank').value;
 
-    // Собираем данные из полей
-    const nick = document.getElementById('nick').value;
-    const age = document.getElementById('age').value;
-    const kd = document.getElementById('kd').value;
-    const role = document.getElementById('role').value;
-    const rank = document.getElementById('best_rank').value;
+        const message = `🔥 *НОВАЯ ЗАЯВКА В AIREX TEAM*%0A` +
+                        `----------------------------%0A` + 
+                        `👤 *Ник:* ${nick}%0A` +
+                        `🔞 *Возраст:* ${age}%0A` +
+                        `📊 *K/D:* ${kd}%0A` +
+                        `🎮 *Роль:* ${role}%0A` +
+                        `🏆 *Макс. Ранг:* ${rank}%0A` +
+                        `----------------------------`;
 
-    // Формируем красивое сообщение
-    // %0A — это перенос строки в ссылках
-    const message = `🔥 *НОВАЯ ЗАЯВКА В AIREX TEAM*%0A` +
-                    `----------------------------%0A` + 
-                    `👤 *Ник:* ${nick}%0A` +
-                    `🔞 *Возраст:* ${age}%0A` +
-                    `📊 *K/D:* ${kd}%0A` +
-                    `🎮 *Роль:* ${role}%0A` +
-                    `🏆 *Макс. Ранг:* ${rank}%0A` +
-                    `----------------------------`;
+        const tgUrl = `https://t.me/kas_0ff?text=${message}`;
+        window.open(tgUrl, '_blank');
+    };
 
-    // Твоя ссылка в личку
-    const tgUrl = `https://t.me/kas_0ff?text=${message}`;
-
-    // Открываем чат в новом окне
-    window.open(tgUrl, '_blank');
-};
-
-    // --- HUD NOTIFY SYSTEM ---
+    // HUD Notifications
     window.showNotify = (msg, type = 'info') => {
         const container = document.getElementById('notify-container');
-        
-        // Создаем элементы
         const toast = document.createElement('div');
         toast.className = `hud-toast ${type}`;
         
@@ -1192,112 +1201,17 @@
         `;
 
         container.appendChild(toast);
-
-        // Анимация входа (небольшая задержка для CSS transition)
         requestAnimationFrame(() => { toast.classList.add('active'); });
 
-        // Удаление
         setTimeout(() => {
             toast.classList.remove('active');
-            setTimeout(() => toast.remove(), 400); // Ждем окончания анимации исчезновения
+            setTimeout(() => toast.remove(), 400); 
         }, 4000);
-        
-        // (Опционально) Звук уведомления можно добавить сюда
     };
 
-    // ПЕРЕОПРЕДЕЛЯЕМ стандартный alert, чтобы все было красиво
     window.alert = (msg) => window.showNotify(msg, 'info');
-    // --- SMART BADGE LOGIC ---
-    
-    // Функция проверки: есть ли что-то новое?
-    // sectionKey: ключ в localStorage (напр. 'last_seen_news')
-    // latestId: ID или Timestamp самой свежей записи из базы
-    // btnId: ID кнопки в меню, где показать точку
-    const checkUpdateBadge = (sectionKey, latestId, btnId) => {
-        const lastSeen = localStorage.getItem('last_seen_' + sectionKey) || 0;
-        const btn = document.getElementById(btnId);
-        
-        if (latestId > lastSeen) {
-            // Есть обнова!
-            if(btn) btn.classList.add('has-update');
-            updateGlobalBadge();
-        } else {
-            if(btn) btn.classList.remove('has-update');
-            updateGlobalBadge();
-        }
-    };
-
-    // Обновляет главную точку на гамбургере
-    const updateGlobalBadge = () => {
-        const hasAnyUpdate = document.querySelectorAll('.menu-item.has-update').length > 0;
-        const burger = document.getElementById('menuBtn');
-        if(hasAnyUpdate) burger.classList.add('has-update');
-        else burger.classList.remove('has-update');
-    };
-
-    // --- ОБНОВЛЯЕМ ТЕКУЩИЕ СЛУШАТЕЛИ FIREBASE ---
-    // (Нужно слегка модифицировать твои существующие onSnapshot)
-
-    // Пример для НОВОСТЕЙ:
-    onSnapshot(doc(db, "siteData", "news"), (snap) => {
-        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
-        
-        // ... твой код рендеринга новостей ...
-        
-        // ПРОВЕРКА НА ОБНОВЛЕНИЕ
-        if(list.length > 0) {
-            // Берем ID самой последней новости (предполагаем, что id = Date.now())
-            // Сортируем чтобы найти макс ID
-            const latest = Math.max(...list.map(i => i.id));
-            checkUpdateBadge('news', latest, 'btn-news');
-        }
-    });
-
-    // Пример для МАТЧЕЙ (History):
-    onSnapshot(doc(db, "siteData", "history"), (snap) => {
-        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
-        
-        // ... твой код рендеринга ...
-
-        if(list.length > 0) {
-            const latest = Math.max(...list.map(i => i.id));
-            checkUpdateBadge('history', latest, 'btn-history');
-        }
-    });
-    
-    // Пример для МЕДИА:
-    onSnapshot(doc(db, "siteData", "media"), (snap) => {
-       // ... код рендеринга ...
-       const d = snap.data();
-       // Для галереи берем ID последней фотки
-       if(d.gallery && d.gallery.length > 0) {
-           const latest = Math.max(...d.gallery.map(i => i.id));
-           checkUpdateBadge('media', latest, 'btn-media');
-       }
-    });
-
-    // --- МОДИФИКАЦИЯ ФУНКЦИИ ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК ---
-    // Когда мы открываем вкладку, мы "прочитываем" обновления
-    window.selectTab = (tabId, btn) => {
-        // Стандартная логика переключения
-        document.querySelectorAll('section').forEach(s => { s.classList.remove('active'); s.style.opacity = '0'; });
-        const t = document.getElementById(tabId);
-        if(t) { setTimeout(() => { t.classList.add('active'); requestAnimationFrame(() => t.style.opacity = '1'); }, 100); }
-        document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active-tab'));
-        if(btn) btn.classList.add('active-tab');
-        document.getElementById('navDropdown').classList.remove('active');
-
-        // НОВАЯ ЛОГИКА: Снятие бейджика
-        if(btn && btn.classList.contains('has-update')) {
-            btn.classList.remove('has-update');
-            updateGlobalBadge(); // Проверяем, остались ли еще точки
-            
-            // Сохраняем "сейчас" как время просмотра
-            localStorage.setItem('last_seen_' + tabId, Date.now());
-        }
-    };
 
 </script>
 <div id="notify-container"></div>
 </body>
-  </html>
+</html>
