@@ -136,8 +136,80 @@
         21% { opacity: 1; transform: skew(2deg); }
         100% { opacity: 1; transform: skew(0deg); }
     }
-    
+    /* --- EDITOR STYLES --- */
+.editor-toolbar {
+    display: flex;
+    gap: 5px;
+    background: #1a1a1a;
+    padding: 8px;
+    border: 1px solid #333;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    flex-wrap: wrap;
+}
+
+.tool-btn {
+    background: #333;
+    border: 1px solid #444;
+    color: #ccc;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.tool-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+#newsText {
+    border-radius: 0 0 6px 6px; /* Скругляем только низ, так как сверху тулбар */
+    margin-top: 0;
+    min-height: 120px;
+    font-family: 'Courier New', monospace; /* Чтобы было удобнее править код */
+    line-height: 1.5;
+}
+
+#newsPreview {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(0,0,0,0.5);
+    border: 1px dashed var(--accent);
+    border-radius: 6px;
+    min-height: 60px;
+    font-size: 13px;
+    color: #ccc;
+    word-wrap: break-word;
+}
+
+/* Стили для контента внутри превью (как на сайте) */
+#newsPreview b { color: #fff; font-weight: 700; }
+#newsPreview a { color: var(--accent); text-decoration: underline; cursor: pointer; }
+#newsPreview img { max-width: 100%; border-radius: 8px; margin: 10px 0; border: 1px solid #333; }
+#newsPreview .news-quote { 
+    border-left: 3px solid var(--accent); 
+    padding-left: 10px; 
+    font-style: italic; 
+    color: #888; 
+    margin: 10px 0; 
+}
+#newsPreview .news-code {
+    background: #222;
+    color: #00ffa3;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 11px;
+}
+
     #mainUI { display: none; opacity: 0; transition: opacity 1s ease; }
+    
   </style>
 </head>
 <body>
@@ -170,28 +242,44 @@
   <div class="container" id="adminContainer" style="display: grid;">
 
     <div class="panel">
-        <div class="panel-header">
-            <h2><i class="fas fa-newspaper panel-icon"></i> LIVE НОВОСТИ</h2>
-        </div>
-        <label>Заголовок</label>
-        <input type="text" id="newsTitle" placeholder="Например: Победа в турнире">
-        <label>Текст новости</label>
-        <textarea id="newsText" rows="2" placeholder="Краткое описание..."></textarea>
-        <div class="row-inputs">
-            <div><label>Дата</label><input type="text" id="newsDate" placeholder="22.01.2026"></div>
-            <div>
-                <label>Тег</label>
-                <select id="newsTag">
-                    <option value="ВАЖНО">ВАЖНО</option>
-                    <option value="ТУРНИР">ТУРНИР</option>
-                    <option value="СОСТАВ">СОСТАВ</option>
-                    <option value="ОБНОВЛЕНИЕ">ОБНОВЛЕНИЕ</option>
-                </select>
-            </div>
-        </div>
-        <button class="action-btn" onclick="addNews()">ОПУБЛИКОВАТЬ</button>
-        <div class="data-list" id="newsList">Загрузка...</div>
+    <div class="panel-header">
+        <h2><i class="fas fa-newspaper panel-icon"></i> LIVE НОВОСТИ (EDITOR)</h2>
     </div>
+    
+    <label>Заголовок</label>
+    <input type="text" id="newsTitle" placeholder="Например: Победа в турнире">
+    
+    <label>Редактор текста</label>
+    <div class="editor-toolbar">
+        <button class="tool-btn" onclick="formatText('bold')" title="Жирный"><i class="fas fa-bold"></i></button>
+        <button class="tool-btn" onclick="formatText('italic')" title="Курсив"><i class="fas fa-italic"></i></button>
+        <button class="tool-btn" onclick="formatText('quote')" title="Цитата"><i class="fas fa-quote-right"></i></button>
+        <button class="tool-btn" onclick="formatText('code')" title="Моно-текст"><i class="fas fa-code"></i></button>
+        <div style="width: 1px; background: #444; margin: 0 5px;"></div>
+        <button class="tool-btn" onclick="addLink()" title="Добавить ссылку"><i class="fas fa-link"></i></button>
+        <button class="tool-btn" onclick="addImage()" title="Добавить фото"><i class="far fa-image"></i></button>
+    </div>
+    
+    <textarea id="newsText" rows="6" placeholder="Пишите текст здесь..." oninput="updatePreview()"></textarea>
+
+    <label style="margin-top: 10px; opacity: 0.5;">Предпросмотр (как будет на сайте):</label>
+    <div id="newsPreview">Начните вводить текст...</div>
+
+    <div class="row-inputs" style="margin-top: 15px;">
+        <div><label>Дата</label><input type="text" id="newsDate" placeholder="22.01.2026"></div>
+        <div>
+            <label>Тег</label>
+            <select id="newsTag">
+                <option value="ВАЖНО">ВАЖНО</option>
+                <option value="ТУРНИР">ТУРНИР</option>
+                <option value="СОСТАВ">СОСТАВ</option>
+                <option value="ОБНОВЛЕНИЕ">ОБНОВЛЕНИЕ</option>
+            </select>
+        </div>
+    </div>
+    <button class="action-btn" onclick="addNews()">ОПУБЛИКОВАТЬ</button>
+    <div class="data-list" id="newsList">Загрузка...</div>
+</div>
 
     <div class="panel">
         <div class="panel-header">
@@ -665,6 +753,74 @@ window.deletePracSlot = async (id) => {
             document.getElementById('hEnemy').value = '';
         }
     };
+
+      // --- EDITOR LOGIC ---
+
+    // Функция вставки тегов (Жирный, Курсив, Код, Цитата)
+    window.formatText = (cmd) => {
+        const textarea = document.getElementById('newsText');
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = textarea.value;
+        const selectedText = text.substring(start, end);
+
+        let before = "", after = "";
+
+        if (cmd === 'bold') { before = "<b>"; after = "</b>"; }
+        if (cmd === 'italic') { before = "<i>"; after = "</i>"; }
+        if (cmd === 'code') { before = "<span class='news-code'>"; after = "</span>"; }
+        if (cmd === 'quote') { before = "<div class='news-quote'>"; after = "</div>"; }
+
+        // Вставляем текст
+        const newText = text.substring(0, start) + before + selectedText + after + text.substring(end);
+        textarea.value = newText;
+        
+        // Возвращаем фокус и обновляем превью
+        textarea.focus();
+        textarea.selectionEnd = end + before.length; 
+        updatePreview();
+    };
+
+    // Функция добавления ссылки
+    window.addLink = () => {
+        const url = prompt("Введите ссылку (https://...):");
+        if (!url) return;
+
+        const textarea = document.getElementById('newsText');
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const selectedText = textarea.value.substring(start, end);
+
+        // Если текст был выделен — делаем его ссылкой. Если нет — вставляем ссылку текстом "ТУТ"
+        const linkText = selectedText.length > 0 ? selectedText : "ССЫЛКА";
+        const tag = `<a href="${url}" target="_blank">${linkText}</a>`;
+
+        textarea.value = textarea.value.substring(0, start) + tag + textarea.value.substring(end);
+        updatePreview();
+    };
+
+    // Функция добавления картинки
+    window.addImage = () => {
+        const url = prompt("Введите прямой URL картинки (https://...jpg/png):");
+        if (!url) return;
+
+        const tag = `<img src="${url}" alt="image">`;
+        const textarea = document.getElementById('newsText');
+        
+        // Вставляем в место курсора
+        const start = textarea.selectionStart;
+        textarea.value = textarea.value.substring(0, start) + "\n" + tag + "\n" + textarea.value.substring(start);
+        updatePreview();
+    };
+
+    // Функция Живого Предпросмотра
+    window.updatePreview = () => {
+        const raw = document.getElementById('newsText').value;
+        // Заменяем перенос строки на <br> для визуального отображения
+        const formatted = raw.replace(/\n/g, "<br>");
+        document.getElementById('newsPreview').innerHTML = formatted;
+    };
+
 </script>
 </body>
 </html>
