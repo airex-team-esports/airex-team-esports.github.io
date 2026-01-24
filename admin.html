@@ -620,17 +620,42 @@
     };
 
     window.createPracSlot = async () => {
-        const dateInput = document.getElementById('pracDateInput').value;
-        if (!dateInput) return alert("Выберите дату и время!");
-        const displayTime = new Date(dateInput).toLocaleDateString('ru-RU', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-        const newSlot = { id: Date.now(), isoDate: dateInput, displayTime: displayTime, status: 'open', team: null };
-        if(await updateArray("practices", "list", newSlot)) {
-            alert(`Слот создан!`);
-            document.getElementById('pracDateInput').value = ''; 
-        }
+    const dateInput = document.getElementById('pracDateInput').value;
+    if (!dateInput) return alert("Выберите дату и время!");
+
+    // Создаем объект даты из того, что ввели в поле
+    const dateObj = new Date(dateInput);
+
+    // Форматируем время СТРОГО по МСК
+    const displayTime = dateObj.toLocaleString('ru-RU', {
+        timeZone: 'Europe/Moscow', // Это заставит код считать время по Москве
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    }) + " (МСК)";
+
+    // Формируем объект слота
+    const newSlot = { 
+        id: Date.now(), 
+        isoDate: dateObj.toISOString(), // Используем ISO формат для идеальной сортировки
+        displayTime: displayTime, 
+        status: 'open', 
+        team: null 
     };
 
-    window.deletePracSlot = async (id) => window.deleteItem("practices", id, "list");
+    if(await updateArray("practices", "list", newSlot)) {
+        alert(`Слот успешно создан на ${displayTime}`);
+        document.getElementById('pracDateInput').value = ''; 
+    }
+};
+
+window.deletePracSlot = async (id) => {
+    if(confirm("Удалить этот слот? Если он был забронирован, бронь исчезнет.")) {
+        return window.deleteItem("practices", id, "list");
+    }
+};
+
 
     window.addHistory = async () => {
         const enemy = document.getElementById('hEnemy').value;
