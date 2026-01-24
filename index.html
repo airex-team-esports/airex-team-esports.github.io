@@ -922,20 +922,45 @@
                 openSlots.map(s => `<option value="${s.id}">${s.displayTime}</option>`).join('');
         }
 
-        const bookedSlots = allSlots.filter(s => s.status === 'booked');
+                const bookedSlots = allSlots.filter(s => s.status === 'booked');
         if (bookedSlots.length === 0) {
             publicList.innerHTML = '<div style="font-size:12px; color:#555; text-align:center;">Пока нет забронированных игр</div>';
         } else {
             publicList.innerHTML = bookedSlots.map(s => `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                    <div>
-                        <div style="font-family:var(--font-tech); font-size:13px; color:#fff;">${s.team.clanName}</div>
-                        <div style="font-size:10px; color:var(--accent);">${s.displayTime}</div>
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 12px; padding: 15px; margin-bottom: 15px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                        <div style="font-size:12px; color:var(--accent); font-family:var(--font-tech); font-weight:700;">
+                            <i class="far fa-clock"></i> ${s.displayTime}
+                        </div>
+                        <div style="font-size:9px; padding:3px 8px; background:rgba(0,255,163,0.1); color:#00ffa3; border-radius:4px; border:1px solid rgba(0,255,163,0.2);">ПОДТВЕРЖДЕНО</div>
                     </div>
-                    <div style="font-size:10px; padding:4px 8px; background:rgba(255,0,76,0.1); color:var(--accent); border-radius:4px; border:1px solid var(--accent-dim);">ЗАНЯТО</div>
+
+                    <div style="font-family:var(--font-tech); font-size:16px; color:#fff; margin-bottom: 10px; text-transform: uppercase;">
+                        ${s.team.clanName} <span style="color:var(--accent); font-size:12px; margin-left:5px;">[${s.team.format}]</span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11px;">
+                        <div>
+                            <span style="color:#555; display:block; text-transform:uppercase; font-size:9px;">Капитан</span>
+                            <span style="color:#eee;">${s.team.captain} (ID: ${s.team.capId})</span>
+                        </div>
+                        <div>
+                            <span style="color:#555; display:block; text-transform:uppercase; font-size:9px;">Связь</span>
+                            <span style="color:#eee;">${s.team.contact}</span>
+                        </div>
+                        <div style="grid-column: span 2;">
+                            <span style="color:#555; display:block; text-transform:uppercase; font-size:9px;">Карты</span>
+                            <span style="color:#eee;">${s.team.maps && s.team.maps.length > 0 ? s.team.maps.join(', ') : 'Не выбраны'}</span>
+                        </div>
+                        <div style="grid-column: span 2;">
+                            <span style="color:#555; display:block; text-transform:uppercase; font-size:9px;">Состав (Line-up)</span>
+                            <span style="color:#aaa; font-style: italic;">${s.team.lineup || 'Не указан'}</span>
+                        </div>
+                    </div>
                 </div>
             `).join('');
         }
+
     });
 
     window.submitPrac = async (e) => {
