@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#020202">
-  <meta name="description" content="Официальный сайт киберспортивной организации Airex Team. Standoff 2 Esports.">
-  <meta name="keywords" content="Airex, Standoff 2, Cybersport, Clan, Team, Турниры">
-  <meta name="author" content="Airex Team">
-  <title>AIREX TEAM | Official Site</title>
+  <meta name="description" content="Официальный сайт киберспортивной организации Airex Team.">
+  <title>AIREX TEAM | Официальный сайт</title>
   
   <meta property="og:title" content="AIREX TEAM | Esports Organization">
   <meta property="og:description" content="Официальный сайт команды AIREX по Standoff 2. Побеждай вместе с нами!">
@@ -16,31 +14,29 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* --- 1. CORE VARIABLES --- */
+    /* --- CORE VARIABLES --- */
     :root {
       --accent: #ff004c;
       --accent-dim: rgba(255, 0, 76, 0.15);
       --accent-glow: rgba(255, 0, 76, 0.6); 
       --bg-deep: #020202;
-      --bg-card: rgba(12, 12, 12, 0.9);
       --glass-dark: rgba(12, 12, 12, 0.7);
       --glass-border: rgba(255, 255, 255, 0.08);
       --text-white: #ffffff;
       --text-gray: #a0a0a0;
       --success: #00ffa3;
-      --error: #ff004c;
       --font-main: 'Montserrat', sans-serif;
       --font-tech: 'Orbitron', sans-serif;
       --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    /* --- 2. RESET & BASE --- */
+    /* --- RESET & BASE --- */
     html { scroll-behavior: smooth; }
-    *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+    *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
     body {
       margin: 0; 
@@ -54,12 +50,7 @@
       -webkit-user-select: none;
     }
 
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-deep); }
-    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
-
-    /* --- 3. BACKGROUNDS --- */
+    /* --- BACKGROUNDS --- */
      .bg-logo {
       opacity: 0.05;
       position: fixed; top: 50%; left: 50%; 
@@ -68,10 +59,9 @@
       background: url('logo.png') center/contain no-repeat;
       z-index: -1; 
       pointer-events: none;
-      will-change: transform;
     }
 
-    /* --- 4. NAVIGATION --- */
+    /* --- NAVIGATION --- */
     .navbar {
       position: fixed; top: 0; inset-inline: 0; height: 72px;
       background: rgba(2, 2, 2, 0.85); 
@@ -133,26 +123,26 @@
     .menu-item.active-tab i { color: var(--accent); }
     .menu-item.join-btn { margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.1); color: var(--accent); }
 
-    /* --- 5. LAYOUT & ANIMATION --- */
+    /* --- LAYOUT & ANIMATION --- */
     .container { max-width: 900px; margin: 0 auto; padding: 20px 15px 80px 15px; }
-    section { display: none; opacity: 0; transform: translateY(15px); transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out); }
+    section { display: none; opacity: 0; transform: translateY(15px); transition: 0.5s var(--ease-out); }
     section.active { display: block; opacity: 1; transform: translateY(0); }
 
-    /* --- 6. CARDS & UI --- */
+    /* --- CARDS & UI --- */
      .card {
-      background: var(--bg-card);
+      background: rgba(12, 12, 12, 0.9);
       border: 1px solid var(--glass-border);
       border-radius: 16px; padding: 24px; margin-bottom: 20px;
       position: relative; overflow: hidden;
       box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     }
-    .text-center { text-align: center; }
     h2, h3 { font-family: var(--font-tech); color: #fff; margin: 0 0 15px 0; letter-spacing: 1px; text-transform: uppercase; }
     p { line-height: 1.7; color: var(--text-gray); font-size: 14px; margin-bottom: 15px; margin-top: 0; font-weight: 300; }
+    .text-center { text-align: center; }
     .text-accent { color: var(--accent); }
     .font-tech { font-family: var(--font-tech); }
 
-    /* --- 7. HERO SECTION --- */
+    /* --- HERO --- */
     .hero-card { 
       padding: 60px 20px; text-align: center; 
       background: radial-gradient(circle at center, rgba(255,0,76,0.08) 0%, rgba(10,10,10,0.8) 100%);
@@ -161,11 +151,12 @@
     .hero-title {
       font-size: 38px; font-weight: 900; margin-bottom: 15px;
       position: relative; display: inline-block; letter-spacing: 4px;
-      color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.5);
+      color: #fff;
     }
-    #typing-text { font-family: var(--font-tech); color: var(--text-gray); min-height: 20px; font-size: 13px; letter-spacing: 1px; }
+    .glitch { position: relative; }
+    #typing-text { font-family: var(--font-tech); color: var(--text-gray); min-height: 40px; font-size: 13px; letter-spacing: 1px; }
 
-    /* --- 8. STATS --- */
+    /* --- STATS --- */
     .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
     .stat-card { 
       background: rgba(255, 255, 255, 0.02); padding: 20px; text-align: center; 
@@ -178,7 +169,7 @@
     }
     .stat-lbl { font-size: 11px; text-transform: uppercase; color: #666; font-weight: 600; letter-spacing: 1px; }
 
-    /* --- 9. MATCH CENTER --- */
+    /* --- MATCH CENTER --- */
     .match-card {
       border: 1px solid rgba(255, 0, 76, 0.3);
       background: linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(30,10,15,0.4) 100%);
@@ -197,16 +188,14 @@
       display: flex; justify-content: space-between; align-items: center; 
       border-top: 1px solid var(--glass-border); padding-top: 20px; position: relative;
     }
-    .team-block { text-align: center; }
     .team-name { font-family: var(--font-tech); font-size: 20px; font-weight: 700; margin-bottom: 5px; }
-    .team-sub { font-size: 10px; color: #666; text-transform: uppercase; }
     .team-vs { 
       color: var(--accent); font-weight: 900; font-family: var(--font-tech); 
       font-size: 24px; font-style: italic; opacity: 0.8;
-      position: absolute; left: 50%; transform: translateX(-50%); top: 50%;
+      position: absolute; left: 50%; transform: translateX(-50%); top: 20px;
     }
 
-    /* --- 10. BUTTONS & FORMS --- */
+    /* --- BUTTONS --- */
     .btn-glitch {
       display: flex; align-items: center; justify-content: center;
       padding: 14px 28px; background: rgba(0,0,0,0.4);
@@ -216,21 +205,20 @@
       position: relative; overflow: hidden; transition: all 0.3s ease;
       cursor: pointer; width: 100%; border-radius: 4px;
     }
-    .btn-glitch:hover, .btn-glitch:active { background: var(--accent); box-shadow: 0 0 25px var(--accent-glow); transform: translateY(-2px); }
+    .btn-glitch:hover { background: var(--accent); box-shadow: 0 0 25px var(--accent-glow); transform: translateY(-2px); }
     .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; color: var(--text-gray); }
-    .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: #fff; box-shadow: none; color: #fff; }
 
+    /* --- FORMS --- */
     .form-group { margin-bottom: 15px; }
     .form-label { display: block; color: var(--accent); font-size: 11px; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
     .form-input, textarea.form-input {
       width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--glass-border);
       color: #fff; padding: 14px; border-radius: 8px; outline: none; transition: 0.3s; font-family: var(--font-main);
     }
-    .form-input:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-dim); }
 
-    /* --- 11. ROSTER (FLIP CARDS) --- */
+    /* --- ROSTER --- */
     .roster-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
-    .player-wrapper { width: 100%; height: 320px; perspective: 1000px; cursor: pointer; }
+    .player-wrapper { width: 100%; height: 320px; perspective: 1000px; }
     .player-card-inner { 
       position: relative; width: 100%; height: 100%; 
       transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; 
@@ -242,51 +230,40 @@
       border-radius: 20px; overflow: hidden; border: 1px solid var(--glass-border);
       display: flex; flex-direction: column; padding: 20px;
     }
-    
+
+    /* Лицевая сторона */
     .player-front {
       background: linear-gradient(165deg, #111 0%, #050505 100%);
-      justify-content: space-between; border: 1px solid rgba(255, 0, 76, 0.2);
+      justify-content: space-between;
+      border: 1px solid rgba(255, 0, 76, 0.2);
     }
     .p-header { display: flex; align-items: center; gap: 12px; }
     .p-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
     .p-nick { font-size: 20px; font-weight: 800; font-family: var(--font-tech); color: #fff; margin: 0; }
     .p-role { font-size: 9px; color: var(--accent); font-weight: 700; text-transform: uppercase; }
     .p-quote { font-size: 11px; color: #888; font-style: italic; margin-top: 15px; line-height: 1.4; border-left: 2px solid var(--accent); padding-left: 10px; }
-    
-    .stats-grid { display: flex; justify-content: space-between; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
-    .stat-item { text-align: center; }
-    .stat-val { font-family: var(--font-tech); font-weight: 700; font-size: 16px; }
-    .stat-label { font-size: 8px; color: #666; text-transform: uppercase; margin-top: 2px; }
 
+    /* Обратная сторона */
     .player-back {
-      background: #0a0a0a; transform: rotateY(180deg);
-      border: 1px solid var(--accent); justify-content: center; text-align: center;
+      background: #0a0a0a;
+      transform: rotateY(180deg);
+      border: 1px solid var(--accent);
+      justify-content: center;
+      text-align: center;
     }
     .back-title { font-family: var(--font-tech); color: var(--accent); font-size: 12px; margin-bottom: 15px; letter-spacing: 1px; }
-    .info-item { margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
+    .info-item { margin-bottom: 12px; }
     .info-label { font-size: 8px; color: #555; text-transform: uppercase; display: block; }
     .info-value { font-size: 13px; color: #eee; font-weight: 600; }
 
-    /* --- 12. NEWS & MEDIA FIXES --- */
-    /* Ограничиваем ВСЕ картинки внутри списка новостей */
-    #newsContainer img, #dynamic-news-container img, .news-item img, .news-body img { 
-        width: 100% !important; max-width: 100% !important; height: auto !important;
-        max-height: 300px !important; object-fit: cover !important;
-        border-radius: 12px !important; display: block !important; margin: 15px auto !important;
-        border: 1px solid rgba(255, 0, 76, 0.3) !important;
-    }
-    .news-quote {
-        background: rgba(255, 0, 76, 0.05) !important; border-left: 4px solid #ff004c !important;
-        padding: 12px 20px !important; margin: 15px 0 !important; font-style: italic !important;
-        color: #bbb !important; line-height: 1.6 !important; border-radius: 4px !important;
-        display: block !important;
-    }
-
-    /* --- 13. REVIEWS & ROADMAP --- */
+    /* --- REVIEWS --- */
     .reviews-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
-    .review-card { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 20px; border-radius: 12px; }
+    .review-card { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 20px; border-radius: 12px; position: relative; }
+    .r-header { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+    .r-nick { font-family: var(--font-tech); font-size: 14px; font-weight: 700; color: #fff; }
     .r-text { font-size: 13px; color: #ccc; line-height: 1.5; font-style: italic; }
 
+    /* --- ROADMAP --- */
     .roadmap-container { position: relative; padding-left: 30px; margin: 20px 0; }
     .roadmap-line { position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--accent) 0%, rgba(255,255,255,0.1) 100%); }
     .rm-item { position: relative; margin-bottom: 30px; }
@@ -294,37 +271,41 @@
     .rm-date { font-family: var(--font-tech); color: var(--accent); font-size: 10px; margin-bottom: 5px; display: block; }
     .rm-title { color: #fff; font-weight: 700; font-size: 14px; margin-bottom: 2px; }
 
-    /* --- 14. GALLERY & VIDEO --- */
+    /* --- GALLERY --- */
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
-    .gallery-item { height: 120px; background-size: cover; background-position: center; border-radius: 8px; cursor: pointer; transition: transform 0.2s; }
-    .gallery-item:hover { transform: scale(1.02); }
-
-    /* --- 15. LOADING & UTILS --- */
-    .loading-text { color: var(--text-gray); font-size: 12px; letter-spacing: 1px; animation: pulse 1.5s infinite; text-align: center; width: 100%; display: block; padding: 20px 0; }
+    .gallery-item { height: 120px; background-size: cover; background-position: center; border-radius: 8px; cursor: pointer; }
+    
+    /* --- LOADING TEXT --- */
+    .loading-text { color: var(--text-gray); font-size: 12px; letter-spacing: 1px; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
     
-    /* --- 16. AMBIENT PLAYER --- */
+    /* --- PLAYER --- */
     #ambient-player {
         position: fixed; bottom: 25px; left: 25px; z-index: 9999;
         display: flex; align-items: center; gap: 15px;
         background: rgba(255, 0, 76, 0.1); backdrop-filter: blur(10px);
         padding: 10px 18px; border-radius: 50px;
-        border: 1px solid var(--accent); box-shadow: 0 0 20px var(--accent-dim);
+        border: 1px solid var(--accent);
+        box-shadow: 0 0 20px var(--accent-dim);
         transition: all 0.3s ease;
     }
     #ambient-player:hover { box-shadow: 0 0 30px var(--accent-glow); transform: scale(1.05); }
+
     .play-state-icon {
         font-size: 18px; color: #fff; cursor: pointer;
-        width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+        width: 40px; height: 40px;
+        display: flex; align-items: center; justify-content: center;
         background: var(--accent); border-radius: 50%;
-        box-shadow: 0 0 15px var(--accent-glow); transition: 0.3s;
-        animation: pulse-red 2s infinite;
+        box-shadow: 0 0 15px var(--accent-glow);
+        transition: 0.3s; animation: pulse-red 2s infinite;
     }
+
     @keyframes pulse-red {
         0% { box-shadow: 0 0 0 0 rgba(255, 0, 76, 0.7); }
         70% { box-shadow: 0 0 0 15px rgba(255, 0, 76, 0); }
         100% { box-shadow: 0 0 0 0 rgba(255, 0, 76, 0); }
     }
+
     .music-waves { display: flex; align-items: flex-end; gap: 3px; height: 20px; }
     .wave { width: 3px; background: var(--accent); border-radius: 10px; animation: wave-anim 1s ease-in-out infinite; }
     .wave:nth-child(2) { animation-delay: 0.2s; }
@@ -332,26 +313,36 @@
     @keyframes wave-anim { 0%, 100% { height: 5px; } 50% { height: 20px; } }
     .player-label { font-family: var(--font-tech); font-size: 10px; letter-spacing: 1px; color: #fff; text-transform: uppercase; }
 
-    /* --- 17. HUD NOTIFICATIONS --- */
+    /* --- HUD NOTIFICATIONS --- */
     #notify-container {
-      position: fixed; top: 90px; right: 20px; z-index: 10000; 
-      display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+      position: fixed; top: 90px; right: 20px;
+      z-index: 10000; display: flex; flex-direction: column; gap: 10px;
+      pointer-events: none;
     }
     .hud-toast {
-      background: rgba(10, 10, 10, 0.95); border-left: 3px solid var(--accent);
-      border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); border-right: 1px solid rgba(255,255,255,0.1);
-      padding: 15px 20px; min-width: 280px; color: #fff; font-family: var(--font-tech);
-      position: relative; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-      backdrop-filter: blur(10px); transform: translateX(120%); opacity: 0;
+      background: rgba(10, 10, 10, 0.9);
+      border-left: 3px solid var(--accent);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-right: 1px solid rgba(255,255,255,0.1);
+      padding: 15px 20px; min-width: 280px;
+      color: #fff; font-family: var(--font-tech);
+      position: relative; overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+      transform: translateX(100%); opacity: 0;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      pointer-events: auto; display: flex; align-items: center; gap: 15px;
+      pointer-events: auto;
+      display: flex; align-items: center; gap: 15px;
     }
     .hud-toast.active { transform: translateX(0); opacity: 1; }
     .hud-toast.success { border-left-color: #00ffa3; }
-    .hud-toast.success .toast-icon { color: #00ffa3; }
     .hud-toast.error { border-left-color: #ff004c; }
-    .hud-toast.error .toast-icon { color: #ff004c; }
+    .hud-toast.info { border-left-color: #00ccff; }
     .toast-icon { font-size: 20px; }
+    .hud-toast.success .toast-icon { color: #00ffa3; }
+    .hud-toast.error .toast-icon { color: #ff004c; }
+    .hud-toast.info .toast-icon { color: #00ccff; }
     .toast-content { display: flex; flex-direction: column; }
     .toast-title { font-size: 11px; font-weight: 700; text-transform: uppercase; opacity: 0.7; letter-spacing: 1px; }
     .toast-msg { font-size: 13px; font-weight: 500; margin-top: 2px; }
@@ -362,24 +353,47 @@
     }
     @keyframes progress-burn { from { width: 100%; } to { width: 0%; } }
 
-    /* --- 18. BADGE SYSTEM --- */
+    /* --- BADGE SYSTEM --- */
     .menu-toggle { position: relative; }
     .menu-toggle.has-update::after {
         content: ''; position: absolute; top: 10px; right: 8px;
         width: 8px; height: 8px; background: var(--accent);
         border-radius: 50%; border: 2px solid var(--bg-deep);
-        box-shadow: 0 0 10px var(--accent); animation: pulse-dot 2s infinite;
+        box-shadow: 0 0 10px var(--accent);
+        animation: pulse-dot 2s infinite;
     }
     .menu-item { position: relative; }
     .menu-item.has-update::after {
         content: ''; position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
-        width: 6px; height: 6px; background: #00ffa3; border-radius: 50%; box-shadow: 0 0 8px #00ffa3;
+        width: 6px; height: 6px; background: #00ffa3;
+        border-radius: 50%; box-shadow: 0 0 8px #00ffa3;
     }
     @keyframes pulse-dot { 0% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.3); } 100% { opacity: 0.5; transform: scale(1); } }
+
+    /* --- FIX NEWS IMAGES --- */
+    #newsContainer img, #newsList img, .news-item img, .news-body img { 
+        width: 100% !important; max-width: 100% !important;
+        height: auto !important; max-height: 300px !important;
+        object-fit: cover !important; border-radius: 12px !important;
+        display: block !important; margin: 15px auto !important;
+        border: 1px solid rgba(255, 0, 76, 0.3) !important;
+    }
+    .news-quote {
+        background: rgba(255, 0, 76, 0.05) !important;
+        border-left: 4px solid #ff004c !important;
+        padding: 12px 20px !important; margin: 15px 0 !important;
+        font-style: italic !important; color: #bbb !important;
+        line-height: 1.6 !important; border-radius: 4px !important;
+        display: block !important;
+    }
+    .news-code {
+        background: #111 !important; color: #00ffa3 !important;
+        padding: 2px 8px !important; font-family: monospace !important;
+        border-radius: 4px !important; border: 1px solid #333 !important;
+    }
   </style>
 
   <script>
-    // Блокируем ПКМ для защиты контента (базовая защита)
     document.addEventListener('contextmenu', event => event.preventDefault());
   </script>
 </head>
@@ -388,7 +402,9 @@
 <div id="ambient-player">
     <div class="player-label" id="player-status">Ambient: Off</div>
     <div class="music-waves" id="music-anim" style="display: none;">
-        <div class="wave"></div><div class="wave"></div><div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
     </div>
     <div class="play-state-icon" id="music-btn" onclick="toggleAmbient()">
         <i class="fas fa-play" id="btn-icon"></i>
@@ -407,7 +423,7 @@
     </div>
 
     <div class="nav-controls">
-        <button class="menu-toggle" id="menuBtn" onclick="toggleMenu()" aria-label="Меню">
+        <button class="menu-toggle" id="menuBtn" onclick="toggleMenu()">
             <i class="fas fa-bars"></i>
         </button>
     </div>
@@ -429,7 +445,7 @@
 
     <section id="home" class="active">
       <div class="card hero-card">
-        <h2 class="glitch hero-title">AIREX TEAM</h2>
+        <h2 class="glitch hero-title" data-text="AIREX TEAM">AIREX TEAM</h2>
         <p style="font-size: 16px; color: #ddd;">Профессиональная киберспортивная организация по дисциплине Standoff 2</p>
         <div id="typing-text"></div>
         <div style="margin-top: 25px;">
@@ -444,7 +460,7 @@
           <div class="stat-val-main">0</div><div class="stat-lbl">Трофеев</div>
         </div>
         <div class="stat-card">
-          <div class="stat-val-main">0%</div><div class="stat-lbl">Winrate</div>
+          <div class="stat-val-main">0%</div><div class="stat-lbl">Рейтинг победы</div>
         </div>
       </div>
 
@@ -474,19 +490,19 @@
       <div class="card">
           <h3><i class="fas fa-bolt text-accent" style="margin-right:8px;"></i> LIVE НОВОСТИ</h3>
           <div id="home-news-feed">
-             <div class="loading-text">СИНХРОНИЗАЦИЯ...</div>
+             <div class="text-center loading-text">СИНХРОНИЗАЦИЯ...</div>
           </div>
           <button class="btn-glitch btn-secondary" onclick="selectTab('news', document.getElementById('btn-news'))" style="margin-top:15px;">
             ЧИТАТЬ ВСЕ НОВОСТИ
           </button>
       </div>
 
-      <div class="card donate-card text-center">
-        <h3 style="font-size: 16px; margin-bottom: 8px;">Поддержи команду!</h3>
-        <a href="https://dalink.to/airex_team_esports" target="_blank" rel="noopener noreferrer" class="btn-glitch" style="border:none; background: var(--accent); width: auto; display: inline-flex;">
-          <i class="fas fa-heart" style="font-size: 14px; margin-right: 8px;"></i> ОТПРАВИТЬ ДОНАТ
-        </a>
-      </div>
+     <div class="card donate-card text-center">
+      <h3 style="font-size: 16px; margin-bottom: 8px;">Поддержи команду донатом!</h3>
+      <a href="https://dalink.to/airex_team_esports" target="_blank" rel="noopener noreferrer" class="btn-glitch" style="border:none; background: var(--accent); width: auto; display: inline-flex;">
+        <i class="fas fa-heart" style="font-size: 14px; margin-right: 8px;"></i> ОТПРАВИТЬ ДОНАТ
+      </a>
+    </div>
     </section>
 
     <section id="team">
@@ -494,16 +510,12 @@
         <h2 class="font-tech" style="color: var(--accent);">MAIN ROSTER</h2>
         <p style="font-size: 11px; opacity: 0.5;">Нажми на карту игрока для инфо</p>
       </div>
-      <div class="roster-grid" id="dynamic-roster">
-          <div class="loading-text">ЗАГРУЗКА СОСТАВА...</div>
-      </div>
+      <div class="roster-grid" id="dynamic-roster"></div>
 
       <div class="text-center" style="margin-top: 60px; margin-bottom: 30px;">
         <h2 class="font-tech" style="opacity: 0.7;">RESERVE ROSTER</h2>
       </div>
-      <div class="roster-grid" id="dynamic-roster-reserve">
-          <div class="loading-text">ЗАГРУЗКА РЕЗЕРВА...</div>
-      </div>
+      <div class="roster-grid" id="dynamic-roster-reserve"></div>
     </section>
 
     <section id="practice">
@@ -569,18 +581,17 @@
 
             <div class="form-group">
                 <label class="form-label">Состав (Line-up)</label>
-                <textarea id="pc-lineup" class="form-input" rows="3" placeholder="Nick 1, Nick 2, Nick 3, Nick 4, Nick 5"></textarea>
+                <textarea id="pc-lineup" class="form-input" rows="3" placeholder="Nick 1, Nick 2, Nick 3, Nick 4, Nick 5 (Замены: Nick...)"></textarea>
             </div>
 
             <button type="submit" class="btn-glitch" style="margin-top: 10px;">ПОДТВЕРДИТЬ РЕГИСТРАЦИЮ</button>
         </form>
-        
-        <div class="card" style="margin-top: 30px; border-color: rgba(255,255,255,0.1);">
+              <div class="card" style="margin-top: 30px; border-color: rgba(255,255,255,0.1);">
           <h3 style="font-size: 14px; color: var(--text-gray);"><i class="fas fa-list-ul"></i> ПОДТВЕРЖДЕННЫЕ ИГРЫ</h3>
           <div id="public-booked-list">
-              <div class="loading-text">Загрузка расписания...</div>
+              <div class="loading-text" style="text-align: center; padding: 10px;">Загрузка расписания...</div>
           </div>
-        </div>
+      </div>
       </div>
     </section>
 
@@ -589,16 +600,16 @@
            <h3><i class="fas fa-route text-accent"></i> ПУТЬ AIREX</h3>
            <div class="roadmap-container" id="roadmap-container">
                <div class="roadmap-line"></div>
-               <div class="loading-text">ЗАГРУЗКА ИСТОРИИ...</div>
+               <div class="text-center loading-text">ЗАГРУЗКА ИСТОРИИ...</div>
            </div>
        </div>
 
       <div class="card text-center">
         <h3>НАШИ СОЦСЕТИ</h3>
         <div class="social-row" style="display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin-top:20px; font-size: 30px;">
-          <a href="https://t.me/airex_team_esports" target="_blank" rel="noopener noreferrer" style="color:#fff; transition:0.3s;" onmouseover="this.style.color='#0088cc'" onmouseout="this.style.color='#fff'"><i class="fab fa-telegram"></i></a>
-          <a href="https://www.tiktok.com/@airex_team" target="_blank" rel="noopener noreferrer" style="color:#fff; transition:0.3s;" onmouseover="this.style.color='#ff0050'" onmouseout="this.style.color='#fff'"><i class="fab fa-tiktok"></i></a>
-          <a href="https://youtube.com/@airex_team.official" target="_blank" rel="noopener noreferrer" style="color:#fff; transition:0.3s;" onmouseover="this.style.color='#ff0000'" onmouseout="this.style.color='#fff'"><i class="fab fa-youtube"></i></a>
+          <a href="https://t.me/airex_team_esports" target="_blank" rel="noopener noreferrer" style="color:#fff;"><i class="fab fa-telegram"></i></a>
+          <a href="https://www.tiktok.com/@airex_team" target="_blank" rel="noopener noreferrer" style="color:#fff;"><i class="fab fa-tiktok"></i></a>
+          <a href="https://youtube.com/@airex_team.official" target="_blank" rel="noopener noreferrer" style="color:#fff;"><i class="fab fa-youtube"></i></a>
         </div>
       </div>
     </section>
@@ -609,7 +620,7 @@
       </div>
       <div id="dynamic-news-container">
           <div class="card text-center">
-              <span class="loading-text">ЗАГРУЗКА ЛЕНТЫ...</span>
+              <span class="loading-text">ЗАГРУЗКА...</span>
           </div>
       </div>
     </section>
@@ -674,636 +685,549 @@
         <div class="reviews-grid" id="reviews-container"></div>
     </section>
 
-    <section id="join">
-      <div class="card">
-        <div class="text-center">
-            <h3 style="font-size: 24px; margin-bottom: 5px;">JOIN AIREX</h3>
-        </div>
-        <form onsubmit="sendToTelegram(event)" autocomplete="off" style="margin-top: 20px;">
-          <div class="form-group">
-            <label class="form-label">Никнейм</label>
-            <input type="text" id="nick" class="form-input" placeholder="Ваш ник" required>
-          </div>
-          <div style="display: flex; gap: 15px;">
-            <div class="form-group" style="flex: 1;">
-                <label class="form-label">Возраст</label>
-                <input type="number" id="age" class="form-input" placeholder="16" required>
-            </div>
-            <div class="form-group" style="flex: 1;">
-                <label class="form-label">K/D</label>
-                <input type="number" step="0.01" id="kd" class="form-input" placeholder="1.50" required>
-            </div>
-          </div> 
-          <div class="form-group">
-            <label class="form-label">Роль</label>
-            <select id="role" class="form-input">
-                <option>Рифлер</option>
-                <option>Снайпер</option>
-                <option>Капитан</option>
-                <option>Энтри-Фрагер</option>
-                <option>Опен-Фрагер</option>
-                <option>Саппорт</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Ранг</label>
-            <input type="text" id="best_rank" class="form-input" placeholder="Legend / Phoenix" required>
-          </div>
-          <button type="submit" class="btn-glitch">ОТПРАВИТЬ В ЛИЧКУ TG</button>
-        </form>
+ <section id="join">
+  <div class="card">
+    <div class="text-center">
+        <h3 style="font-size: 24px; margin-bottom: 5px;">JOIN AIREX</h3>
+    </div>
+    <form onsubmit="sendToTelegram(event)" autocomplete="off" style="margin-top: 20px;">
+      <div class="form-group">
+        <label class="form-label">Никнейм</label>
+        <input type="text" id="nick" class="form-input" placeholder="Ваш ник" required>
       </div>
-    </section>
+      <div style="display: flex; gap: 15px;">
+        <div class="form-group" style="flex: 1;">
+            <label class="form-label">Возраст</label>
+            <input type="number" id="age" class="form-input" placeholder="16" required>
+        </div>
+        <div class="form-group" style="flex: 1;">
+            <label class="form-label">K/D</label>
+            <input type="number" step="0.01" id="kd" class="form-input" placeholder="1.50" required>
+        </div>
+      </div> 
+      <div class="form-group">
+        <label class="form-label">Роль</label>
+        <select id="role" class="form-input">
+            <option>Рифлер</option>
+            <option>Снайпер</option>
+            <option>Капитан</option>
+            <option>Энтри-Фрагер</option>
+            <option>Опен-Фрагер</option>
+            <option>Саппорт</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ранг</label>
+        <input type="text" id="best_rank" class="form-input" placeholder="Legend / Phoenix" required>
+      </div>
+      <button type="submit" class="btn-glitch">ОТПРАВИТЬ В ЛИЧКУ TG</button>
+    </form>
+  </div>
+</section>
 
     <footer style="text-align: center; padding: 40px 20px; color: #444; font-size: 10px; font-family: var(--font-tech); text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 40px;">
-        <p style="margin: 0;">© 2026 AIREX TEAM. DESIGNED & POWERED.</p>
+        <p style="margin: 0;">© 2026 AIREX TEAM.</p>
     </footer>
 
 </div>
-<div id="notify-container"></div>
-<script>
-  /**
-   * --- КОНФИГУРАЦИЯ ---
-   * Сюда нужно вставить URL твоего Google Apps Script (Web App URL)
-   */
-  const SCRIPT_URL = 'ВСТАВЬ_СЮДА_ТВОЮ_ССЫЛКУ_GOOGLE_APPS_SCRIPT'; 
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getFirestore, doc, onSnapshot, getDoc, setDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-  // --- 1. СИСТЕМНЫЕ ФУНКЦИИ (CORE) ---
-  
-  // Инициализация при загрузке
-  window.onload = function() {
-    typeWriter(); // Эффект печати
-    
-    // Запускаем загрузку данных (если URL установлен)
-    if (SCRIPT_URL && SCRIPT_URL.includes('http')) {
-       loadAllData();
-    } else {
-       console.warn('Backend URL не установлен. Данные не будут загружены.');
-       // Для демонстрации интерфейса убираем лоадеры через 2 сек
-       setTimeout(() => removeLoadersMock(), 2000);
-    }
-  };
+    // --- FIREBASE CONFIG ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
+      authDomain: "airexsite.firebaseapp.com",
+      projectId: "airexsite",
+      storageBucket: "airexsite.firebasestorage.app",
+      messagingSenderId: "276640665598",
+      appId: "1:276640665598:web:d7400bd5962995efb43aaf"
+    };
 
-  async function loadAllData() {
-    try {
-        await Promise.all([
-            loadNews(),
-            loadRoster(),
-            loadMatches(), // Включая историю и следующий матч
-            loadPracSlots(),
-            loadRoadmap(),
-            loadGallery(),
-            loadVideo(),
-            loadReviews()
-        ]);
-        console.log('All systems operational.');
-    } catch (e) {
-        console.error('Global Load Error:', e);
-        showToast('Ошибка соединения', 'Не удалось загрузить данные сервера', 'error');
-    }
-  }
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-  // Универсальная функция запроса
-  async function fetchData(action) {
-      if (!SCRIPT_URL || !SCRIPT_URL.includes('http')) return null;
-      try {
-          const response = await fetch(`${SCRIPT_URL}?action=${action}`);
-          if (!response.ok) throw new Error('Network response was not ok');
-          return await response.json();
-      } catch (error) {
-          console.error(`Error fetching ${action}:`, error);
-          return null;
-      }
-  }
+    // --- 1. ЕДИНАЯ СИНХРОНИЗАЦИЯ НОВОСТЕЙ ---
+    onSnapshot(doc(db, "siteData", "news"), (snap) => {
+        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        
+        // 1. Рендерим Home Feed (Главная - топ 3)
+        const homeFeed = document.getElementById('home-news-feed');
+        if(homeFeed) {
+            homeFeed.innerHTML = list.length ? list.slice(0, 3).map(n => `
+                <div class="news-card" style="padding: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="color:var(--accent); font-size:9px; font-weight:800;">[${n.tag || 'LIVE'}]</span>
+                        <span style="color: #666; font-size: 9px;">${n.date}</span>
+                    </div>
+                    <h3 style="font-family: 'Orbitron'; font-size: 14px; margin: 0 0 10px 0; color: #fff;">${n.title}</h3>
+                    <div class="news-body" style="font-size: 12px; color: #ccc;">
+                        ${n.text.length > 100 ? n.text.substring(0, 100) + '...' : n.text}
+                    </div>
+                </div>
+            `).join('') : '<div class="text-center" style="font-size:10px;">Новостей нет</div>';
+        }
 
-  // --- 2. ИНТЕРФЕЙС И НАВИГАЦИЯ ---
+        // 2. Рендерим Full Feed (Вкладка Новости - все)
+        const fullFeed = document.getElementById('dynamic-news-container');
+        if(fullFeed) {
+            fullFeed.innerHTML = list.length ? list.slice().reverse().map(n => `
+                <div class="card" style="margin-bottom: 25px; border-left: 2px solid var(--accent);">
+                    <div style="font-size:10px; color:var(--accent); font-weight:700; margin-bottom:8px;">
+                        ${n.date} <span style="color:#fff; opacity:0.5;">[${n.tag || 'NEWS'}]</span>
+                    </div>
+                    <h2 style="font-family: 'Orbitron'; font-size: 18px; margin: 0 0 15px 0; color: #fff;">${n.title}</h2>
+                    <div class="news-body" style="font-size: 14px; color: #ccc; line-height: 1.6;">
+                        ${n.text}
+                    </div>
+                </div>
+            `).join('') : '<div class="text-center">Лента пуста</div>';
+        }
 
-  // Переключение вкладок
-  function selectTab(tabId, btnElement) {
-    // Скрываем все секции
-    document.querySelectorAll('section').forEach(sec => {
-      sec.classList.remove('active');
-      sec.style.opacity = '0'; // Сброс для анимации
+        // 3. Проверка бейджика
+        if(list.length > 0) {
+            const latest = Math.max(...list.map(i => i.id || 0));
+            checkUpdateBadge('news', latest, 'btn-news');
+        }
     });
 
-    // Убираем активный класс у кнопок
-    document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active-tab'));
-
-    // Показываем нужную секцию
-    const targetSection = document.getElementById(tabId);
-    if (targetSection) {
-      targetSection.classList.add('active');
-      // Небольшая задержка для плавного появления (CSS transition)
-      setTimeout(() => { targetSection.style.opacity = '1'; }, 50);
-    }
-
-    // Подсвечиваем кнопку (если передана)
-    if (btnElement) {
-        btnElement.classList.add('active-tab');
-    }
-    
-    // Закрываем меню на мобильном
-    toggleMenu(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // Меню (Гамбургер)
-  function toggleMenu(forceState) {
-    const dropdown = document.getElementById('navDropdown');
-    const btn = document.getElementById('menuBtn');
-    
-    if (typeof forceState === 'boolean') {
-        if (!forceState) {
-            dropdown.classList.remove('active');
-            btn.classList.remove('active');
-        } else {
-            dropdown.classList.add('active');
-            btn.classList.add('active');
+    // --- 2. СИНХРОНИЗАЦИЯ ТАЙМЕРА МАТЧА ---
+    let timerInterval;
+    onSnapshot(doc(db, "siteData", "match"), (snap) => {
+        if(snap.exists()) {
+            const data = snap.data();
+            const enemyEl = document.getElementById('enemy-name-display');
+            if(enemyEl) enemyEl.innerText = data.enemy || "TBA";
+            if(data.date) startTimer(data.date);
         }
-    } else {
-        dropdown.classList.toggle('active');
-        btn.classList.toggle('active');
+    });
+
+    function startTimer(isoDate) {
+        if(timerInterval) clearInterval(timerInterval);
+        const target = new Date(isoDate).getTime();
+        
+        timerInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const diff = target - now;
+            const statusEl = document.getElementById('match-status');
+            const cdEl = document.getElementById('countdown');
+
+            if (!statusEl || !cdEl) return;
+            
+            if(diff < 0) {
+                statusEl.innerText = "LIVE / FINISHED";
+                cdEl.innerHTML = "<span style='font-size:16px; font-weight:bold; color:red;'>МАТЧ УЖЕ ИДЕТ ИЛИ ЗАВЕРШЕН</span>";
+                clearInterval(timerInterval);
+                return;
+            }
+            
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            cdEl.innerHTML = `
+               <div class="cd-item"><div class="cd-num">${d}</div><div class="cd-lbl">ДН</div></div>
+               <div style="font-size:20px; padding-bottom:15px;">:</div>
+               <div class="cd-item"><div class="cd-num">${h}</div><div class="cd-lbl">ЧАС</div></div>
+               <div style="font-size:20px; padding-bottom:15px;">:</div>
+               <div class="cd-item"><div class="cd-num">${m}</div><div class="cd-lbl">МИН</div></div>
+            `;
+            statusEl.innerText = "COUNTDOWN";
+        }, 1000);
     }
-  }
 
-  // Эффект печатающей машинки
-  const texts = ["STANDOFF 2 ROSTER", "WINNERS MENTALITY", "JOIN THE LEGACY", "EST. 2024"];
-  let count = 0;
-  let index = 0;
-  let currentText = "";
-  let letter = "";
-
-  function typeWriter() {
-    if (count === texts.length) count = 0;
-    currentText = texts[count];
-    letter = currentText.slice(0, ++index);
-    
-    const el = document.getElementById("typing-text");
-    if(el) el.textContent = letter + "|";
-
-    if (letter.length === currentText.length) {
-      count++;
-      index = 0;
-      setTimeout(typeWriter, 2000); // Пауза перед стиранием/следующим словом
-    } else {
-      setTimeout(typeWriter, 100); // Скорость печати
-    }
-  }
-
-  // --- 3. ЗАГРУЗКА ДАННЫХ (LOGIC) ---
-
-  // Новости
-  async function loadNews() {
-      const data = await fetchData('getNews');
-      const homeFeed = document.getElementById('home-news-feed');
-      const fullFeed = document.getElementById('dynamic-news-container');
-      
-      if (!data || data.length === 0) {
-          const emptyMsg = '<div class="text-center" style="padding:20px; color:#666;">Новостей пока нет</div>';
-          if(homeFeed) homeFeed.innerHTML = emptyMsg;
-          if(fullFeed) fullFeed.innerHTML = emptyMsg;
-          return;
-      }
-
-      // Очищаем контейнеры перед рендером (Fix duplicates)
-      if(homeFeed) homeFeed.innerHTML = '';
-      if(fullFeed) fullFeed.innerHTML = '';
-
-      // Рендер
-      data.forEach((item, idx) => {
-          // Главная (только первые 2 новости)
-          if (idx < 2 && homeFeed) {
-              homeFeed.innerHTML += createNewsCard(item, true);
-          }
-          // Все новости
-          if (fullFeed) {
-              fullFeed.innerHTML += createNewsCard(item, false);
-          }
-      });
-  }
-
-  function createNewsCard(item, isCompact) {
-      // Форматируем дату
-      const date = new Date(item.date).toLocaleDateString('ru-RU', {day:'numeric', month:'short'});
-      // Обработка длинного текста
-      const snippet = item.text.length > 100 ? item.text.substring(0, 100) + '...' : item.text;
-      const fullText = item.text.replace(/\n/g, '<br>'); // Сохраняем переносы строк
-
-      if (isCompact) {
-          return `
-            <div style="border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:15px;">
-                <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--accent); margin-bottom:5px;">
-                    <span class="font-tech">${item.tag || 'NEWS'}</span> <span>${date}</span>
-                </div>
-                <div style="font-size:13px; font-weight:600; margin-bottom:5px;">${item.title}</div>
-                <div style="font-size:11px; color:#888;">${snippet}</div>
-            </div>
-          `;
-      } else {
-          return `
-            <div class="card news-item">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <span style="background:var(--accent); color:#fff; padding:4px 8px; border-radius:4px; font-size:10px; font-weight:700;">${item.tag || 'EVENT'}</span>
-                    <span style="color:#666; font-size:11px;">${date}</span>
-                </div>
-                <h3 style="color:#fff; font-size:18px; line-height:1.4;">${item.title}</h3>
-                <div class="news-body" style="color:#ccc; font-size:13px; line-height:1.6;">${fullText}</div>
-                ${item.image ? `<img src="${item.image}" alt="News Image" loading="lazy">` : ''}
-            </div>
-          `;
-      }
-  }
-
-  // Состав (Roster)
-  async function loadRoster() {
-      const data = await fetchData('getRoster');
-      const mainContainer = document.getElementById('dynamic-roster');
-      const reserveContainer = document.getElementById('dynamic-roster-reserve');
-
-      if (!data) return;
-
-      if(mainContainer) mainContainer.innerHTML = '';
-      if(reserveContainer) reserveContainer.innerHTML = '';
-
-      data.forEach(player => {
-          const cardHTML = createPlayerCard(player);
-          if (player.status === 'Main') {
-              if(mainContainer) mainContainer.innerHTML += cardHTML;
-          } else {
-              if(reserveContainer) reserveContainer.innerHTML += cardHTML;
-          }
-      });
-  }
-
-  function createPlayerCard(p) {
-      return `
-      <div class="player-wrapper" onclick="this.querySelector('.player-card-inner').classList.toggle('is-flipped')">
-        <div class="player-card-inner">
-          <div class="player-front">
-             <div class="p-header">
-               <img src="${p.avatar || 'https://via.placeholder.com/100/000000/FFFFFF/?text=AX'}" class="p-avatar" alt="${p.nick}">
-               <div>
-                 <h4 class="p-nick">${p.nick}</h4>
-                 <div class="p-role">${p.role}</div>
-               </div>
-             </div>
-             <div class="p-quote">"${p.quote || 'No limits.'}"</div>
-             <div class="stats-grid">
-               <div class="stat-item"><div class="stat-val">${p.kd || '0.0'}</div><div class="stat-label">K/D</div></div>
-               <div class="stat-item"><div class="stat-val">${p.hs || '0%'}</div><div class="stat-label">HS%</div></div>
-               <div class="stat-item"><div class="stat-val">${p.hours || '0'}</div><div class="stat-label">HOURS</div></div>
-             </div>
-          </div>
-          <div class="player-back">
-             <div class="back-title">PLAYER INFO</div>
-             <div class="info-item"><span class="info-label">Name</span><span class="info-value">${p.name || 'Hidden'}</span></div>
-             <div class="info-item"><span class="info-label">Device</span><span class="info-value">${p.device || 'Unknown'}</span></div>
-             <div class="info-item"><span class="info-label">ID</span><span class="info-value">${p.id || '---'}</span></div>
-             <div style="margin-top:15px; font-size:10px; color:var(--accent);">TAP TO FLIP BACK</div>
-          </div>
-        </div>
-      </div>`;
-  }
-
-  // Матчи (Следующий + История)
-  async function loadMatches() {
-      const data = await fetchData('getMatches');
-      if (!data) return;
-
-      // 1. Обработка следующего матча
-      const nextMatch = data.find(m => m.status === 'Upcoming');
-      if (nextMatch) {
-          document.getElementById('enemy-name-display').innerText = nextMatch.enemy;
-          document.getElementById('match-status').innerText = nextMatch.date + ' ' + nextMatch.time;
-          startCountdown(nextMatch.date + 'T' + nextMatch.time); // Требует ISO формат даты (YYYY-MM-DD)
-      } else {
-          document.getElementById('match-status').innerText = "NO MATCHES";
-          document.getElementById('countdown').innerHTML = '<span style="font-size:12px; color:#666;">Матчей не запланировано</span>';
-      }
-
-      // 2. История матчей
-      const historyContainer = document.getElementById('full-history-container');
-      const historyMatches = data.filter(m => m.status === 'Finished').reverse(); // Свежие сверху
-      
-      if(historyContainer) {
-          historyContainer.innerHTML = '';
-          if (historyMatches.length === 0) {
-              historyContainer.innerHTML = '<div class="text-center" style="color:#666;">История пуста</div>';
-          } else {
-              historyMatches.forEach(m => {
-                  const isWin = parseInt(m.scoreOur) > parseInt(m.scoreEnemy);
-                  const color = isWin ? 'var(--success)' : 'var(--error)';
-                  historyContainer.innerHTML += `
-                    <div class="card" style="padding:15px; border-left: 3px solid ${color}; display:flex; justify-content:space-between; align-items:center;">
-                        <div style="text-align:left;">
-                            <div style="font-size:10px; color:#888; margin-bottom:4px;">${m.date} | ${m.tournament || 'Pracc'}</div>
-                            <div style="font-family:var(--font-tech); font-weight:700; font-size:14px;">VS ${m.enemy}</div>
-                        </div>
-                        <div style="text-align:right;">
-                            <div style="font-family:var(--font-tech); font-size:18px; font-weight:800; color:${color};">
-                                ${m.scoreOur} : ${m.scoreEnemy}
-                            </div>
-                            <div style="font-size:10px; color:#fff; background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px; display:inline-block; margin-top:4px;">${m.map}</div>
+    // --- 3. СОСТАВЫ (Roster) ---
+    const createPlayerCard = (p) => `
+        <div class="player-wrapper" onclick="this.querySelector('.player-card-inner').classList.toggle('is-flipped')">
+            <div class="player-card-inner">
+                <div class="player-front">
+                    <div class="p-header">
+                        <img src="${p.img}" class="p-avatar" onerror="this.src='logo.png'">
+                        <div>
+                            <div class="p-role">${p.role}</div>
+                            <h3 class="p-nick">${p.nick}</h3>
                         </div>
                     </div>
-                  `;
-              });
-          }
-      }
-  }
-
-  // Таймер обратного отсчета
-  function startCountdown(targetDateString) {
-      const target = new Date(targetDateString).getTime();
-      const el = document.getElementById('countdown');
-      
-      if (isNaN(target)) return; // Защита от кривой даты
-
-      const interval = setInterval(() => {
-          const now = new Date().getTime();
-          const distance = target - now;
-
-          if (distance < 0) {
-              clearInterval(interval);
-              el.innerHTML = '<span style="color:var(--accent); font-weight:700;">LIVE / ЗАВЕРШЕН</span>';
-              return;
-          }
-
-          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-
-          el.innerHTML = `
-             <div class="cd-item"><div class="cd-num">${days}</div><div class="cd-lbl">ДН</div></div>
-             <div class="cd-item"><div class="cd-num">${hours}</div><div class="cd-lbl">ЧАС</div></div>
-             <div class="cd-item"><div class="cd-num">${minutes}</div><div class="cd-lbl">МИН</div></div>
-          `;
-      }, 1000);
-  }
-
-  // Остальные загрузчики (Gallery, Slots, Reviews и т.д.)
-  async function loadPracSlots() {
-     const data = await fetchData('getSlots');
-     const select = document.getElementById('prac-slot-select');
-     const list = document.getElementById('public-booked-list');
-     const noSlotsMsg = document.getElementById('no-slots-msg');
-
-     if (!select || !data) return;
-
-     select.innerHTML = '<option value="" disabled selected>Выберите время (МСК)</option>';
-     if(list) list.innerHTML = '';
-     
-     let hasFreeSlots = false;
-
-     data.forEach(slot => {
-         // Заполняем Select (только свободные)
-         if (slot.status === 'Free') {
-             const option = document.createElement('option');
-             option.value = `${slot.date} ${slot.time}`;
-             option.text = `${slot.date} | ${slot.time}`;
-             select.appendChild(option);
-             hasFreeSlots = true;
-         }
-         
-         // Заполняем список занятых (для инфо)
-         if (slot.status === 'Busy' && list) {
-             list.innerHTML += `
-               <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid rgba(255,255,255,0.05); font-size:12px;">
-                   <span style="color:#aaa;">${slot.date} ${slot.time}</span>
-                   <span style="color:var(--accent); font-weight:600;">VS ${slot.enemyName}</span>
-               </div>
-             `;
-         }
-     });
-
-     if (!hasFreeSlots && noSlotsMsg) {
-         noSlotsMsg.style.display = 'block';
-         select.disabled = true;
-     }
-  }
-
-  async function loadRoadmap() {
-      // Пример статических данных, если нет в базе
-      const data = [
-          { date: 'JAN 2026', title: 'Rebranding & New Site', done: true },
-          { date: 'FEB 2026', title: 'Major Tournament Qualifiers', done: false },
-          { date: 'MAR 2026', title: 'Bootcamp', done: false }
-      ];
-      // const data = await fetchData('getRoadmap'); // Раскомментируй, если будет в БД
-      
-      const container = document.getElementById('roadmap-container');
-      if(!container) return;
-      container.innerHTML = '<div class="roadmap-line"></div>'; // Возвращаем линию
-
-      data.forEach(item => {
-          container.innerHTML += `
-            <div class="rm-item" style="opacity:${item.done ? 1 : 0.5}">
-                <div class="rm-dot" style="background:${item.done ? 'var(--accent)' : 'var(--bg-deep)'}"></div>
-                <span class="rm-date">${item.date}</span>
-                <div class="rm-title">${item.title}</div>
+                    <div class="p-quote">"${p.quote}"</div>
+                    <div class="stats-grid" style="display:flex; gap:15px; margin-top:auto;">
+                        <div><div style="color:#00ffa3; font-weight:700;">${p.stats.kd}</div><div style="font-size:8px; color:#555;">KD</div></div>
+                        <div><div style="color:#ff0055; font-weight:700;">${p.stats.rank}</div><div style="font-size:8px; color:#555;">RANK</div></div>
+                    </div>
+                </div>
+                <div class="player-back">
+                    <div class="back-title">SETUP & SETTINGS</div>
+                    <div class="info-item">
+                        <span class="info-label">Device</span>
+                        <span class="info-value">${p.device || 'N/A'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Settings</span>
+                        <span class="info-value">${p.settings || 'N/A'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Favorite Weapon</span>
+                        <span class="info-value"><i class="fas fa-gun"></i> ${p.weapon || 'N/A'}</span>
+                    </div>
+                </div>
             </div>
-          `;
-      });
-  }
-  
-  async function loadGallery() {
-      const data = await fetchData('getGallery');
-      const container = document.getElementById('gallery-container');
-      if (!data || !container) return;
-      container.innerHTML = '';
-      data.forEach(imgUrl => {
-          container.innerHTML += `<div class="gallery-item" style="background-image:url('${imgUrl}')"></div>`;
-      });
-  }
-  
-  async function loadVideo() {
-     // Заглушка, можно тоже тянуть из БД
-     // document.getElementById('video-container').innerHTML = '<iframe ... ></iframe>';
-  }
-  
-  async function loadReviews() {
-      const data = await fetchData('getReviews');
-      const container = document.getElementById('reviews-container');
-      if(!data || !container) return;
-      
-      container.innerHTML = '';
-      data.forEach(r => {
-          container.innerHTML += `
-            <div class="review-card">
-               <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                   <span style="color:var(--accent); font-weight:700; font-size:12px;">${r.nick}</span>
-                   <span style="font-size:10px; color:#666;">to: ${r.target}</span>
-               </div>
-               <div class="r-text">"${r.text}"</div>
-            </div>
-          `;
-      });
-  }
+        </div>
+    `;
 
-  // --- 4. ОБРАБОТКА ФОРМ ---
+    onSnapshot(doc(db, "siteData", "roster_main"), (snap) => {
+        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        const el = document.getElementById('dynamic-roster');
+        if(el) el.innerHTML = list.map(p => createPlayerCard(p)).join('');
+    });
 
-  function submitPrac(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('button');
-    const originalText = btn.innerText;
+    onSnapshot(doc(db, "siteData", "roster_reserve"), (snap) => {
+        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        const el = document.getElementById('dynamic-roster-reserve');
+        if(el) el.innerHTML = list.map(p => createPlayerCard(p)).join('');
+    });
+  
+    // --- 4. СИСТЕМА ПРАКОВ ---
+    onSnapshot(doc(db, "siteData", "practices"), (snap) => {
+        const select = document.getElementById('prac-slot-select');
+        const msg = document.getElementById('no-slots-msg');
+        const publicList = document.getElementById('public-booked-list');
+        
+        if (!snap.exists() || !snap.data().list) return;
+
+        const allSlots = snap.data().list;
+        // Сортировка по дате
+        allSlots.sort((a, b) => new Date(a.isoDate) - new Date(b.isoDate));
+
+        // Доступные слоты
+        const openSlots = allSlots.filter(s => s.status === 'open' && new Date(s.isoDate) > new Date());
+        
+        if (select && msg) {
+            if (openSlots.length === 0) {
+                select.style.display = 'none';
+                msg.style.display = 'block';
+            } else {
+                select.style.display = 'block';
+                msg.style.display = 'none';
+                select.innerHTML = '<option value="" disabled selected>-- Выберите время --</option>' + 
+                    openSlots.map(s => `<option value="${s.id}">${s.displayTime}</option>`).join('');
+            }
+        }
+
+        // Занятые слоты (публичный список)
+        const bookedSlots = allSlots.filter(s => s.status === 'booked');
+        if (publicList) {
+            if (bookedSlots.length === 0) {
+                publicList.innerHTML = '<div style="font-size:12px; color:#555; text-align:center;">Пока нет забронированных игр</div>';
+            } else {
+                publicList.innerHTML = bookedSlots.map(s => `
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 12px; padding: 15px; margin-bottom: 15px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                            <div style="font-size:12px; color:var(--accent); font-family:var(--font-tech); font-weight:700;">
+                                <i class="far fa-clock"></i> ${s.displayTime}
+                            </div>
+                            <div style="font-size:9px; padding:3px 8px; background:rgba(0,255,163,0.1); color:#00ffa3; border-radius:4px; border:1px solid rgba(0,255,163,0.2);">ПОДТВЕРЖДЕНО</div>
+                        </div>
+
+                        <div style="font-family:var(--font-tech); font-size:16px; color:#fff; margin-bottom: 10px; text-transform: uppercase;">
+                            ${s.team.clanName} <span style="color:var(--accent); font-size:12px; margin-left:5px;">[${s.team.format}]</span>
+                        </div>
+                        <div style="font-size:10px; color:#aaa;">VS: ${s.team.captain}</div>
+                    </div>
+                `).join('');
+            }
+        }
+    });
+
+    window.submitPrac = async (e) => {
+        e.preventDefault();
+        
+        const slotSelect = document.getElementById('prac-slot-select');
+        const slotId = parseInt(slotSelect.value);
+        if(!slotId) return alert("Пожалуйста, выберите время прака!");
+
+        const checkedMaps = [];
+        document.querySelectorAll('.map-check:checked').forEach(cb => checkedMaps.push(cb.value));
+        
+        const formData = {
+            clanName: document.getElementById('pc-clan').value,
+            captain: document.getElementById('pc-cap').value,
+            capId: document.getElementById('pc-id').value,
+            contact: document.getElementById('pc-contact').value,
+            format: document.querySelector('input[name="format"]:checked').value,
+            maps: checkedMaps,
+            lineup: document.getElementById('pc-lineup').value
+        };
+
+        const submitBtn = e.target.querySelector('button');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = "ПРОВЕРКА СЛОТА...";
+        submitBtn.disabled = true;
+
+        try {
+            const ref = doc(db, "siteData", "practices");
+            const snap = await getDoc(ref);
+            if(!snap.exists()) throw new Error("Ошибка базы данных");
+
+            let list = snap.data().list;
+            const slotIndex = list.findIndex(s => s.id === slotId);
+
+            if (slotIndex === -1) throw new Error("Слот был удален.");
+            if (list[slotIndex].status !== 'open') throw new Error("Этот слот уже заняли!");
+
+            list[slotIndex].status = 'booked';
+            list[slotIndex].team = formData;
+
+            await updateDoc(ref, { list: list });
+            window.showNotify("РЕГИСТРАЦИЯ УСПЕШНА!", "success");
+            e.target.reset();
+            setTimeout(() => window.location.reload(), 2000);
+
+        } catch (err) {
+            window.showNotify(err.message, "error");
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
+        }
+    };
+
+    // --- 5. МЕДИА И ИСТОРИЯ ---
+    onSnapshot(doc(db, "siteData", "about"), (snap) => {
+        const list = (snap.exists() && snap.data().roadmap) ? snap.data().roadmap : [];
+        const cont = document.getElementById('roadmap-container');
+        if(cont) {
+            cont.innerHTML = '<div class="roadmap-line"></div>' + list.map(r => `
+                <div class="rm-item">
+                    <div class="rm-dot"></div>
+                    <div class="rm-content">
+                        <span class="rm-date">${r.date}</span>
+                        <div class="rm-title">${r.title}</div>
+                        <div style="font-size: 11px; color: #aaa;">${r.desc}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    });
+
+    onSnapshot(doc(db, "siteData", "media"), (snap) => {
+        if(!snap.exists()) return;
+        const d = snap.data();
+        const vidCont = document.getElementById('video-container');
+        const galCont = document.getElementById('gallery-container');
+
+        if(vidCont && d.videoId) {
+            vidCont.innerHTML = `
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/${d.videoId}" frameborder="0" allowfullscreen></iframe>
+            `;
+        }
+        if(galCont && d.gallery) {
+            galCont.innerHTML = d.gallery.map(g => `
+                <div class="gallery-item" style="background-image:url('${g.src}')"></div>
+            `).join('');
+            
+            const latest = Math.max(...d.gallery.map(i => i.id || 0));
+            checkUpdateBadge('media', latest, 'btn-media');
+        }
+    });
+
+    onSnapshot(doc(db, "siteData", "history"), (snap) => {
+        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        const container = document.getElementById('full-history-container');
+        
+        if(container) {
+            container.innerHTML = list.slice().reverse().map(m => `
+                <div style="background:rgba(255,255,255,0.03); padding:15px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border-left: 3px solid ${m.win ? '#00ffa3' : '#ff004c'};">
+                    <div>
+                        <div style="font-size:9px; color:#888; text-transform:uppercase;">${m.tour}</div>
+                        <div style="font-family:var(--font-tech); font-weight:700; font-size:14px;">VS ${m.enemy}</div>
+                    </div>
+                    <div style="font-family:var(--font-tech); font-size:18px; font-weight:700;">${m.our} : ${m.their}</div>
+                </div>
+            `).join('');
+        }
+
+        if(list.length > 0) {
+            const latest = Math.max(...list.map(i => i.id || 0));
+            checkUpdateBadge('history', latest, 'btn-history');
+        }
+    });
+
+    // --- 6. ОТЗЫВЫ ---
+    onSnapshot(doc(db, "siteData", "reviews"), (snap) => {
+        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+        const el = document.getElementById('reviews-container');
+        if(el) {
+            el.innerHTML = list.slice().reverse().map(r => `
+                <div class="review-card">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                        <div style="font-weight:700; color:var(--accent); font-size:13px;">${r.nick}</div>
+                        <div style="font-size:10px; color:#666;">TO: ${r.target}</div>
+                    </div>
+                    <div class="r-text">"${r.text}"</div>
+                </div>
+            `).join('');
+        }
+    });
+
+    window.submitReview = async (e) => {
+        e.preventDefault();
+        const nick = document.getElementById('rev-nick').value;
+        const target = document.getElementById('rev-target').value;
+        const text = document.getElementById('rev-text').value;
+
+        try {
+            const ref = doc(db, "siteData", "reviews");
+            const snap = await getDoc(ref);
+            if(!snap.exists()) await setDoc(ref, { list: [] });
+            
+            await updateDoc(ref, { list: arrayUnion({ id: Date.now(), nick, target, text }) });
+            window.showNotify("Отзыв отправлен!", "success");
+            e.target.reset();
+        } catch(err) { window.showNotify("Ошибка: " + err.message, "error"); }
+    };
+
+    // --- UI LOGIC ---
     
-    // Собираем данные
-    const formData = {
-        action: 'submitPrac',
-        slot: document.getElementById('prac-slot-select').value,
-        clan: document.getElementById('pc-clan').value,
-        cap: document.getElementById('pc-cap').value,
-        id: document.getElementById('pc-id').value,
-        contact: document.getElementById('pc-contact').value,
-        format: document.querySelector('input[name="format"]:checked').value,
-        maps: Array.from(document.querySelectorAll('.map-check:checked')).map(el => el.value).join(', '),
-        lineup: document.getElementById('pc-lineup').value
+    window.selectTab = (tabId, btn) => {
+        document.querySelectorAll('section').forEach(s => { s.classList.remove('active'); s.style.opacity = '0'; });
+        const t = document.getElementById(tabId);
+        if(t) { 
+            setTimeout(() => { t.classList.add('active'); requestAnimationFrame(() => t.style.opacity = '1'); }, 100); 
+        }
+        
+        document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active-tab'));
+        if(btn) {
+            btn.classList.add('active-tab');
+            if(btn.classList.contains('has-update')) {
+                btn.classList.remove('has-update');
+                localStorage.setItem('last_seen_' + tabId, Date.now());
+                updateGlobalBadge();
+            }
+        }
+        const dropdown = document.getElementById('navDropdown');
+        if(dropdown) dropdown.classList.remove('active');
+    };
+    
+    window.toggleMenu = () => {
+        const dd = document.getElementById('navDropdown');
+        if(dd) dd.classList.toggle('active');
     };
 
-    if (!formData.slot) {
-        showToast('Ошибка', 'Выберите слот времени!', 'error');
-        return;
+    // BADGE SYSTEM LOGIC
+    window.checkUpdateBadge = (sectionKey, latestId, btnId) => {
+        const lastSeen = parseInt(localStorage.getItem('last_seen_' + sectionKey) || '0');
+        const btn = document.getElementById(btnId);
+        
+        if (btn && latestId > lastSeen) {
+            btn.classList.add('has-update');
+            updateGlobalBadge();
+        } else if (btn) {
+            btn.classList.remove('has-update');
+            updateGlobalBadge();
+        }
+    };
+
+    window.updateGlobalBadge = () => {
+        const hasAnyUpdate = document.querySelectorAll('.menu-item.has-update').length > 0;
+        const burger = document.getElementById('menuBtn');
+        if(burger) {
+            if(hasAnyUpdate) burger.classList.add('has-update');
+            else burger.classList.remove('has-update');
+        }
+    };
+
+    // Typing Effect
+    const typeText = "ДОМИНИРУЙ. РАЗВИВАЙСЯ. ПОБЕЖДАЙ. ";
+    let typeIdx = 0;
+    function typeWriter() {
+        const el = document.getElementById('typing-text');
+        if(el && typeIdx < typeText.length) {
+            el.innerHTML += typeText.charAt(typeIdx);
+            typeIdx++; setTimeout(typeWriter, 100);
+        }
     }
+    window.onload = typeWriter;
 
-    sendForm(formData, btn, originalText, () => {
-        e.target.reset();
-        loadPracSlots(); // Обновить слоты
-    });
-  }
+    // Music Player
+    window.toggleAmbient = () => {
+        const audio = document.getElementById('bg-music');
+        const btnIcon = document.getElementById('btn-icon');
+        const btn = document.getElementById('music-btn');
+        const anim = document.getElementById('music-anim');
+        const status = document.getElementById('player-status');
 
-  function sendToTelegram(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('button');
-    const originalText = btn.innerText;
+        if(!audio) return;
 
-    const formData = {
-        action: 'joinRequest',
-        nick: document.getElementById('nick').value,
-        age: document.getElementById('age').value,
-        kd: document.getElementById('kd').value,
-        role: document.getElementById('role').value,
-        rank: document.getElementById('best_rank').value
+        if (audio.paused) {
+            audio.play().catch(e => console.log("Auto-play prevented by browser policy"));
+            if(btnIcon) btnIcon.className = 'fas fa-pause';
+            if(btn) btn.style.animation = 'none';
+            if(anim) anim.style.display = 'flex';
+            if(status) { status.innerText = 'Ambient: On'; status.style.color = 'var(--accent)'; }
+        } else {
+            audio.pause();
+            if(btnIcon) btnIcon.className = 'fas fa-play';
+            if(btn) btn.style.animation = 'pulse-red 2s infinite';
+            if(anim) anim.style.display = 'none';
+            if(status) { status.innerText = 'Ambient: Off'; status.style.color = '#fff'; }
+        }
+    };
+  
+    window.sendToTelegram = (event) => {
+        event.preventDefault(); 
+        const nick = document.getElementById('nick').value;
+        const age = document.getElementById('age').value;
+        const kd = document.getElementById('kd').value;
+        const role = document.getElementById('role').value;
+        const rank = document.getElementById('best_rank').value;
+
+        // Кодируем данные, чтобы не ломалась ссылка
+        const message = encodeURIComponent(
+            `🔥 *НОВАЯ ЗАЯВКА В AIREX TEAM*\n` +
+            `----------------------------\n` + 
+            `👤 *Ник:* ${nick}\n` +
+            `🔞 *Возраст:* ${age}\n` +
+            `📊 *K/D:* ${kd}\n` +
+            `🎮 *Роль:* ${role}\n` +
+            `🏆 *Макс. Ранг:* ${rank}\n` +
+            `----------------------------`
+        );
+
+        const tgUrl = `https://t.me/kas_0ff?text=${message}`;
+        window.open(tgUrl, '_blank');
     };
 
-    sendForm(formData, btn, originalText, () => {
-        e.target.reset();
-    });
-  }
-  
-  function submitReview(e) {
-      e.preventDefault();
-      const btn = e.target.querySelector('button');
-      const originalText = btn.innerText;
-      
-      const formData = {
-          action: 'submitReview',
-          nick: document.getElementById('rev-nick').value,
-          target: document.getElementById('rev-target').value,
-          text: document.getElementById('rev-text').value
-      };
-      
-      sendForm(formData, btn, originalText, () => {
-          e.target.reset();
-          loadReviews(); // Обновить отзывы сразу
-      });
-  }
+    // HUD Notifications
+    window.showNotify = (msg, type = 'info') => {
+        const container = document.getElementById('notify-container');
+        if(!container) return;
 
-  // Общая функция отправки формы
-  async function sendForm(data, btn, btnText, onSuccess) {
-      if (!SCRIPT_URL) {
-          showToast('Демо режим', 'Бэкенд не подключен. Данные не отправлены.', 'error');
-          return;
-      }
+        const toast = document.createElement('div');
+        toast.className = `hud-toast ${type}`;
+        
+        let icon = 'fa-info-circle';
+        let title = 'INFO';
+        if(type === 'success') { icon = 'fa-check-circle'; title = 'SUCCESS'; }
+        if(type === 'error') { icon = 'fa-exclamation-triangle'; title = 'ERROR'; }
 
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> ОТПРАВКА...';
+        toast.innerHTML = `
+            <i class="fas ${icon} toast-icon"></i>
+            <div class="toast-content">
+                <span class="toast-title">${title}</span>
+                <span class="toast-msg">${msg}</span>
+            </div>
+            <div class="toast-progress" style="animation-duration: 4000ms;"></div>
+        `;
 
-      try {
-          const response = await fetch(SCRIPT_URL, {
-              method: 'POST',
-              mode: 'no-cors', // Важно для Google Apps Script
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(data)
-          });
-          
-          // Из-за 'no-cors' мы не узнаем ответ, поэтому считаем успехом
-          showToast('Успешно!', 'Данные отправлены менеджеру.', 'success');
-          if(onSuccess) onSuccess();
+        container.appendChild(toast);
+        requestAnimationFrame(() => { toast.classList.add('active'); });
 
-      } catch (error) {
-          console.error(error);
-          showToast('Ошибка', 'Проверьте соединение.', 'error');
-      } finally {
-          btn.disabled = false;
-          btn.innerText = btnText;
-      }
-  }
+        setTimeout(() => {
+            toast.classList.remove('active');
+            setTimeout(() => toast.remove(), 400); 
+        }, 4000);
+    };
 
-  // --- 5. УТИЛИТЫ И UI ЭФФЕКТЫ ---
+    window.alert = (msg) => window.showNotify(msg, 'info');
 
-  // HUD Уведомления (Toast)
-  function showToast(title, msg, type = 'success') {
-      const container = document.getElementById('notify-container');
-      const toast = document.createElement('div');
-      
-      const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
-      
-      toast.className = `hud-toast ${type}`;
-      toast.innerHTML = `
-          <div class="toast-progress"></div>
-          <i class="fas ${icon} toast-icon"></i>
-          <div class="toast-content">
-              <span class="toast-title">${title}</span>
-              <span class="toast-msg">${msg}</span>
-          </div>
-      `;
-
-      container.appendChild(toast);
-
-      // Анимация входа
-      requestAnimationFrame(() => {
-          toast.classList.add('active');
-      });
-
-      // Удаление
-      setTimeout(() => {
-          toast.classList.remove('active');
-          setTimeout(() => toast.remove(), 400);
-      }, 3000);
-  }
-
-  // Музыкальный плеер
-  function toggleAmbient() {
-      const audio = document.getElementById('bg-music');
-      const anim = document.getElementById('music-anim');
-      const btnIcon = document.getElementById('btn-icon');
-      const status = document.getElementById('player-status');
-
-      if (audio.paused) {
-          audio.play().then(() => {
-              anim.style.display = 'flex';
-              btnIcon.className = 'fas fa-pause';
-              status.innerText = 'Ambient: ON';
-              status.style.color = 'var(--success)';
-          }).catch(e => {
-              showToast('Ошибка Audio', 'Нужно взаимодействие со страницей', 'error');
-          });
-      } else {
-          audio.pause();
-          anim.style.display = 'none';
-          btnIcon.className = 'fas fa-play';
-          status.innerText = 'Ambient: OFF';
-          status.style.color = '#fff';
-      }
-  }
-
-  // Удаление заглушек (для демо режима)
-  function removeLoadersMock() {
-      const loaders = document.querySelectorAll('.loading-text');
-      loaders.forEach(l => {
-          if(!l.parentElement.classList.contains('countdown')) // Не трогаем таймер
-            l.innerText = "Нет данных (Demo)";
-      });
-  }
 </script>
+<div id="notify-container"></div>
 </body>
 </html>
