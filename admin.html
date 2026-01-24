@@ -21,7 +21,6 @@
       --font-tech: 'Orbitron', sans-serif;
     }
 
-    /* --- SCROLLBAR --- */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #000; }
     ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
@@ -40,17 +39,15 @@
     h1, h2, h3 { font-family: var(--font-tech); text-transform: uppercase; letter-spacing: 2px; margin-top: 0; }
     h1 { color: var(--accent); text-align: center; margin-bottom: 40px; text-shadow: 0 0 25px var(--accent-dim); font-size: 28px; }
     
-    /* --- GRID LAYOUT --- */
     .container { 
         max-width: 1400px; margin: 0 auto; padding-bottom: 50px; 
-        display: none; /* Скрыто до логина */
+        display: none; 
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
         gap: 25px;
     }
     
     .full-width { grid-column: 1 / -1; }
 
-    /* --- PANEL STYLES --- */
     .panel {
       background: var(--glass-dark);
       border: 1px solid var(--glass-border);
@@ -68,7 +65,6 @@
     .panel-header h2 { margin: 0; font-size: 15px; display: flex; align-items: center; gap: 10px; color: #fff; }
     .panel-icon { color: var(--accent); filter: drop-shadow(0 0 5px var(--accent)); }
 
-    /* --- FORMS --- */
     label { font-size: 10px; color: var(--accent); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; display: block; margin-top: 15px; margin-bottom: 6px; opacity: 0.8; }
     
     input, select, textarea {
@@ -86,7 +82,6 @@
     .row-inputs { display: flex; gap: 15px; }
     .row-inputs > div { flex: 1; }
 
-    /* --- BUTTONS --- */
     button.action-btn {
       background: linear-gradient(135deg, #a30030, var(--accent));
       color: white; border: none; padding: 14px; width: 100%;
@@ -109,11 +104,10 @@
     }
     .btn-del:hover { border-color: #ff3333; color: #ff3333; background: rgba(255, 51, 51, 0.1); }
 
-    /* --- LISTS --- */
     .data-list {
         margin-top: 20px; max-height: 250px; overflow-y: auto;
         border-top: 1px dashed #333; padding-top: 10px;
-        padding-right: 5px; /* space for scrollbar */
+        padding-right: 5px; 
     }
     .list-item {
       display: flex; justify-content: space-between; align-items: center;
@@ -125,7 +119,6 @@
     .item-info b { color: #fff; display: block; margin-bottom: 3px; font-weight: 600; }
     .item-sub { color: #888; font-size: 10px; }
 
-    /* --- LOGIN SCREEN --- */
     #loginOverlay {
       position: fixed; inset: 0; background: #000; z-index: 9999;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -302,7 +295,6 @@
         </div>
     </div>
 
-
     <div class="panel">
         <div class="panel-header">
             <h2><i class="fas fa-trophy panel-icon"></i> ИСТОРИЯ ИГР</h2>
@@ -334,7 +326,7 @@
     import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-    // КОНФИГУРАЦИЯ FIREBASE
+    // FIREBASE CONFIG
     const firebaseConfig = {
       apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
       authDomain: "airexsite.firebaseapp.com",
@@ -348,7 +340,7 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // --- АВТОРИЗАЦИЯ ---
+    // --- AUTH ---
     window.sysLogin = async () => {
         const email = document.getElementById('adminEmail').value;
         const pass = document.getElementById('adminPass').value;
@@ -360,7 +352,7 @@
             await signInWithEmailAndPassword(auth, email, pass);
         } catch (e) {
             err.style.opacity = 1;
-            err.innerText = "Неверный логин или пароль";
+            err.innerText = "Ошибка входа. Проверьте консоль или данные.";
             console.error(e);
         }
     };
@@ -380,8 +372,7 @@
         }
     });
 
-    // --- СЛУШАТЕЛИ (REAL-TIME UPDATES) ---
-    
+    // --- LISTENERS ---
     function listenToDoc(collection, docName, callback) {
         onSnapshot(doc(db, collection, docName), (snap) => {
             if(snap.exists()) callback(snap.data());
@@ -391,10 +382,9 @@
 
     function initAdminListeners() {
 
-        // 1. Новости
+        // NEWS
         listenToDoc("siteData", "news", (data) => {
             const list = data.list || [];
-            // Сортировка: новые сверху (по id, т.к. id это timestamp)
             list.sort((a,b) => b.id - a.id);
             document.getElementById('newsList').innerHTML = list.map(n => `
                 <div class="list-item">
@@ -404,7 +394,7 @@
             `).join('');
         });
 
-        // 2. Матч
+        // MATCH
         listenToDoc("siteData", "match", (data) => {
             const info = document.getElementById('currentMatchInfo');
             if(data.enemy) {
@@ -418,10 +408,10 @@
             }
         });
 
-        // 3. Состав (Инициализация)
+        // ROSTER INIT
         setupRosterListener();
 
-        // 4. Roadmap
+        // ROADMAP
         listenToDoc("siteData", "about", (data) => {
             const list = data.roadmap || [];
             document.getElementById('roadmapList').innerHTML = list.map(r => `
@@ -432,7 +422,7 @@
             `).join('');
         });
 
-        // 5. Медиа
+        // MEDIA
         listenToDoc("siteData", "media", (data) => {
             if(data.videoId) document.getElementById('vidId').value = data.videoId;
             const gallery = data.gallery || [];
@@ -447,10 +437,10 @@
             `).join('');
         });
 
-        // 6. Праки
+        // PRACTICES
         listenToDoc("siteData", "practices", (data) => {
             const list = data.list || [];
-            list.sort((a, b) => new Date(a.isoDate) - new Date(b.isoDate)); // Сортировка по времени
+            list.sort((a, b) => new Date(a.isoDate) - new Date(b.isoDate));
 
             const freeCont = document.getElementById('pracFreeList');
             const bookedCont = document.getElementById('pracBookedList');
@@ -484,7 +474,7 @@
             });
         });
 
-        // 7. История
+        // HISTORY
         listenToDoc("siteData", "history", (data) => {
             const list = data.list || [];
             list.sort((a,b) => b.id - a.id);
@@ -501,7 +491,7 @@
             `).join('');
         });
 
-        // 8. Отзывы
+        // REVIEWS
         listenToDoc("siteData", "reviews", (data) => {
             const list = data.list || [];
             document.getElementById('reviewsList').innerHTML = list.map(r => `
@@ -516,8 +506,7 @@
         });
     }
 
-    // --- УНИВЕРСАЛЬНЫЕ ФУНКЦИИ ---
-    
+    // --- UTILS ---
     async function updateArray(docName, arrayField, item) {
         try {
             const ref = doc(db, "siteData", docName);
@@ -527,7 +516,7 @@
             return true;
         } catch(e) {
             console.error(e);
-            alert("Ошибка записи! Проверь консоль.");
+            alert("Ошибка записи! Проверь права доступа.");
             return false;
         }
     }
@@ -545,24 +534,14 @@
         } catch(e) { alert("Ошибка удаления"); }
     };
 
-    // --- ФУНКЦИИ КНОПОК ---
-
+    // --- BUTTON ACTIONS ---
     window.addNews = async () => {
         const title = document.getElementById('newsTitle').value;
         if(!title) return alert("Введите заголовок!");
-        
-        const item = { 
-            id: Date.now(), 
-            title, 
-            text: document.getElementById('newsText').value, 
-            date: document.getElementById('newsDate').value || new Date().toLocaleDateString(), 
-            tag: document.getElementById('newsTag').value 
-        };
-        
+        const item = { id: Date.now(), title, text: document.getElementById('newsText').value, date: document.getElementById('newsDate').value || new Date().toLocaleDateString(), tag: document.getElementById('newsTag').value };
         if(await updateArray("news", "list", item)) {
             alert("Новость опубликована");
             document.getElementById('newsTitle').value = '';
-            document.getElementById('newsText').value = '';
         }
     };
 
@@ -573,26 +552,19 @@
         alert("Таймер обновлен!");
     };
 
-    // ROSTER LOGIC
     let currentRosterType = "roster_main";
     let rosterUnsub = null;
-
-    window.loadRoster = () => { 
-        currentRosterType = document.getElementById('rosterType').value; 
-        setupRosterListener(); 
-    };
+    window.loadRoster = () => { currentRosterType = document.getElementById('rosterType').value; setupRosterListener(); };
 
     function setupRosterListener() {
-        if(rosterUnsub) rosterUnsub(); // Отключаем старый слушатель
+        if(rosterUnsub) rosterUnsub(); 
         document.getElementById('rosterList').innerHTML = '<span class="item-sub">Загрузка...</span>';
         
         rosterUnsub = onSnapshot(doc(db, "siteData", currentRosterType), (snap) => {
             const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
             const container = document.getElementById('rosterList');
             container.innerHTML = '';
-            
             if(list.length === 0) container.innerHTML = '<span class="item-sub">Список пуст</span>';
-            
             list.forEach(p => {
                 container.innerHTML += `
                 <div class="list-item" style="background: rgba(0,0,0,0.5); border: 1px solid #333;">
@@ -606,32 +578,17 @@
     window.addPlayer = async () => {
         const nick = document.getElementById('pNick').value;
         if(!nick) return alert("Введите ник!");
-        
         const p = { 
-            nick, 
-            role: document.getElementById('pRole').value, 
-            img: document.getElementById('pImg').value || "https://placehold.co/400x600/000/FFF?text=NO+IMAGE", 
-            quote: document.getElementById('pQuote').value, 
-            device: document.getElementById('pDevice').value, 
-            settings: document.getElementById('pSettings').value, 
-            weapon: document.getElementById('pWeapon').value, 
-            stats: { 
-                kd: document.getElementById('pKd').value, 
-                rank: document.getElementById('pRank').value 
-            } 
+            nick, role: document.getElementById('pRole').value, img: document.getElementById('pImg').value || "https://placehold.co/400x600/000/FFF?text=NO+IMAGE", quote: document.getElementById('pQuote').value, 
+            device: document.getElementById('pDevice').value, settings: document.getElementById('pSettings').value, weapon: document.getElementById('pWeapon').value, 
+            stats: { kd: document.getElementById('pKd').value, rank: document.getElementById('pRank').value } 
         };
-        
         const ref = doc(db, "siteData", currentRosterType);
         const snap = await getDoc(ref);
         let list = snap.exists() ? (snap.data().list || []) : [];
         list.push(p);
         await setDoc(ref, { list });
-        alert(`Игрок ${nick} добавлен в ${currentRosterType === 'roster_main' ? 'Основу' : 'Резерв'}!`);
-        
-        // Очистка полей
-        document.getElementById('pNick').value = '';
-        document.getElementById('pRole').value = '';
-        document.getElementById('pImg').value = '';
+        alert(`Игрок ${nick} добавлен!`);
     };
 
     window.deletePlayer = async (nick) => {
@@ -644,7 +601,6 @@
         }
     };
 
-    // OTHER
     window.addRoadmap = async () => {
         const item = { id: Date.now(), date: document.getElementById('rmDate').value, title: document.getElementById('rmTitle').value, desc: document.getElementById('rmDesc').value };
         if(item.title && await updateArray("about", "roadmap", item)) alert("Событие добавлено");
@@ -657,56 +613,34 @@
 
     window.addGallery = async () => {
         const src = document.getElementById('galUrl').value;
-        if(!src) return alert("Нужна ссылка!");
-        if(await updateArray("media", "gallery", { id: Date.now(), src, cap: document.getElementById('galCap').value })) {
+        if(src && await updateArray("media", "gallery", { id: Date.now(), src, cap: document.getElementById('galCap').value })) {
             alert("Фото добавлено");
             document.getElementById('galUrl').value = '';
         }
     };
 
-    // PRACS LOGIC
     window.createPracSlot = async () => {
         const dateInput = document.getElementById('pracDateInput').value;
         if (!dateInput) return alert("Выберите дату и время!");
-
-        const dateObj = new Date(dateInput);
-        const options = { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-        const displayTime = dateObj.toLocaleDateString('ru-RU', options);
-
-        const newSlot = {
-            id: Date.now(),
-            isoDate: dateInput,
-            displayTime: displayTime,
-            status: 'open',
-            team: null
-        };
-
+        const displayTime = new Date(dateInput).toLocaleDateString('ru-RU', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        const newSlot = { id: Date.now(), isoDate: dateInput, displayTime: displayTime, status: 'open', team: null };
         if(await updateArray("practices", "list", newSlot)) {
-            alert(`Слот на ${displayTime} создан!`);
+            alert(`Слот создан!`);
             document.getElementById('pracDateInput').value = ''; 
         }
     };
 
-    window.deletePracSlot = async (id) => {
-        await window.deleteItem("practices", id, "list");
-    };
+    window.deletePracSlot = async (id) => window.deleteItem("practices", id, "list");
 
     window.addHistory = async () => {
         const enemy = document.getElementById('hEnemy').value;
-        if(!enemy) return alert("Введите соперника");
-        const item = { 
-            id: Date.now(), 
-            enemy, 
-            tour: document.getElementById('hTour').value, 
-            our: document.getElementById('hOur').value || 0, 
-            their: document.getElementById('hTheir').value || 0 
-        };
-        if(await updateArray("history", "list", item)) {
+        const item = { id: Date.now(), enemy, tour: document.getElementById('hTour').value, our: document.getElementById('hOur').value || 0, their: document.getElementById('hTheir').value || 0 };
+        if(enemy && await updateArray("history", "list", item)) {
             alert("Результат сохранен");
             document.getElementById('hEnemy').value = '';
         }
     };
-
 </script>
 </body>
 </html>
+
