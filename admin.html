@@ -623,13 +623,30 @@
     };
 
     // --- BUTTON ACTIONS ---
-    window.addNews = async () => {
+        window.addNews = async () => {
         const title = document.getElementById('newsTitle').value;
         if(!title) return alert("Введите заголовок!");
-        const item = { id: Date.now(), title, text: document.getElementById('newsText').value, date: document.getElementById('newsDate').value || new Date().toLocaleDateString(), tag: document.getElementById('newsTag').value };
+        
+        // --- НАЧАЛО ИЗМЕНЕНИЙ ---
+        let rawText = document.getElementById('newsText').value;
+        
+        // Превращаем переносы строк в тег <br>, чтобы текст не слипался
+        let formattedText = rawText.replace(/\n/g, "<br>");
+        
+        const item = { 
+            id: Date.now(), 
+            title, 
+            text: formattedText, // Сохраняем уже обработанный текст
+            date: document.getElementById('newsDate').value || new Date().toLocaleDateString(), 
+            tag: document.getElementById('newsTag').value 
+        };
+        // --- КОНЕЦ ИЗМЕНЕНИЙ ---
+
         if(await updateArray("news", "list", item)) {
             alert("Новость опубликована");
             document.getElementById('newsTitle').value = '';
+            document.getElementById('newsText').value = ''; // Очищаем поле текста
+            document.getElementById('newsPreview').innerHTML = 'Начните вводить текст...'; // Сбрасываем превью
         }
     };
 
