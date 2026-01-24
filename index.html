@@ -392,44 +392,24 @@
         border-radius: 4px !important; border: 1px solid #333 !important;
     }
 
-    /* Вставьте это в <style> внутри index.html или в style.css */
-
-/* Стиль для цитат */
-.news-quote { 
-    border-left: 3px solid #ff004c; /* Ваш акцентный цвет */
-    padding-left: 15px; 
-    font-style: italic; 
-    color: #bbb; 
-    margin: 15px 0;
-    background: rgba(255, 255, 255, 0.05); /* Легкий фон */
-    padding: 10px 15px;
-    border-radius: 0 6px 6px 0;
+/* Улучшенные стили для карточек новостей на главной */
+.news-card {
+    padding: 18px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+}
+.news-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-dim);
+}
+/* Стили контента новостей */
+.news-body img { 
+    width: 100%; border-radius: 8px; margin: 10px 0; border: 1px solid var(--accent-dim); 
 }
 
-/* Стиль для кода/моноширинного текста */
-.news-code {
-    background: #222;
-    color: #00ffa3; /* Зеленоватый цвет как в админке */
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 0.9em;
-    border: 1px solid #333;
-}
-
-/* Убедитесь, что ссылки внутри новостей видны */
-.news-content a {
-    color: #ff004c;
-    text-decoration: underline;
-}
-
-/* Чтобы картинки внутри новостей не вылезали за пределы */
-.news-content img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin: 10px 0;
-}
 
   </style>
 
@@ -1126,11 +1106,30 @@
     // --- UI LOGIC ---
     
     window.selectTab = (tabId, btn) => {
-        document.querySelectorAll('section').forEach(s => { s.classList.remove('active'); s.style.opacity = '0'; });
-        const t = document.getElementById(tabId);
-        if(t) { 
-            setTimeout(() => { t.classList.add('active'); requestAnimationFrame(() => t.style.opacity = '1'); }, 100); 
-        }
+    // Скрываем все секции
+    document.querySelectorAll('section').forEach(s => { 
+        s.classList.remove('active'); 
+        s.style.opacity = '0'; 
+    });
+
+    // Активируем нужную
+    const t = document.getElementById(tabId);
+    if(t) { 
+        t.classList.add('active');
+        setTimeout(() => { t.style.opacity = '1'; }, 50);
+    }
+    
+    // Подсветка кнопок
+    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active-tab'));
+    if(btn) btn.classList.add('active-tab');
+
+    // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Закрываем меню после выбора
+    const dropdown = document.getElementById('navDropdown');
+    const menuBtn = document.getElementById('menuBtn');
+    if(dropdown) dropdown.classList.remove('active');
+    if(menuBtn) menuBtn.classList.remove('active');
+};
+
         
         document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active-tab'));
         if(btn) {
@@ -1211,28 +1210,33 @@
     };
   
     window.sendToTelegram = (event) => {
-        event.preventDefault(); 
-        const nick = document.getElementById('nick').value;
-        const age = document.getElementById('age').value;
-        const kd = document.getElementById('kd').value;
-        const role = document.getElementById('role').value;
-        const rank = document.getElementById('best_rank').value;
-
-        // Кодируем данные, чтобы не ломалась ссылка
-        const message = encodeURIComponent(
-            `🔥 *НОВАЯ ЗАЯВКА В AIREX TEAM*\n` +
-            `----------------------------\n` + 
-            `👤 *Ник:* ${nick}\n` +
-            `🔞 *Возраст:* ${age}\n` +
-            `📊 *K/D:* ${kd}\n` +
-            `🎮 *Роль:* ${role}\n` +
-            `🏆 *Макс. Ранг:* ${rank}\n` +
-            `----------------------------`
-        );
-
-        const tgUrl = `https://t.me/kas_0ff?text=${message}`;
-        window.open(tgUrl, '_blank');
+    event.preventDefault(); 
+    
+    const fields = {
+        nick: document.getElementById('nick').value,
+        age: document.getElementById('age').value,
+        kd: document.getElementById('kd').value,
+        role: document.getElementById('role').value,
+        rank: document.getElementById('best_rank').value
     };
+
+    const text = `🔥 *НОВАЯ ЗАЯВКА В AIREX TEAM*\n` +
+                 `----------------------------\n` + 
+                 `👤 Ник: ${fields.nick}\n` +
+                 `🔞 Возраст: ${fields.age}\n` +
+                 `📊 K/D: ${fields.kd}\n` +
+                 `🎮 Роль: ${fields.role}\n` +
+                 `🏆 Ранг: ${fields.rank}`;
+
+    const tgUrl = `https://t.me/kas_0ff?text=${encodeURIComponent(text)}`;
+    
+    // Показываем уведомление перед переходом
+    window.showNotify("Перенаправление в Telegram...", "info");
+    
+    setTimeout(() => {
+        window.location.href = tgUrl;
+    }, 1000);
+};
 
     // HUD Notifications
     window.showNotify = (msg, type = 'info') => {
