@@ -4,129 +4,173 @@
   <meta charset="UTF-8">
   <title>AIREX ADMIN // COMMAND CENTER</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
       --accent: #ff004c;
+      --accent-hover: #ff1a5e;
       --accent-dim: rgba(255, 0, 76, 0.15);
-      --bg-deep: #020202;
-      --glass-dark: rgba(12, 12, 12, 0.9);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --text-white: #ffffff;
+      --bg-deep: #050505;
+      --glass-dark: rgba(20, 20, 20, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-white: #e0e0e0;
       --font-main: 'Montserrat', sans-serif;
       --font-tech: 'Orbitron', sans-serif;
     }
+
+    /* --- SCROLLBAR --- */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
     body {
       background-color: var(--bg-deep);
       color: var(--text-white);
       font-family: var(--font-main);
       margin: 0; padding: 20px;
-      background-image: radial-gradient(circle at 50% 0%, #1a0008 0%, #000 100%);
+      background-image: radial-gradient(circle at 50% -20%, #2a000e 0%, #000 70%);
+      background-attachment: fixed;
       min-height: 100vh;
     }
 
     h1, h2, h3 { font-family: var(--font-tech); text-transform: uppercase; letter-spacing: 2px; margin-top: 0; }
-    h1 { color: var(--accent); text-align: center; margin-bottom: 30px; text-shadow: 0 0 20px var(--accent-dim); }
+    h1 { color: var(--accent); text-align: center; margin-bottom: 40px; text-shadow: 0 0 25px var(--accent-dim); font-size: 28px; }
     
+    /* --- GRID LAYOUT --- */
     .container { 
-        max-width: 1200px; margin: 0 auto; padding-bottom: 50px; 
-        display: none; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;
+        max-width: 1400px; margin: 0 auto; padding-bottom: 50px; 
+        display: none; /* Скрыто до логина */
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+        gap: 25px;
     }
     
     .full-width { grid-column: 1 / -1; }
 
+    /* --- PANEL STYLES --- */
     .panel {
       background: var(--glass-dark);
       border: 1px solid var(--glass-border);
-      border-radius: 12px; padding: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      backdrop-filter: blur(10px); display: flex; flex-direction: column;
+      border-radius: 16px; padding: 25px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+      backdrop-filter: blur(15px); 
+      display: flex; flex-direction: column;
+      transition: transform 0.3s ease;
     }
     
     .panel-header { 
         display: flex; align-items: center; justify-content: space-between; 
-        border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 15px; 
+        border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 20px; 
     }
-    .panel-header h2 { margin: 0; font-size: 16px; display: flex; align-items: center; gap: 10px; color: #fff; }
-    .panel-icon { color: var(--accent); }
+    .panel-header h2 { margin: 0; font-size: 15px; display: flex; align-items: center; gap: 10px; color: #fff; }
+    .panel-icon { color: var(--accent); filter: drop-shadow(0 0 5px var(--accent)); }
 
-    label { font-size: 9px; color: var(--accent); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; display: block; margin-top: 10px; margin-bottom: 4px; }
+    /* --- FORMS --- */
+    label { font-size: 10px; color: var(--accent); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; display: block; margin-top: 15px; margin-bottom: 6px; opacity: 0.8; }
     
     input, select, textarea {
-      width: 100%; padding: 10px; background: rgba(0,0,0,0.4);
-      border: 1px solid #333; color: #fff; border-radius: 4px;
+      width: 100%; padding: 12px; background: rgba(0,0,0,0.6);
+      border: 1px solid #333; color: #fff; border-radius: 6px;
       font-family: var(--font-main); outline: none; transition: 0.3s;
-      box-sizing: border-box; font-size: 12px;
+      box-sizing: border-box; font-size: 13px;
     }
-    input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-dim); }
+    input:focus, select:focus, textarea:focus { 
+        border-color: var(--accent); 
+        background: rgba(0,0,0,0.9);
+        box-shadow: 0 0 15px var(--accent-dim); 
+    }
 
-    .row-inputs { display: flex; gap: 10px; }
+    .row-inputs { display: flex; gap: 15px; }
     .row-inputs > div { flex: 1; }
 
+    /* --- BUTTONS --- */
     button.action-btn {
-      background: linear-gradient(45deg, #cc003d, var(--accent));
-      color: white; border: none; padding: 12px; width: 100%;
+      background: linear-gradient(135deg, #a30030, var(--accent));
+      color: white; border: none; padding: 14px; width: 100%;
       font-family: var(--font-tech); font-weight: 700; letter-spacing: 1px;
-      text-transform: uppercase; border-radius: 4px; cursor: pointer;
-      margin-top: 15px; transition: 0.2s; font-size: 12px;
+      text-transform: uppercase; border-radius: 6px; cursor: pointer;
+      margin-top: 20px; transition: 0.3s; font-size: 12px;
+      box-shadow: 0 4px 15px rgba(255, 0, 76, 0.2);
     }
-    button.action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px var(--accent-dim); }
+    button.action-btn:hover { 
+        transform: translateY(-2px); 
+        box-shadow: 0 6px 20px rgba(255, 0, 76, 0.4);
+        background: linear-gradient(135deg, var(--accent), #ff4d79);
+    }
+    button.action-btn:active { transform: translateY(0); }
     
     .btn-del { 
-        background: transparent; border: 1px solid #444; color: #666; 
-        width: 25px; height: 25px; display: flex; align-items: center; justify-content: center;
+        background: rgba(0,0,0,0.3); border: 1px solid #444; color: #888; 
+        width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
         cursor: pointer; transition: 0.2s; border-radius: 4px;
     }
-    .btn-del:hover { border-color: red; color: red; }
+    .btn-del:hover { border-color: #ff3333; color: #ff3333; background: rgba(255, 51, 51, 0.1); }
 
+    /* --- LISTS --- */
     .data-list {
-        margin-top: 20px; max-height: 200px; overflow-y: auto;
+        margin-top: 20px; max-height: 250px; overflow-y: auto;
         border-top: 1px dashed #333; padding-top: 10px;
+        padding-right: 5px; /* space for scrollbar */
     }
     .list-item {
       display: flex; justify-content: space-between; align-items: center;
-      background: rgba(255,255,255,0.03); padding: 8px; border-radius: 4px;
-      margin-bottom: 6px; border: 1px solid transparent; font-size: 11px;
+      background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px;
+      margin-bottom: 8px; border-left: 2px solid transparent; font-size: 12px;
+      transition: 0.2s;
     }
-    .list-item:hover { border-color: #444; }
-    .item-info b { color: #fff; display: block; margin-bottom: 2px; }
+    .list-item:hover { background: rgba(255,255,255,0.06); border-left-color: var(--accent); }
+    .item-info b { color: #fff; display: block; margin-bottom: 3px; font-weight: 600; }
     .item-sub { color: #888; font-size: 10px; }
 
+    /* --- LOGIN SCREEN --- */
     #loginOverlay {
       position: fixed; inset: 0; background: #000; z-index: 9999;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background-image: radial-gradient(circle at 50% 50%, #111 0%, #000 80%);
     }
-    .login-box { width: 300px; text-align: center; }
-    .glitch-text { animation: glitch 2s infinite; color: var(--accent); font-family: var(--font-tech); font-size: 24px; margin-bottom: 20px; }
+    .login-box { width: 320px; text-align: center; padding: 40px; border: 1px solid #333; border-radius: 20px; background: rgba(20,20,20,0.9); }
+    .glitch-text { 
+        animation: glitch 3s infinite; color: var(--accent); 
+        font-family: var(--font-tech); font-size: 24px; margin-bottom: 30px; 
+        font-weight: 700; letter-spacing: 4px;
+    }
+    @keyframes glitch {
+        0% { opacity: 1; transform: skew(0deg); }
+        20% { opacity: 0.8; transform: skew(-2deg); }
+        21% { opacity: 1; transform: skew(2deg); }
+        100% { opacity: 1; transform: skew(0deg); }
+    }
     
-    #mainUI { display: none; }
+    #mainUI { display: none; opacity: 0; transition: opacity 1s ease; }
   </style>
 </head>
 <body>
 
- <div id="loginOverlay">
+<div id="loginOverlay">
   <div class="login-box">
       <div class="glitch-text">SECURE ACCESS</div>
-      <input type="email" id="adminEmail" placeholder="EMAIL" style="margin-bottom: 10px;">
-      <input type="password" id="adminPass" placeholder="PASSWORD">
+      <input type="email" id="adminEmail" placeholder="ACCESS ID (EMAIL)" style="margin-bottom: 10px;">
+      <input type="password" id="adminPass" placeholder="PASSPHRASE">
       <button class="action-btn" onclick="sysLogin()">AUTHENTICATE</button>
-      <p id="loginError" style="color: #ff004c; font-size: 11px; margin-top: 15px; opacity: 0;">Access Denied</p>
+      <p id="loginError" style="color: #ff004c; font-size: 11px; margin-top: 15px; opacity: 0; transition: 0.3s;">Access Denied</p>
   </div>
 </div>
 
 <div id="mainUI">
-  <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
-      <h1>AIREX <span style="color:#fff; opacity:0.3;">//</span> ADMIN</h1>
+  <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto 30px auto; padding: 0 10px;">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <h1 style="margin: 0; font-size: 24px; text-align: left;">AIREX <span style="color:#555;">//</span> ADMIN</h1>
+      </div>
       <div style="display: flex; gap: 10px;">
-          <button class="action-btn" onclick="sysLogout()" style="width: auto; padding: 8px 20px; margin:0; background: #555; font-size: 10px;">ВЫЙТИ</button>
           <a href="index.html" target="_blank" style="text-decoration: none;">
-            <button class="action-btn" style="width: auto; padding: 8px 20px; margin:0; background: #333; font-size: 10px;">
+            <button class="action-btn" style="width: auto; padding: 10px 25px; margin:0; background: #222; font-size: 10px; border: 1px solid #444;">
                 ОТКРЫТЬ САЙТ <i class="fas fa-external-link-alt" style="margin-left:5px;"></i>
             </button>
           </a>
+          <button class="action-btn" onclick="sysLogout()" style="width: auto; padding: 10px 25px; margin:0; background: #b00; font-size: 10px;">ВЫЙТИ</button>
       </div>
   </div>
 
@@ -148,6 +192,7 @@
                     <option value="ВАЖНО">ВАЖНО</option>
                     <option value="ТУРНИР">ТУРНИР</option>
                     <option value="СОСТАВ">СОСТАВ</option>
+                    <option value="ОБНОВЛЕНИЕ">ОБНОВЛЕНИЕ</option>
                 </select>
             </div>
         </div>
@@ -159,7 +204,7 @@
         <div class="panel-header">
             <h2><i class="fas fa-clock panel-icon"></i> ТАЙМЕР МАТЧА (MSK)</h2>
         </div>
-        <div id="currentMatchInfo" style="font-size: 11px; color: #00ff88; margin-bottom: 10px; border: 1px solid #333; padding: 5px;">Нет данных</div>
+        <div id="currentMatchInfo" style="font-size: 11px; color: #00ff88; margin-bottom: 10px; border: 1px solid #333; padding: 8px; border-radius: 4px; text-align: center; background: rgba(0,255,136,0.05);">Нет данных</div>
         <label>Имя соперника</label>
         <input type="text" id="tmEnemy" placeholder="Например: Saints">
         <label>Дата и время (Вводите по МСК)</label>
@@ -170,35 +215,37 @@
     <div class="panel full-width">
         <div class="panel-header">
             <h2><i class="fas fa-users panel-icon"></i> УПРАВЛЕНИЕ СОСТАВОМ</h2>
-            <select id="rosterType" onchange="loadRoster()" style="width: 180px; margin:0;">
+            <select id="rosterType" onchange="loadRoster()" style="width: 200px; margin:0; border-color: var(--accent);">
                 <option value="roster_main">Основа (Main)</option>
                 <option value="roster_reserve">Резерв (Reserve)</option>
             </select>
         </div>
-        <div style="display: grid; grid-template-columns: 1.2fr 2fr; gap: 20px;">
-            <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px;">
-                <h3 style="font-size: 12px; color: var(--accent);">ДАННЫЕ ИГРОКА</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+            <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 12px; border: 1px dashed #333;">
+                <h3 style="font-size: 12px; color: var(--accent); margin-bottom: 15px;">ДОБАВИТЬ ИГРОКА</h3>
                 <div class="row-inputs">
                     <div><label>Никнейм</label><input type="text" id="pNick" placeholder="Nick"></div>
                     <div><label>Роль</label><input type="text" id="pRole" placeholder="Sniper"></div>
                 </div>
                 <label>Фото (URL)</label>
-                <input type="text" id="pImg" placeholder="https://...">
-                <label>Цитата</label>
-                <input type="text" id="pQuote" placeholder="Текст на лицевой стороне">
+                <input type="text" id="pImg" placeholder="https://imgur.com/...">
+                <label>Цитата (На карточке)</label>
+                <input type="text" id="pQuote" placeholder="Текст цитаты...">
                 <div class="row-inputs">
                     <div><label>K/D</label><input type="text" id="pKd" placeholder="1.50"></div>
                     <div><label>Ранг</label><input type="text" id="pRank" placeholder="Legend"></div>
                 </div>
-                <h3 style="font-size: 12px; color: var(--accent); margin-top:20px;">ТЕХ. ДАННЫЕ</h3>
-                <label>Устройство</label><input type="text" id="pDevice" placeholder="iPad Pro">
-                <label>Настройки</label><input type="text" id="pSettings" placeholder="Sens: 1.20">
-                <label>Оружие</label><input type="text" id="pWeapon" placeholder="M4 / AKR">
+                <h3 style="font-size: 12px; color: var(--accent); margin-top:20px; margin-bottom: 15px;">ДЕВАЙС</h3>
+                <label>Устройство</label><input type="text" id="pDevice" placeholder="iPad Pro 2024">
+                <div class="row-inputs">
+                    <div><label>Сенса</label><input type="text" id="pSettings" placeholder="1.20"></div>
+                    <div><label>Оружие</label><input type="text" id="pWeapon" placeholder="M4 / AKR"></div>
+                </div>
                 <button class="action-btn" onclick="addPlayer()">СОХРАНИТЬ В БАЗУ</button>
             </div>
-            <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px;">
-                 <h3 style="font-size: 12px; color: #888; margin-bottom: 15px;">СПИСОК ИГРОКОВ</h3>
-                 <div id="rosterList" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
+            <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px;">
+                 <h3 style="font-size: 12px; color: #888; margin-bottom: 15px;">АКТИВНЫЙ СПИСОК</h3>
+                 <div id="rosterList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px;"></div>
             </div>
         </div>
     </div>
@@ -219,37 +266,37 @@
             <h2><i class="fas fa-play-circle panel-icon"></i> МЕДИА</h2>
         </div>
         <label>YouTube Video ID</label>
-        <div style="display: flex; gap: 5px;">
-            <input type="text" id="vidId" placeholder="ID видео">
-            <button class="action-btn" style="width: auto; margin-top:0;" onclick="updateVideo()">OK</button>
+        <div style="display: flex; gap: 5px; align-items: flex-end;">
+            <input type="text" id="vidId" placeholder="ID видео (после v=)">
+            <button class="action-btn" style="width: auto; margin:0; padding: 12px;" onclick="updateVideo()">OK</button>
         </div>
-        <label style="margin-top:20px;">Добавить в Галерею</label>
+        <label style="margin-top:25px; border-top: 1px solid #333; padding-top: 15px;">Добавить в Галерею</label>
         <input type="text" id="galUrl" placeholder="URL картинки">
-        <input type="text" id="galCap" placeholder="Подпись" style="margin-top: 5px;">
+        <input type="text" id="galCap" placeholder="Подпись (необязательно)" style="margin-top: 5px;">
         <button class="action-btn" onclick="addGallery()">ДОБАВИТЬ ФОТО</button>
         <div class="data-list" id="galleryList"></div>
     </div>
 
-        <div class="panel full-width" style="border-color: var(--accent);">
+    <div class="panel full-width" style="border: 1px solid var(--accent-dim);">
         <div class="panel-header">
-            <h2><i class="fas fa-crosshairs panel-icon"></i> УПРАВЛЕНИЕ ПРАКАМИ</h2>
+            <h2><i class="fas fa-crosshairs panel-icon"></i> УПРАВЛЕНИЕ ПРАКАМИ (SCRIMS)</h2>
         </div>
         
-        <div style="display: grid; grid-template-columns: 1fr 1.5fr 1.5fr; gap: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
             <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px;">
                 <h3 style="font-size: 12px; color: var(--accent);">СОЗДАТЬ СЛОТ</h3>
-                <label>Дата и время</label>
+                <label>Дата и время игры</label>
                 <input type="datetime-local" id="pracDateInput">
                 <button class="action-btn" onclick="createPracSlot()">ОТКРЫТЬ НАБОР</button>
             </div>
 
             <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px;">
-                 <h3 style="font-size: 12px; color: #00ffa3;">СВОБОДНО</h3>
+                 <h3 style="font-size: 12px; color: #00ffa3;">СВОБОДНЫЕ СЛОТЫ</h3>
                  <div id="pracFreeList" style="display: grid; gap: 8px;"></div>
             </div>
 
             <div style="background: rgba(255, 0, 76, 0.05); padding: 15px; border-radius: 12px; border: 1px solid var(--accent-dim);">
-                 <h3 style="font-size: 12px; color: #ff4d4d;">ЗАБРОНИРОВАНО</h3>
+                 <h3 style="font-size: 12px; color: #ff4d4d;">ЗАБРОНИРОВАНО (ВСЕ ДАННЫЕ)</h3>
                  <div id="pracBookedList" style="display: grid; gap: 8px;"></div>
             </div>
         </div>
@@ -262,7 +309,7 @@
         </div>
         <div class="row-inputs">
             <div><label>Соперник</label><input type="text" id="hEnemy" placeholder="Team Name"></div>
-            <div><label>Турнир</label><input type="text" id="hTour" placeholder="Major"></div>
+            <div><label>Турнир</label><input type="text" id="hTour" placeholder="Major / Праки"></div>
         </div>
         <div class="row-inputs">
             <div><label>Наш счет</label><input type="number" id="hOur"></div>
@@ -287,6 +334,7 @@
     import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
+    // КОНФИГУРАЦИЯ FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
       authDomain: "airexsite.firebaseapp.com",
@@ -305,11 +353,15 @@
         const email = document.getElementById('adminEmail').value;
         const pass = document.getElementById('adminPass').value;
         const err = document.getElementById('loginError');
+        
+        if(!email || !pass) { err.style.opacity = 1; err.innerText = "Введите данные"; return; }
+
         try {
             await signInWithEmailAndPassword(auth, email, pass);
         } catch (e) {
             err.style.opacity = 1;
-            err.innerText = "ОШИБКА ДОСТУПА";
+            err.innerText = "Неверный логин или пароль";
+            console.error(e);
         }
     };
 
@@ -319,14 +371,17 @@
         if (user) {
             document.getElementById('loginOverlay').style.display = 'none';
             document.getElementById('mainUI').style.display = 'block';
+            setTimeout(() => { document.getElementById('mainUI').style.opacity = 1; }, 100);
             initAdminListeners();
         } else {
             document.getElementById('loginOverlay').style.display = 'flex';
-            document.getElementById('mainUI').style.display = 'none';
+            document.getElementById('mainUI').style.opacity = 0;
+            setTimeout(() => { document.getElementById('mainUI').style.display = 'none'; }, 500);
         }
     });
 
-    // --- СЛУШАТЕЛИ ---
+    // --- СЛУШАТЕЛИ (REAL-TIME UPDATES) ---
+    
     function listenToDoc(collection, docName, callback) {
         onSnapshot(doc(db, collection, docName), (snap) => {
             if(snap.exists()) callback(snap.data());
@@ -336,192 +391,251 @@
 
     function initAdminListeners() {
 
-        // Слушатель праков (улучшенный)
+        // 1. Новости
+        listenToDoc("siteData", "news", (data) => {
+            const list = data.list || [];
+            // Сортировка: новые сверху (по id, т.к. id это timestamp)
+            list.sort((a,b) => b.id - a.id);
+            document.getElementById('newsList').innerHTML = list.map(n => `
+                <div class="list-item">
+                    <div class="item-info"><b>${n.title}</b><span class="item-sub">${n.date} [${n.tag}]</span></div>
+                    <button class="btn-del" onclick="window.deleteItem('news', ${n.id})"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        });
+
+        // 2. Матч
+        listenToDoc("siteData", "match", (data) => {
+            const info = document.getElementById('currentMatchInfo');
+            if(data.enemy) {
+                const dateObj = new Date(data.date);
+                const readableDate = dateObj.toLocaleString('ru-RU', { month: 'short', day: 'numeric', hour:'2-digit', minute:'2-digit'});
+                info.innerText = `МАТЧ: VS ${data.enemy} | ${readableDate}`;
+                info.style.color = '#00ff88';
+            } else {
+                info.innerText = "Матч не установлен";
+                info.style.color = '#666';
+            }
+        });
+
+        // 3. Состав (Инициализация)
+        setupRosterListener();
+
+        // 4. Roadmap
+        listenToDoc("siteData", "about", (data) => {
+            const list = data.roadmap || [];
+            document.getElementById('roadmapList').innerHTML = list.map(r => `
+                <div class="list-item">
+                    <div class="item-info"><b>${r.date}</b><span class="item-sub">${r.title}</span></div>
+                    <button class="btn-del" onclick="window.deleteItem('about', ${r.id}, 'roadmap')"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        });
+
+        // 5. Медиа
+        listenToDoc("siteData", "media", (data) => {
+            if(data.videoId) document.getElementById('vidId').value = data.videoId;
+            const gallery = data.gallery || [];
+            document.getElementById('galleryList').innerHTML = gallery.map(g => `
+                <div class="list-item">
+                    <div style="display:flex; align-items:center;">
+                        <img src="${g.src}" style="width:30px; height:30px; object-fit:cover; margin-right:10px; border-radius:4px;">
+                        <span class="item-sub" style="max-width:150px; overflow:hidden; text-overflow:ellipsis;">${g.cap || 'Без подписи'}</span>
+                    </div>
+                    <button class="btn-del" onclick="window.deleteItem('media', ${g.id}, 'gallery')"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        });
+
+        // 6. Праки
         listenToDoc("siteData", "practices", (data) => {
             const list = data.list || [];
-            list.sort((a, b) => new Date(a.isoDate) - new Date(b.isoDate));
+            list.sort((a, b) => new Date(a.isoDate) - new Date(b.isoDate)); // Сортировка по времени
 
             const freeCont = document.getElementById('pracFreeList');
             const bookedCont = document.getElementById('pracBookedList');
 
-            // Очищаем списки
             freeCont.innerHTML = "";
             bookedCont.innerHTML = "";
+
+            if(list.length === 0) freeCont.innerHTML = "<span class='item-sub'>Нет активных слотов</span>";
 
             list.forEach(p => {
                 if (p.status === 'open') {
                     freeCont.innerHTML += `
                         <div class="list-item">
-                            <span>${p.displayTime}</span>
+                            <span><i class="far fa-calendar-alt"></i> ${p.displayTime}</span>
                             <button class="btn-del" onclick="window.deletePracSlot(${p.id})"><i class="fas fa-trash"></i></button>
                         </div>`;
                 } else {
                     bookedCont.innerHTML += `
-                        <div class="list-item" style="background: rgba(255,0,76,0.1);">
-                            <div class="item-info">
+                        <div class="list-item" style="background: rgba(255,0,76,0.1); border: 1px solid var(--accent-dim); flex-direction:column; align-items: flex-start; gap:5px;">
+                            <div style="display:flex; justify-content:space-between; width:100%;">
                                 <b>${p.team.clanName}</b>
                                 <span class="item-sub">${p.displayTime}</span>
                             </div>
-                            <div style="display:flex; gap:5px;">
-                                <button class="btn-del" style="color:#fff; border-color:#fff;" onclick="alert('Капитан: ${p.team.captain}\\nСвязь: ${p.team.contact}\\nКарты: ${p.team.maps.join(', ')}')"><i class="fas fa-info"></i></button>
-                                <button class="btn-del" onclick="window.deletePracSlot(${p.id})"><i class="fas fa-times"></i></button>
+                            <div class="item-sub" style="color:#ccc;">Cap: ${p.team.captain} | TG: ${p.team.contact}</div>
+                            <div style="display:flex; gap:10px; width:100%; margin-top:5px;">
+                                <button class="action-btn" style="padding:5px; margin:0; font-size:10px; background:#444;" onclick="alert('Карты: ${p.team.maps.join(', ')}')">MAPS</button>
+                                <button class="btn-del" style="width:100%;" onclick="window.deletePracSlot(${p.id})">ОТМЕНИТЬ МАТЧ</button>
                             </div>
                         </div>`;
                 }
             });
         });
 
-
-        listenToDoc("siteData", "news", (data) => {
-            const list = data.list || [];
-            document.getElementById('newsList').innerHTML = list.map(n => `
-                <div class="list-item">
-                    <div class="item-info"><b>${n.title}</b><span class="item-sub">${n.date}</span></div>
-                    <button class="btn-del" onclick="window.deleteItem('news', ${n.id})"><i class="fas fa-trash"></i></button>
-                </div>
-            `).join('');
-        });
-
-        listenToDoc("siteData", "match", (data) => {
-            const info = document.getElementById('currentMatchInfo');
-            info.innerText = data.enemy ? `LIVE: VS ${data.enemy} (${data.date})` : "Матч не установлен";
-        });
-
-        setupRosterListener();
-
-        listenToDoc("siteData", "about", (data) => {
-            const list = data.roadmap || [];
-            document.getElementById('roadmapList').innerHTML = list.map(r => `
-                <div class="list-item">
-                    <div class="item-info"><b>${r.date} - ${r.title}</b></div>
-                    <button class="btn-del" onclick="window.deleteItem('about', ${r.id}, 'roadmap')"><i class="fas fa-trash"></i></button>
-                </div>
-            `).join('');
-        });
-
-        listenToDoc("siteData", "media", (data) => {
-            if(data.videoId) document.getElementById('vidId').value = data.videoId;
-            const gallery = data.gallery || [];
-            document.getElementById('galleryList').innerHTML = gallery.map(g => `
-                <div class="list-item">
-                    <img src="${g.src}" style="width:30px; height:30px; object-fit:cover; margin-right:10px;">
-                    <span style="font-size:9px;">${g.cap || 'IMG'}</span>
-                    <button class="btn-del" onclick="window.deleteItem('media', ${g.id}, 'gallery')"><i class="fas fa-trash"></i></button>
-                </div>
-            `).join('');
-        });
-
+        // 7. История
         listenToDoc("siteData", "history", (data) => {
             const list = data.list || [];
+            list.sort((a,b) => b.id - a.id);
             document.getElementById('historyList').innerHTML = list.map(h => `
                 <div class="list-item">
-                    <div class="item-info"><b>VS ${h.enemy} (${h.our}:${h.their})</b></div>
+                    <div class="item-info">
+                        <b style="color: ${parseInt(h.our) > parseInt(h.their) ? '#00ff88' : '#ff3333'}">
+                            VS ${h.enemy} (${h.our}:${h.their})
+                        </b>
+                        <span class="item-sub">${h.tour}</span>
+                    </div>
                     <button class="btn-del" onclick="window.deleteItem('history', ${h.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         });
 
+        // 8. Отзывы
         listenToDoc("siteData", "reviews", (data) => {
             const list = data.list || [];
             document.getElementById('reviewsList').innerHTML = list.map(r => `
-                <div class="list-item">
-                    <div class="item-info"><b>${r.nick} (To: ${r.target})</b><div class="item-sub">${r.text}</div></div>
+                <div class="list-item" style="align-items: flex-start;">
+                    <div class="item-info">
+                        <b>${r.nick} <span style="color:#666;">для ${r.target}</span></b>
+                        <div class="item-sub" style="font-size:11px; margin-top:3px;">${r.text}</div>
+                    </div>
                     <button class="btn-del" onclick="window.deleteItem('reviews', ${r.id})"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         });
     }
 
-    // --- ФУНКЦИИ ---
-    window.addNews = async () => {
-        const title = document.getElementById('newsTitle').value;
-        if(!title) return alert("Введите заголовок!");
-        const item = { id: Date.now(), title, text: document.getElementById('newsText').value, date: document.getElementById('newsDate').value || new Date().toLocaleDateString(), tag: document.getElementById('newsTag').value };
-        await updateArray("news", "list", item);
-        alert("Новость добавлена!");
-        document.getElementById('newsTitle').value = ''; document.getElementById('newsText').value = '';
-    };
-
-    window.addRoadmap = async () => {
-        const item = { id: Date.now(), date: document.getElementById('rmDate').value, title: document.getElementById('rmTitle').value, desc: document.getElementById('rmDesc').value };
-        if(!item.title) return alert("Заголовок!");
-        await updateArray("about", "roadmap", item);
-        alert("Точка добавлена!");
-    };
-
-    window.addGallery = async () => {
-        const src = document.getElementById('galUrl').value;
-        if(!src) return alert("URL картинки!");
-        await updateArray("media", "gallery", { id: Date.now(), src, cap: document.getElementById('galCap').value });
-        alert("Фото добавлено!");
-        document.getElementById('galUrl').value = '';
-    };
-
-    window.updateVideo = async () => {
-        await setDoc(doc(db, "siteData", "media"), { videoId: document.getElementById('vidId').value }, { merge: true });
-        alert("Видео обновлено!");
-    };
-
-    window.addHistory = async () => {
-        const enemy = document.getElementById('hEnemy').value;
-        if(!enemy) return alert("Соперник?");
-        const our = document.getElementById('hOur').value || 0;
-        const their = document.getElementById('hTheir').value || 0;
-        const item = { id: Date.now(), enemy, tour: document.getElementById('hTour').value, our, their, win: parseInt(our) > parseInt(their) };
-        await updateArray("history", "list", item);
-        alert("Результат сохранен!");
-    };
-
+    // --- УНИВЕРСАЛЬНЫЕ ФУНКЦИИ ---
+    
     async function updateArray(docName, arrayField, item) {
-        const ref = doc(db, "siteData", docName);
-        const snap = await getDoc(ref);
-        if (!snap.exists()) await setDoc(ref, { [arrayField]: [item] });
-        else await updateDoc(ref, { [arrayField]: arrayUnion(item) });
+        try {
+            const ref = doc(db, "siteData", docName);
+            const snap = await getDoc(ref);
+            if (!snap.exists()) await setDoc(ref, { [arrayField]: [item] });
+            else await updateDoc(ref, { [arrayField]: arrayUnion(item) });
+            return true;
+        } catch(e) {
+            console.error(e);
+            alert("Ошибка записи! Проверь консоль.");
+            return false;
+        }
     }
 
     window.deleteItem = async (docName, id, arrayField = "list") => {
-        if(!confirm("Удалить запись?")) return;
-        const ref = doc(db, "siteData", docName);
-        const snap = await getDoc(ref);
-        if(snap.exists()) {
-            const currentList = snap.data()[arrayField] || [];
-            const data = currentList.filter(i => i.id !== id);
-            await setDoc(ref, { [arrayField]: data }, { merge: true });
+        if(!confirm("Удалить эту запись?")) return;
+        try {
+            const ref = doc(db, "siteData", docName);
+            const snap = await getDoc(ref);
+            if(snap.exists()) {
+                const currentList = snap.data()[arrayField] || [];
+                const data = currentList.filter(i => i.id !== id);
+                await setDoc(ref, { [arrayField]: data }, { merge: true });
+            }
+        } catch(e) { alert("Ошибка удаления"); }
+    };
+
+    // --- ФУНКЦИИ КНОПОК ---
+
+    window.addNews = async () => {
+        const title = document.getElementById('newsTitle').value;
+        if(!title) return alert("Введите заголовок!");
+        
+        const item = { 
+            id: Date.now(), 
+            title, 
+            text: document.getElementById('newsText').value, 
+            date: document.getElementById('newsDate').value || new Date().toLocaleDateString(), 
+            tag: document.getElementById('newsTag').value 
+        };
+        
+        if(await updateArray("news", "list", item)) {
+            alert("Новость опубликована");
+            document.getElementById('newsTitle').value = '';
+            document.getElementById('newsText').value = '';
         }
     };
 
     window.updateMatch = async () => {
-        await setDoc(doc(db, "siteData", "match"), { enemy: document.getElementById('tmEnemy').value, date: document.getElementById('tmDate').value });
+        const enemy = document.getElementById('tmEnemy').value;
+        const date = document.getElementById('tmDate').value;
+        await setDoc(doc(db, "siteData", "match"), { enemy, date });
         alert("Таймер обновлен!");
     };
 
+    // ROSTER LOGIC
     let currentRosterType = "roster_main";
-    window.loadRoster = () => { currentRosterType = document.getElementById('rosterType').value; setupRosterListener(); };
+    let rosterUnsub = null;
+
+    window.loadRoster = () => { 
+        currentRosterType = document.getElementById('rosterType').value; 
+        setupRosterListener(); 
+    };
 
     function setupRosterListener() {
-        onSnapshot(doc(db, "siteData", currentRosterType), (snap) => {
+        if(rosterUnsub) rosterUnsub(); // Отключаем старый слушатель
+        document.getElementById('rosterList').innerHTML = '<span class="item-sub">Загрузка...</span>';
+        
+        rosterUnsub = onSnapshot(doc(db, "siteData", currentRosterType), (snap) => {
             const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
-            document.getElementById('rosterList').innerHTML = list.map(p => `
-                <div class="list-item"><b>${p.nick}</b><button class="btn-del" onclick="window.deletePlayer('${p.nick}')">X</button></div>
-            `).join('');
+            const container = document.getElementById('rosterList');
+            container.innerHTML = '';
+            
+            if(list.length === 0) container.innerHTML = '<span class="item-sub">Список пуст</span>';
+            
+            list.forEach(p => {
+                container.innerHTML += `
+                <div class="list-item" style="background: rgba(0,0,0,0.5); border: 1px solid #333;">
+                    <div class="item-info"><b>${p.nick}</b><span class="item-sub">${p.role}</span></div>
+                    <button class="btn-del" onclick="window.deletePlayer('${p.nick}')">X</button>
+                </div>`;
+            });
         });
     }
 
     window.addPlayer = async () => {
         const nick = document.getElementById('pNick').value;
-        if(!nick) return alert("Ник?");
-        const p = { nick, role: document.getElementById('pRole').value, img: document.getElementById('pImg').value, quote: document.getElementById('pQuote').value, device: document.getElementById('pDevice').value, settings: document.getElementById('pSettings').value, weapon: document.getElementById('pWeapon').value, stats: { kd: document.getElementById('pKd').value, rank: document.getElementById('pRank').value } };
+        if(!nick) return alert("Введите ник!");
+        
+        const p = { 
+            nick, 
+            role: document.getElementById('pRole').value, 
+            img: document.getElementById('pImg').value || "https://placehold.co/400x600/000/FFF?text=NO+IMAGE", 
+            quote: document.getElementById('pQuote').value, 
+            device: document.getElementById('pDevice').value, 
+            settings: document.getElementById('pSettings').value, 
+            weapon: document.getElementById('pWeapon').value, 
+            stats: { 
+                kd: document.getElementById('pKd').value, 
+                rank: document.getElementById('pRank').value 
+            } 
+        };
+        
         const ref = doc(db, "siteData", currentRosterType);
         const snap = await getDoc(ref);
         let list = snap.exists() ? (snap.data().list || []) : [];
         list.push(p);
         await setDoc(ref, { list });
-        alert("Игрок добавлен!");
+        alert(`Игрок ${nick} добавлен в ${currentRosterType === 'roster_main' ? 'Основу' : 'Резерв'}!`);
+        
+        // Очистка полей
         document.getElementById('pNick').value = '';
+        document.getElementById('pRole').value = '';
+        document.getElementById('pImg').value = '';
     };
 
     window.deletePlayer = async (nick) => {
-        if(!confirm("Удалить игрока?")) return;
+        if(!confirm(`Удалить игрока ${nick}?`)) return;
         const ref = doc(db, "siteData", currentRosterType);
         const snap = await getDoc(ref);
         if(snap.exists()){
@@ -529,41 +643,68 @@
             await setDoc(ref, { list });
         }
     };
-      // --- ФУНКЦИИ ДЛЯ ПРАКОВ (КОТОРЫХ НЕ БЫЛО) ---
 
+    // OTHER
+    window.addRoadmap = async () => {
+        const item = { id: Date.now(), date: document.getElementById('rmDate').value, title: document.getElementById('rmTitle').value, desc: document.getElementById('rmDesc').value };
+        if(item.title && await updateArray("about", "roadmap", item)) alert("Событие добавлено");
+    };
+
+    window.updateVideo = async () => {
+        await setDoc(doc(db, "siteData", "media"), { videoId: document.getElementById('vidId').value }, { merge: true });
+        alert("Видео обновлено");
+    };
+
+    window.addGallery = async () => {
+        const src = document.getElementById('galUrl').value;
+        if(!src) return alert("Нужна ссылка!");
+        if(await updateArray("media", "gallery", { id: Date.now(), src, cap: document.getElementById('galCap').value })) {
+            alert("Фото добавлено");
+            document.getElementById('galUrl').value = '';
+        }
+    };
+
+    // PRACS LOGIC
     window.createPracSlot = async () => {
         const dateInput = document.getElementById('pracDateInput').value;
-        
-        if (!dateInput) {
-            alert("Сначала выберите дату и время!");
-            return;
-        }
+        if (!dateInput) return alert("Выберите дату и время!");
 
         const dateObj = new Date(dateInput);
-        
-        // Форматируем красивую дату (например: "24 Января, 20:00")
         const options = { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
         const displayTime = dateObj.toLocaleDateString('ru-RU', options);
 
         const newSlot = {
-            id: Date.now(), // Уникальный ID
-            isoDate: dateInput, // Для сортировки
-            displayTime: displayTime, // Для отображения
-            status: 'open', // Статус: открыто
-            team: null // Данные соперника пока пусты
+            id: Date.now(),
+            isoDate: dateInput,
+            displayTime: displayTime,
+            status: 'open',
+            team: null
         };
 
-        // Используем твою универсальную функцию updateArray
-        await updateArray("practices", "list", newSlot);
-        
-        alert(`Слот на ${displayTime} создан!`);
-        document.getElementById('pracDateInput').value = ''; // Очистить поле
+        if(await updateArray("practices", "list", newSlot)) {
+            alert(`Слот на ${displayTime} создан!`);
+            document.getElementById('pracDateInput').value = ''; 
+        }
     };
 
     window.deletePracSlot = async (id) => {
-        // Используем твою универсальную функцию deleteItem
-        // docName='practices', id=id, arrayField='list'
         await window.deleteItem("practices", id, "list");
+    };
+
+    window.addHistory = async () => {
+        const enemy = document.getElementById('hEnemy').value;
+        if(!enemy) return alert("Введите соперника");
+        const item = { 
+            id: Date.now(), 
+            enemy, 
+            tour: document.getElementById('hTour').value, 
+            our: document.getElementById('hOur').value || 0, 
+            their: document.getElementById('hTheir').value || 0 
+        };
+        if(await updateArray("history", "list", item)) {
+            alert("Результат сохранен");
+            document.getElementById('hEnemy').value = '';
+        }
     };
 
 </script>
