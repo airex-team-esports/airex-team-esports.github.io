@@ -520,6 +520,43 @@
             await setDoc(ref, { list });
         }
     };
+      // --- ФУНКЦИИ ДЛЯ ПРАКОВ (КОТОРЫХ НЕ БЫЛО) ---
+
+    window.createPracSlot = async () => {
+        const dateInput = document.getElementById('pracDateInput').value;
+        
+        if (!dateInput) {
+            alert("Сначала выберите дату и время!");
+            return;
+        }
+
+        const dateObj = new Date(dateInput);
+        
+        // Форматируем красивую дату (например: "24 Января, 20:00")
+        const options = { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        const displayTime = dateObj.toLocaleDateString('ru-RU', options);
+
+        const newSlot = {
+            id: Date.now(), // Уникальный ID
+            isoDate: dateInput, // Для сортировки
+            displayTime: displayTime, // Для отображения
+            status: 'open', // Статус: открыто
+            team: null // Данные соперника пока пусты
+        };
+
+        // Используем твою универсальную функцию updateArray
+        await updateArray("practices", "list", newSlot);
+        
+        alert(`Слот на ${displayTime} создан!`);
+        document.getElementById('pracDateInput').value = ''; // Очистить поле
+    };
+
+    window.deletePracSlot = async (id) => {
+        // Используем твою универсальную функцию deleteItem
+        // docName='practices', id=id, arrayField='list'
+        await window.deleteItem("practices", id, "list");
+    };
+
 </script>
 </body>
 </html>
