@@ -414,6 +414,29 @@
     import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
+  // --- ТЕЛЕГРАМ КОНФИГ ---
+const TG_CONFIG = {
+    token: "8350126335:AAEGBd3ASBvZVVG9qeFseWlpdlZpznTEe1s",
+    channelId: "-1003511221408"
+};
+
+// Функция отправки
+async function sendToBot(message) {
+    try {
+        await fetch(`https://api.telegram.org/bot${TG_CONFIG.token}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TG_CONFIG.channelId,
+                text: message,
+                parse_mode: 'Markdown'
+            })
+        });
+    } catch (e) {
+        console.error("Ошибка TG:", e);
+    }
+}
+
     // FIREBASE CONFIG
     const firebaseConfig = {
       apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
@@ -728,38 +751,41 @@
     const dateInput = document.getElementById('pracDateInput').value;
     if (!dateInput) return alert("Выберите дату и время!");
 
-    // Создаем объект даты из того, что ввели в поле
     const dateObj = new Date(dateInput);
 
-    // Форматируем время СТРОГО по МСК
+    // Форматируем время для сайта
     const displayTime = dateObj.toLocaleString('ru-RU', {
-        timeZone: 'Europe/Moscow', // Это заставит код считать время по Москве
+        timeZone: 'Europe/Moscow',
         month: 'long',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
     }) + " (МСК)";
 
-    // Формируем объект слота
     const newSlot = { 
         id: Date.now(), 
-        isoDate: dateObj.toISOString(), // Используем ISO формат для идеальной сортировки
+        isoDate: dateObj.toISOString(), 
         displayTime: displayTime, 
         status: 'open', 
         team: null 
     };
 
     if(await updateArray("practices", "list", newSlot)) {
-        alert(`Слот успешно создан на ${displayTime}`);
+        // --- УВЕДОМЛЕНИЕ В ТЕЛЕГРАМ ---
+        const tgMsg = `🚀 *AIREX TEAM ИЩЕТ ПРАК!*\n\n` +
+                      `📅 *Дата:* ${dateObj.toLocaleDateString('ru-RU')}\n` +
+                      `⏰ *Время:* ${dateObj.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'})} МСК\n\n` +
+                      `✅ Слот открыт и доступен для бронирования на сайте.\n` +
+                      `🔗 [Забронировать на сайте](https://airex-team-esports.github.io)`; // Замени ссылку на свой реальный домен
+
+        await sendToBot(tgMsg);
+        // ------------------------------
+
+        alert(`Слот успешно создан и уведомление отправлено в ТГ!`);
         document.getElementById('pracDateInput').value = ''; 
     }
 };
 
-window.deletePracSlot = async (id) => {
-    if(confirm("Удалить этот слот? Если он был забронирован, бронь исчезнет.")) {
-        return window.deleteItem("practices", id, "list");
-    }
-};
 
 
     window.addHistory = async () => {
