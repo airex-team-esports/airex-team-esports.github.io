@@ -529,71 +529,100 @@
     </section>
 
     <section id="practice">
-      <div class="card">
-        <h2 class="font-tech text-accent text-center" style="margin-bottom: 20px;">ЗАБИТЬ ПРАК (CW)</h2>
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title"><i class="fas fa-crosshairs" style="color:var(--accent)"></i> ЗАПИСЬ НА ПРАК (CW)</span>
+            <span style="font-size: 10px; background: rgba(255,0,76,0.2); padding: 4px 8px; border-radius: 4px; color: var(--accent); font-weight: 700;">BO1 ONLY</span>
+        </div>
+        
+        <p style="font-size: 11px; color: #666; margin-bottom: 20px;">Выберите удобное время из доступных слотов и заполните данные вашей команды.</p>
+
         <form id="prac-form" onsubmit="submitPrac(event)">
-            <div class="form-group" style="border: 1px dashed var(--accent); padding: 15px; border-radius: 8px; background: rgba(255,0,76,0.03);">
-                <label class="form-label">Доступные слоты</label>
+            <div class="form-group" style="background: rgba(255, 255, 255, 0.02); border: 1px solid #222; padding: 15px; border-radius: 8px;">
+                <label class="form-label" style="color: var(--accent);">1. ВЫБЕРИТЕ ВРЕМЯ (МСК)</label>
                 <select id="prac-slot-select" class="form-input" required>
                     <option value="" disabled selected>Загрузка расписания...</option>
                 </select>
             </div>
+
             <div class="form-group">
-                <label class="form-label">Ваш Клан</label>
-                <input type="text" id="pc-clan" class="form-input" placeholder="Team Name" required>
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <div class="form-group" style="flex:1;">
-                    <label class="form-label">Ник Капитана</label>
-                    <input type="text" id="pc-cap" class="form-input" required>
-                </div>
-                <div class="form-group" style="flex:1;">
-                    <label class="form-label">ID</label>
-                    <input type="number" id="pc-id" class="form-input" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Связь (TG/VK)</label>
-                <input type="text" id="pc-contact" class="form-input" placeholder="@username" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Формат</label>
-                <div style="display:flex; gap: 15px; margin-top: 5px; font-size: 13px;">
-                    <label><input type="radio" name="format" value="BO1" checked> BO1</label>
-                    <label><input type="radio" name="format" value="BO2"> BO2</label>
-                    <label><input type="radio" name="format" value="BO3"> BO3</label>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Карты</label>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; color: #ccc;">
-                   <label><input type="checkbox" class="map-check" value="Sandstone"> Sandstone</label>
-                   <label><input type="checkbox" class="map-check" value="Rust"> Rust</label>
-                   <label><input type="checkbox" class="map-check" value="Dune"> Dune</label>
-                   <label><input type="checkbox" class="map-check" value="Hanami"> Hanami</label>
-                   <label><input type="checkbox" class="map-check" value="Breeze"> Breeze</label>
-                   <label><input type="checkbox" class="map-check" value="Province"> Province</label>
-                   <label><input type="checkbox" class="map-check" value="Sakura"> Sakura</label>
-                   <label><input type="checkbox" class="map-check" value="Zone 9"> Zone 9</label>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Состав</label>
-                <textarea id="pc-lineup" class="form-input" rows="2" placeholder="Список игроков..."></textarea>
+                <label class="form-label">НАЗВАНИЕ ВАШЕГО КЛАНА</label>
+                <input type="text" id="pc-clan" class="form-input" placeholder="Напр: AIREX TEAM" required>
             </div>
 
-            <button type="submit" class="btn-glitch">РЕГИСТРАЦИЯ</button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label class="form-label">НИК КАПИТАНА</label>
+                    <input type="text" id="pc-cap" class="form-input" placeholder="Nick" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ID КАПИТАНА</label>
+                    <input type="number" id="pc-id" class="form-input" placeholder="12345678" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">КОНТАКТ ДЛЯ СВЯЗИ (TG)</label>
+                <input type="text" id="pc-contact" class="form-input" placeholder="@username" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">ЖЕЛАЕМЫЕ КАРТЫ (ВЫБЕРИТЕ МИНИМУМ ОДНУ)</label>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-top: 10px;">
+                   <label class="map-label"><input type="checkbox" class="map-check" value="Sandstone"> Sandstone</label>
+                   <label class="map-label"><input type="checkbox" class="map-check" value="Rust"> Rust</label>
+                   <label class="map-label"><input type="checkbox" class="map-check" value="Dune"> Dune</label>
+                   <label class="map-label"><input type="checkbox" class="map-check" value="Province"> Province</label>
+                   <label class="map-label"><input type="checkbox" class="map-check" value="Breeze"> Breeze</label>
+                   <label class="map-label"><input type="checkbox" class="map-check" value="Zone 9"> Zone 9</label>
+                  <label class="map-label"><input type="checkbox" class="map-check" value="Zone 9"> Hanami</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">СОСТАВ (5 ИГРОКОВ)</label>
+                <textarea id="pc-lineup" class="form-input" rows="2" placeholder="Nick1, Nick2, Nick3..."></textarea>
+            </div>
+
+            <input type="hidden" id="pc-format" value="BO1">
+
+            <button type="submit" class="btn-glitch" style="margin-top: 10px; width: 100%;">ЗАБРОНИРОВАТЬ МАТЧ</button>
         </form>
-      </div>
-      
-      <div class="card">
-          <h3 style="font-size:14px; color: #888; margin-top:0;">ПОДТВЕРЖДЕННЫЕ МАТЧИ</h3>
-          <div id="public-booked-list"></div>
-      </div>
-    </section>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title">ПОДТВЕРЖДЕННЫЕ МАТЧИ</span>
+        </div>
+        <div id="public-booked-list">
+            </div>
+    </div>
+</section>
+
+<style>
+/* Стили специально для карт в форме */
+.map-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: #888;
+    cursor: pointer;
+    background: rgba(255,255,255,0.02);
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #111;
+    transition: 0.3s;
+}
+.map-label:hover {
+    border-color: #333;
+    color: #fff;
+}
+.map-check:checked + label {
+    border-color: var(--accent);
+}
+</style>
+
 
     <section id="about">
        <div class="card">
@@ -1157,69 +1186,85 @@ window.sendToTelegram = async (e) => {
     }
 };
 
-// === B. ЗАБИТЬ ПРАК (CW) ===
+// === ПОДТВЕРЖДЕНИЕ ПРАКА (ЛОГИКА) ===
 window.submitPrac = async (e) => {
     e.preventDefault();
+    
     const slotSelect = document.getElementById('prac-slot-select');
     const slotId = parseInt(slotSelect.value);
-    
-    if(!slotId) return window.showNotify("Выберите время!", "error");
     const maps = Array.from(document.querySelectorAll('.map-check:checked')).map(cb => cb.value);
     
+    // Валидация
+    if (!slotId) return window.showNotify("Пожалуйста, выберите время!", "error");
+    if (maps.length === 0) return window.showNotify("Выберите хотя бы одну карту!", "error");
+
     const btn = e.target.querySelector('button');
-    const oldText = btn.innerText;
-    btn.innerText = "PROCESSING...";
+    const originalText = btn.innerText;
+    
+    btn.innerText = "РЕГИСТРАЦИЯ...";
     btn.disabled = true;
 
     try {
         const ref = doc(db, "siteData", "practices");
         const snap = await getDoc(ref);
-        if(!snap.exists()) throw new Error("DB Error");
+        if (!snap.exists()) throw new Error("Ошибка базы данных");
 
         let list = snap.data().list;
         const idx = list.findIndex(s => s.id === slotId);
 
-        if (idx === -1 || list[idx].status !== 'open') throw new Error("Слот уже занят!");
+        // Проверка на занятость в реальном времени
+        if (idx === -1 || list[idx].status !== 'open') {
+            throw new Error("Этот слот только что был занят другим кланом!");
+        }
 
         const clanName = document.getElementById('pc-clan').value;
         const captain = document.getElementById('pc-cap').value;
         const contact = document.getElementById('pc-contact').value;
-        const format = document.querySelector('input[name="format"]:checked').value;
-        const displayTime = list[idx].displayTime;
+        const lineup = document.getElementById('pc-lineup').value;
+        const capId = document.getElementById('pc-id').value;
 
+        // Обновляем статус слота локально
         list[idx].status = 'booked';
         list[idx].team = {
             clanName: escapeHTML(clanName),
             captain: escapeHTML(captain),
-            capId: escapeHTML(document.getElementById('pc-id').value),
+            capId: escapeHTML(capId),
             contact: escapeHTML(contact),
-            format: format,
+            format: "BO1", // Хардкод формата
             maps: maps,
-            lineup: escapeHTML(document.getElementById('pc-lineup').value)
+            lineup: escapeHTML(lineup)
         };
 
+        // Сохраняем в Firebase
         await updateDoc(ref, { list: list });
 
-        const tgMsg = `⚡️ <b>НОВЫЙ ПРАК (CW)!</b>\n\n` +
-                      `📅 <b>Время:</b> ${displayTime}\n` +
-                      `👥 <b>Клан:</b> ${escapeHTML(clanName)}\n` +
-                      `👤 <b>Капитан:</b> ${escapeHTML(captain)}\n` +
-                      `📞 <b>Связь:</b> ${escapeHTML(contact)}\n` +
-                      `🎮 <b>Формат:</b> ${format}\n` +
-                      `🗺 <b>Карты:</b> ${maps.length > 0 ? maps.join(', ') : 'Не выбраны'}`;
+        // Отправка уведомления в Telegram (красивое оформление)
+        const tgMsg = `⚔️ <b>НОВЫЙ ПРАК ЗАБРОНИРОВАН</b>\n` +
+                      `────────────────────\n` +
+                      `📅 <b>ВРЕМЯ:</b> <code>${list[idx].displayTime} (МСК)</code>\n` +
+                      `👥 <b>КЛАН:</b> <code>${escapeHTML(clanName)}</code>\n` +
+                      `👤 <b>КЭП:</b> ${escapeHTML(captain)} (ID: ${escapeHTML(capId)})\n` +
+                      `📞 <b>СВЯЗЬ:</b> ${escapeHTML(contact)}\n` +
+                      `🎮 <b>ФОРМАТ:</b> BO1\n` +
+                      `🗺 <b>КАРТЫ:</b> ${maps.join(', ')}\n` +
+                      `📝 <b>СОСТАВ:</b> ${escapeHTML(lineup || 'Не указан')}\n` +
+                      `────────────────────`;
 
         await sendToBot(TG_CONFIG.channelId, tgMsg);
 
-        window.showNotify("Слот забронирован! Инфо в TG.", "success");
+        window.showNotify("Слот успешно забронирован!", "success");
         e.target.reset();
+        
+        // Перезагрузка через 1.5 сек для обновления списка
         setTimeout(() => window.location.reload(), 1500);
 
     } catch (err) {
         window.showNotify(err.message, "error");
-        btn.innerText = oldText;
+        btn.innerText = originalText;
         btn.disabled = false;
     }
 };
+
 
 // === C. ОТЗЫВЫ (REVIEWS) ===
 window.submitReview = async (e) => {
