@@ -362,7 +362,17 @@
         <div class="panel-header">
             <h2><i class="fas fa-crosshairs panel-icon"></i> УПРАВЛЕНИЕ ПРАКАМИ (SCRIMS)</h2>
         </div>
-        
+        <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px;">
+    <h3 style="font-size: 12px; color: var(--accent);">СОЗДАТЬ СЛОТ</h3>
+    
+    <label>Дата и время игры</label>
+    <input type="datetime-local" id="pracDateInput">
+
+    <label>URL картинки для поста (необязательно)</label>
+    <input type="text" id="pracTgImg" placeholder="https://imgur.com/your-image.jpg">
+    <button class="action-btn" onclick="createPracSlot()">ОТКРЫТЬ НАБОР</button>
+        </div>
+
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
             <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px;">
                 <h3 style="font-size: 12px; color: var(--accent);">СОЗДАТЬ СЛОТ</h3>
@@ -419,18 +429,23 @@ const TG_CONFIG = {
     token: "8350126335:AAEGBd3ASBvZVVG9qeFseWlpdlZpznTEe1s",
     channelId: "-1003511221408"
 };
+// Универсальная функция: умеет слать и фото, и текст
+async function sendToBot(message, photoUrl = null) {
+    const method = photoUrl ? 'sendPhoto' : 'sendMessage';
+    const payload = photoUrl 
+        ? { chat_id: TG_CONFIG.channelId, photo: photoUrl, caption: message, parse_mode: 'Markdown' }
+        : { chat_id: TG_CONFIG.channelId, text: message, parse_mode: 'Markdown' };
 
-// Функция отправки
-async function sendToBot(message) {
     try {
-        await fetch(`https://api.telegram.org/bot${TG_CONFIG.token}/sendMessage`, {
+        await fetch(`https://api.telegram.org/bot${TG_CONFIG.token}/${method}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: TG_CONFIG.channelId,
-                text: message,
-                parse_mode: 'Markdown'
-            })
+            body: JSON.stringify(payload)
+        });
+    } catch (e) {
+        console.error("Ошибка TG:", e);
+    }
+}
         });
     } catch (e) {
         console.error("Ошибка TG:", e);
@@ -747,19 +762,17 @@ async function sendToBot(message) {
         }
     };
 
-    window.createPracSlot = async () => {
+// Обновленная функция создания слота
+window.createPracSlot = async () => {
     const dateInput = document.getElementById('pracDateInput').value;
+    const imgUrl = document.getElementById('pracTgImg').value; // Берем ссылку на картинку
+    
     if (!dateInput) return alert("Выберите дату и время!");
 
     const dateObj = new Date(dateInput);
-
-    // Форматируем время для сайта
     const displayTime = dateObj.toLocaleString('ru-RU', {
         timeZone: 'Europe/Moscow',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+        month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
     }) + " (МСК)";
 
     const newSlot = { 
@@ -771,15 +784,24 @@ async function sendToBot(message) {
     };
 
     if(await updateArray("practices", "list", newSlot)) {
-        // --- УВЕДОМЛЕНИЕ В ТЕЛЕГРАМ ---
+        
+        // Текст сообщения
         const tgMsg = `🚀 *AIREX TEAM ИЩЕТ ПРАК!*\n\n` +
                       `📅 *Дата:* ${dateObj.toLocaleDateString('ru-RU')}\n` +
                       `⏰ *Время:* ${dateObj.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'})} МСК\n\n` +
                       `✅ Слот открыт и доступен для бронирования на сайте.\n` +
-                      `🔗 [Забронировать на сайте](https://airex-team-esports.github.io)`; // Замени ссылку на свой реальный домен
+                      `🔗 [ЗАБРОНИРОВАТЬ СЛОТ](https://airex-team-esports.github.io)`;
 
-        await sendToBot(tgMsg);
-        // ------------------------------
+        // Отправляем (если imgUrl пустой, уйдет просто текст)
+        await sendToBot(tgMsg, imgUrl);
+
+        alert(`Слот создан! Сообщение ${imgUrl ? 'с фото' : ''} отправлено в ТГ.`);
+        
+        // Очистка полей
+        document.getElementById('pracDateInput').value = ''; 
+        document.getElementById('pracTgImg').value = ''; 
+    }
+};
 
         alert(`Слот успешно создан и уведомление отправлено в ТГ!`);
         document.getElementById('pracDateInput').value = ''; 
