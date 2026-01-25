@@ -679,9 +679,11 @@
             <select id="role" class="form-input">
                 <option>Rifler</option>
                 <option>Sniper</option>
-                <option>IGL (Captain)</option>
+                <option>Captain</option>
                 <option>Entry Fragger</option>
                 <option>Support</option>
+                <option>Open-Fragger</option>
+                <option>Lurker</option>
             </select>
           </div>
           <div class="form-group"><input type="text" id="best_rank" class="form-input" placeholder="Current Rank" required></div>
@@ -691,19 +693,37 @@
     </section>
 
     <footer style="text-align: center; color: #444; font-size: 9px; font-family: var(--font-tech); text-transform: uppercase; margin-top: 40px;">
-        <p>&copy; 2026 AIREX TEAM. SYSTEM V2.0</p>
+        <p>&copy; 2026 AIREX TEAM - Оффициальный сайт команды</p>
     </footer>
 
 </div>
 
 <div id="notify-container" style="position: fixed; top: 90px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none;"></div>
 <script type="module">
-    /* ================================================================
-       SYSTEM CORE V2.0 | DEVELOPED BY AI GENERATION
-       STATUS: OPTIMIZED
-       SECURITY LEVEL: HIGH
-       ================================================================
-    */
+    // --- ТЕЛЕГРАМ КОНФИГ (ЗАМЕНИ НА СВОИ ДАННЫЕ) ---
+const TG_CONFIG = {
+    token: "8350126335:AAEGBd3ASBvZVVG9qeFseWlpdlZpznTEe1s", // Токен от @BotFather
+    channelId: "-1003511221408", // ID канала для праков и отзывов
+    groupId: "-1003413398300"    // ID группы для заявок в клан
+};
+
+// Универсальная функция отправки
+async function sendToBot(chatId, message) {
+    try {
+        await fetch(`https://api.telegram.org/bot${TG_CONFIG.token}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: chatId,
+                text: message,
+                parse_mode: 'Markdown'
+            })
+        });
+    } catch (e) {
+        console.error("TG Send Error:", e);
+    }
+}
+
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getFirestore, doc, onSnapshot, getDoc, setDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
@@ -997,51 +1017,76 @@
         }
     });
 
-    window.submitPrac = async (e) => {
-        e.preventDefault();
-        const slotSelect = document.getElementById('prac-slot-select');
-        const slotId = parseInt(slotSelect.value);
-        if(!slotId) return window.showNotify("Выберите время!", "error");
+    // 3. ТВОЯ ОБНОВЛЕННАЯ ФУНКЦИЯ ПРАКОВ
+window.submitPrac = async (e) => {
+    e.preventDefault();
+    const slotSelect = document.getElementById('prac-slot-select');
+    const slotId = parseInt(slotSelect.value);
+    
+    if(!slotId) return window.showNotify("Выберите время!", "error");
 
-        const maps = Array.from(document.querySelectorAll('.map-check:checked')).map(cb => cb.value);
+    const maps = Array.from(document.querySelectorAll('.map-check:checked')).map(cb => cb.value);
+    
+    const btn = e.target.querySelector('button');
+    const oldText = btn.innerText;
+    btn.innerText = "PROCESSING...";
+    btn.disabled = true;
+
+    try {
+        const ref = doc(db, "siteData", "practices");
+        const snap = await getDoc(ref);
+        if(!snap.exists()) throw new Error("DB Error");
+
+        let list = snap.data().list;
+        const idx = list.findIndex(s => s.id === slotId);
+
+        if (idx === -1 || list[idx].status !== 'open') throw new Error("Слот уже занят!");
+
+        // Собираем данные формы
+        const clanName = document.getElementById('pc-clan').value;
+        const captain = document.getElementById('pc-cap').value;
+        const contact = document.getElementById('pc-contact').value;
+        const format = document.querySelector('input[name="format"]:checked').value;
+        const displayTime = list[idx].displayTime;
+
+        // Обновляем в Firebase
+        list[idx].status = 'booked';
+        list[idx].team = {
+            clanName: escapeHTML(clanName),
+            captain: escapeHTML(captain),
+            capId: escapeHTML(document.getElementById('pc-id').value),
+            contact: escapeHTML(contact),
+            format: format,
+            maps: maps,
+            lineup: escapeHTML(document.getElementById('pc-lineup').value)
+        };
+
+        await updateDoc(ref, { list: list });
+
+        // --- ОТПРАВКА В ТЕЛЕГРАМ ---
+        const tgMsg = `⚡️ *НОВЫЙ ПРАК (CW)!*\n\n` +
+                      `📅 *Время:* ${displayTime}\n` +
+                      `👥 *Клан:* ${clanName}\n` +
+                      `👤 *Капитан:* ${captain}\n` +
+                      `📞 *Связь:* ${contact}\n` +
+                      `🎮 *Формат:* ${format}\n` +
+                      `🗺 *Карты:* ${maps.length > 0 ? maps.join(', ') : 'Не выбраны'}`;
+
+        await sendToBot(TG_CONFIG.channelId, tgMsg);
+        // ---------------------------
+
+        window.showNotify("Слот забронирован! Данные в Telegram.", "success");
+        e.target.reset();
         
-        const btn = e.target.querySelector('button');
-        const oldText = btn.innerText;
-        btn.innerText = "PROCESSING...";
-        btn.disabled = true;
+        setTimeout(() => window.location.reload(), 1500);
 
-        try {
-            const ref = doc(db, "siteData", "practices");
-            const snap = await getDoc(ref);
-            if(!snap.exists()) throw new Error("DB Error");
+    } catch (err) {
+        window.showNotify(err.message, "error");
+        btn.innerText = oldText;
+        btn.disabled = false;
+    }
+};
 
-            let list = snap.data().list;
-            const idx = list.findIndex(s => s.id === slotId);
-
-            if (idx === -1 || list[idx].status !== 'open') throw new Error("Слот уже занят!");
-
-            list[idx].status = 'booked';
-            list[idx].team = {
-                clanName: escapeHTML(document.getElementById('pc-clan').value),
-                captain: escapeHTML(document.getElementById('pc-cap').value),
-                capId: escapeHTML(document.getElementById('pc-id').value),
-                contact: escapeHTML(document.getElementById('pc-contact').value),
-                format: document.querySelector('input[name="format"]:checked').value,
-                maps: maps,
-                lineup: escapeHTML(document.getElementById('pc-lineup').value)
-            };
-
-            await updateDoc(ref, { list: list });
-            window.showNotify("Слот забронирован! Ждем на праке.", "success");
-            e.target.reset();
-            setTimeout(() => window.location.reload(), 1500);
-
-        } catch (err) {
-            window.showNotify(err.message, "error");
-            btn.innerText = oldText;
-            btn.disabled = false;
-        }
-    };
 
     // === MEDIA, REVIEWS, HISTORY, ABOUT ===
     onSnapshot(doc(db, "siteData", "about"), (snap) => {
@@ -1092,42 +1137,44 @@
         }
     });
 
-    window.submitReview = async (e) => {
-        e.preventDefault();
-        try {
-            const ref = doc(db, "siteData", "reviews");
-            const snap = await getDoc(ref);
-            if(!snap.exists()) await setDoc(ref, { list: [] });
-            
-            await updateDoc(ref, { list: arrayUnion({
-                id: Date.now(),
-                nick: document.getElementById('rev-nick').value,
-                target: document.getElementById('rev-target').value,
-                text: document.getElementById('rev-text').value
-            })});
-            window.showNotify("Отзыв опубликован!", "success");
-            e.target.reset();
-        } catch(err) { window.showNotify("Ошибка сети", "error"); }
-    };
+    // --- ОБНОВЛЕННЫЕ ФУНКЦИИ (REVIEWS & APPLICATIONS) ---
 
-    onSnapshot(doc(db, "siteData", "history"), (snap) => {
-        const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
-        const el = document.getElementById('full-history-container');
-        if(el) {
-            el.innerHTML = list.slice().reverse().map(m => `
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:15px; margin-bottom:10px; border-right: 3px solid ${m.win ? 'var(--success)' : 'var(--accent)'}; border-radius: 6px;">
-                    <div>
-                        <div style="font-size:9px; color:#888;">${escapeHTML(m.tour)}</div>
-                        <div style="font-weight:700; color:#fff;">VS ${escapeHTML(m.enemy)}</div>
-                    </div>
-                    <div style="font-family:var(--font-tech); font-size:18px; font-weight:700; color:${m.win ? 'var(--success)' : '#fff'};">
-                        ${m.our} - ${m.their}
-                    </div>
-                </div>
-            `).join('');
-            if(list.length) checkUpdateBadge('history', Math.max(...list.map(i => i.id || 0)), 'btn-history');
-        }
-    });
+// 1. ОТПРАВКА ОТЗЫВА
+window.submitReview = async (e) => {
+    e.preventDefault();
+    
+    const nick = document.getElementById('rev-nick').value;
+    const target = document.getElementById('rev-target').value;
+    const text = document.getElementById('rev-text').value;
+
+    try {
+        const ref = doc(db, "siteData", "reviews");
+        const snap = await getDoc(ref);
+        if(!snap.exists()) await setDoc(ref, { list: [] });
+        
+        // Сохраняем в Firebase
+        await updateDoc(ref, { list: arrayUnion({
+            id: Date.now(),
+            nick: escapeHTML(nick),
+            target: escapeHTML(target),
+            text: escapeHTML(text)
+        })});
+
+        // --- ОТПРАВКА В ТЕЛЕГРАМ (КАНАЛ) ---
+        const tgMsg = `💬 *НОВЫЙ ОТЗЫВ НА САЙТЕ*\n\n` +
+                      `👤 *От кого:* ${nick}\n` +
+                      `🎯 *Кому:* ${target}\n` +
+                      `📝 *Текст:* ${text}`;
+        
+        await sendToBot(TG_CONFIG.channelId, tgMsg);
+        // ------------------------------------
+
+        window.showNotify("Отзыв опубликован и отправлен!", "success");
+        e.target.reset();
+    } catch(err) { 
+        window.showNotify("Ошибка сети", "error"); 
+    }
+};
 
     // --- 5. HELPERS & FEATURES ---
 
@@ -1180,55 +1227,44 @@
         }
     };
 
-    // HUD Notifications
-    window.showNotify = (msg, type = 'info') => {
-        const container = document.getElementById('notify-container');
-        if(!container) return;
+// 2. ОТПРАВКА ЗАЯВКИ В КЛАН (В ГРУППУ)
+window.sendToTelegram = async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const oldText = btn.innerText;
+    
+    btn.disabled = true;
+    btn.innerText = "SENDING...";
 
-        const toast = document.createElement('div');
-        toast.className = 'hud-toast';
-        
-        let icon = 'fa-info-circle';
-        let color = '#fff';
-        if(type === 'success') { icon = 'fa-check-circle'; color = 'var(--success)'; toast.style.borderLeftColor = color; }
-        if(type === 'error') { icon = 'fa-exclamation-triangle'; color = 'var(--accent)'; toast.style.borderLeftColor = color; }
-
-        toast.innerHTML = `
-            <i class="fas ${icon}" style="color:${color}; font-size:18px;"></i>
-            <div>
-                <div style="font-size:10px; font-weight:700; opacity:0.7;">SYSTEM NOTIFICATION</div>
-                <div style="font-size:13px;">${escapeHTML(msg)}</div>
-            </div>
-        `;
-
-        container.appendChild(toast);
-        // Trigger animation
-        requestAnimationFrame(() => toast.classList.add('active'));
-
-        // Auto remove
-        setTimeout(() => {
-            toast.classList.remove('active');
-            setTimeout(() => toast.remove(), 500);
-        }, 3000);
+    const data = {
+        nick: document.getElementById('nick').value,
+        role: document.getElementById('role').value,
+        rank: document.getElementById('best_rank').value,
+        kd: document.getElementById('kd').value,
+        age: document.getElementById('age').value
     };
 
-    // Telegram Redirect
-    window.sendToTelegram = (e) => {
-        e.preventDefault();
-        const nick = document.getElementById('nick').value;
-        const role = document.getElementById('role').value;
-        const rank = document.getElementById('best_rank').value;
-        const kd = document.getElementById('kd').value;
-        const age = document.getElementById('age').value;
-        
-        const msg = `🔥 *ЗАЯВКА В AIREX TEAM*\n
-        \n👤 Ник: ${nick}\n🎯 Роль: ${role}\n🏆 Ранг: ${rank}\n💀 K/D: ${kd}\n👶 Возраст: ${age}`;
-        
-        window.showNotify("Перенаправление в Telegram...", "info");
-        setTimeout(() => {
-            window.location.href = `https://t.me/kas_0ff?text=${encodeURIComponent(msg)}`;
-        }, 1000);
-    };
+    try {
+        // --- ОТПРАВКА В ТЕЛЕГРАМ (ГРУППА) ---
+        const tgMsg = `📝 *НОВАЯ ЗАЯВКА В CLAN*\n\n` +
+                      `👤 *Ник:* ${data.nick}\n` +
+                      `🎯 *Роль:* ${data.role}\n` +
+                      `🏆 *Ранг:* ${data.rank}\n` +
+                      `💀 *K/D:* ${data.kd}\n` +
+                      `🔞 *Возраст:* ${data.age}`;
+
+        await sendToBot(TG_CONFIG.groupId, tgMsg);
+        // -------------------------------------
+
+        window.showNotify("Анкета доставлена в штаб!", "success");
+        e.target.reset();
+    } catch (err) {
+        window.showNotify("Ошибка при отправке", "error");
+    } finally {
+        btn.disabled = false;
+        btn.innerText = oldText;
+    }
+};
 
 </script>
 </body>
