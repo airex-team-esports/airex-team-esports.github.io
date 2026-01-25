@@ -42,7 +42,7 @@
     .container { 
         max-width: 1400px; margin: 0 auto; padding-bottom: 50px; 
         display: none; 
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
         gap: 25px;
     }
     
@@ -56,6 +56,13 @@
       backdrop-filter: blur(15px); 
       display: flex; flex-direction: column;
       transition: transform 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .panel::before {
+        content: ''; position: absolute; top:0; left:0; width: 100%; height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        opacity: 0.5;
     }
     
     .panel-header { 
@@ -96,11 +103,13 @@
         background: linear-gradient(135deg, var(--accent), #ff4d79);
     }
     button.action-btn:active { transform: translateY(0); }
+    button.action-btn:disabled { background: #333; cursor: not-allowed; box-shadow: none; transform: none; color: #777; }
     
     .btn-del { 
         background: rgba(0,0,0,0.3); border: 1px solid #444; color: #888; 
         width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
         cursor: pointer; transition: 0.2s; border-radius: 4px;
+        flex-shrink: 0;
     }
     .btn-del:hover { border-color: #ff3333; color: #ff3333; background: rgba(255, 51, 51, 0.1); }
 
@@ -113,11 +122,11 @@
       display: flex; justify-content: space-between; align-items: center;
       background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px;
       margin-bottom: 8px; border-left: 2px solid transparent; font-size: 12px;
-      transition: 0.2s;
+      transition: 0.2s; gap: 10px;
     }
     .list-item:hover { background: rgba(255,255,255,0.06); border-left-color: var(--accent); }
     .item-info b { color: #fff; display: block; margin-bottom: 3px; font-weight: 600; }
-    .item-sub { color: #888; font-size: 10px; }
+    .item-sub { color: #888; font-size: 10px; word-break: break-all; }
 
     #loginOverlay {
       position: fixed; inset: 0; background: #000; z-index: 9999;
@@ -136,83 +145,53 @@
         21% { opacity: 1; transform: skew(2deg); }
         100% { opacity: 1; transform: skew(0deg); }
     }
+
     /* --- EDITOR STYLES --- */
-.editor-toolbar {
-    display: flex;
-    gap: 5px;
-    background: #1a1a1a;
-    padding: 8px;
-    border: 1px solid #333;
-    border-bottom: none;
-    border-radius: 6px 6px 0 0;
-    flex-wrap: wrap;
-}
-
-.tool-btn {
-    background: #333;
-    border: 1px solid #444;
-    color: #ccc;
-    width: 30px;
-    height: 30px;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s;
-}
-
-.tool-btn:hover {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-}
-
-#newsText {
-    border-radius: 0 0 6px 6px; /* Скругляем только низ, так как сверху тулбар */
-    margin-top: 0;
-    min-height: 120px;
-    font-family: 'Courier New', monospace; /* Чтобы было удобнее править код */
-    line-height: 1.5;
-}
-
-#newsPreview {
-    margin-top: 15px;
-    padding: 15px;
-    background: rgba(0,0,0,0.5);
-    border: 1px dashed var(--accent);
-    border-radius: 6px;
-    min-height: 60px;
-    font-size: 13px;
-    color: #ccc;
-    word-wrap: break-word;
-}
-
-/* Стили для контента внутри превью (как на сайте) */
-#newsPreview b { color: #fff; font-weight: 700; }
-#newsPreview a { color: var(--accent); text-decoration: underline; cursor: pointer; }
-#newsPreview img { max-width: 100%; border-radius: 8px; margin: 10px 0; border: 1px solid #333; }
-#newsPreview .news-quote { 
-    border-left: 3px solid var(--accent); 
-    padding-left: 10px; 
-    font-style: italic; 
-    color: #888; 
-    margin: 10px 0; 
-}
-#newsPreview .news-code {
-    background: #222;
-    color: #00ffa3;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 11px;
-}
+    .editor-toolbar {
+        display: flex; gap: 5px; background: #1a1a1a; padding: 8px;
+        border: 1px solid #333; border-bottom: none; border-radius: 6px 6px 0 0;
+        flex-wrap: wrap;
+    }
+    .tool-btn {
+        background: #333; border: 1px solid #444; color: #ccc;
+        width: 30px; height: 30px; border-radius: 4px; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; transition: 0.2s;
+    }
+    .tool-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    #newsText {
+        border-radius: 0 0 6px 6px; margin-top: 0; min-height: 120px;
+        font-family: 'Courier New', monospace; line-height: 1.5;
+    }
+    #newsPreview {
+        margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.5);
+        border: 1px dashed var(--accent); border-radius: 6px;
+        min-height: 60px; font-size: 13px; color: #ccc; word-wrap: break-word;
+    }
+    /* Стили превью */
+    #newsPreview b { color: #fff; font-weight: 700; }
+    #newsPreview a { color: var(--accent); text-decoration: underline; cursor: pointer; }
+    #newsPreview img { max-width: 100%; border-radius: 8px; margin: 10px 0; border: 1px solid #333; }
+    #newsPreview .news-quote { border-left: 3px solid var(--accent); padding-left: 10px; font-style: italic; color: #888; margin: 10px 0; }
+    #newsPreview .news-code { background: #222; color: #00ffa3; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 11px; }
 
     #mainUI { display: none; opacity: 0; transition: opacity 1s ease; }
-    
+
+    /* TOAST NOTIFICATIONS */
+    #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 10000; }
+    .toast {
+        background: rgba(20, 20, 20, 0.95); border-left: 4px solid var(--accent);
+        color: #fff; padding: 15px 25px; margin-top: 10px; border-radius: 4px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5); backdrop-filter: blur(5px);
+        font-size: 13px; transform: translateX(120%); transition: transform 0.3s ease;
+        display: flex; align-items: center; gap: 10px;
+    }
+    .toast.show { transform: translateX(0); }
+    .toast i { color: var(--accent); }
   </style>
 </head>
 <body>
+
+<div id="toast-container"></div>
 
 <div id="loginOverlay">
   <div class="login-box">
@@ -225,7 +204,7 @@
 </div>
 
 <div id="mainUI">
-  <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto 30px auto; padding: 0 10px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto 30px auto; padding: 0 10px; flex-wrap: wrap; gap: 15px;">
       <div style="display: flex; align-items: center; gap: 15px;">
         <h1 style="margin: 0; font-size: 24px; text-align: left;">AIREX <span style="color:#555;">//</span> ADMIN</h1>
       </div>
@@ -242,44 +221,44 @@
   <div class="container" id="adminContainer" style="display: grid;">
 
     <div class="panel">
-    <div class="panel-header">
-        <h2><i class="fas fa-newspaper panel-icon"></i> LIVE НОВОСТИ (EDITOR)</h2>
-    </div>
-    
-    <label>Заголовок</label>
-    <input type="text" id="newsTitle" placeholder="Например: Победа в турнире">
-    
-    <label>Редактор текста</label>
-    <div class="editor-toolbar">
-        <button class="tool-btn" onclick="formatText('bold')" title="Жирный"><i class="fas fa-bold"></i></button>
-        <button class="tool-btn" onclick="formatText('italic')" title="Курсив"><i class="fas fa-italic"></i></button>
-        <button class="tool-btn" onclick="formatText('quote')" title="Цитата"><i class="fas fa-quote-right"></i></button>
-        <button class="tool-btn" onclick="formatText('code')" title="Моно-текст"><i class="fas fa-code"></i></button>
-        <div style="width: 1px; background: #444; margin: 0 5px;"></div>
-        <button class="tool-btn" onclick="addLink()" title="Добавить ссылку"><i class="fas fa-link"></i></button>
-        <button class="tool-btn" onclick="addImage()" title="Добавить фото"><i class="far fa-image"></i></button>
-    </div>
-    
-    <textarea id="newsText" rows="6" placeholder="Пишите текст здесь..." oninput="updatePreview()"></textarea>
-
-    <label style="margin-top: 10px; opacity: 0.5;">Предпросмотр (как будет на сайте):</label>
-    <div id="newsPreview">Начните вводить текст...</div>
-
-    <div class="row-inputs" style="margin-top: 15px;">
-        <div><label>Дата</label><input type="text" id="newsDate" placeholder="22.01.2026"></div>
-        <div>
-            <label>Тег</label>
-            <select id="newsTag">
-                <option value="ВАЖНО">ВАЖНО</option>
-                <option value="ТУРНИР">ТУРНИР</option>
-                <option value="СОСТАВ">СОСТАВ</option>
-                <option value="ОБНОВЛЕНИЕ">ОБНОВЛЕНИЕ</option>
-            </select>
+        <div class="panel-header">
+            <h2><i class="fas fa-newspaper panel-icon"></i> LIVE НОВОСТИ (EDITOR)</h2>
         </div>
+        
+        <label>Заголовок</label>
+        <input type="text" id="newsTitle" placeholder="Например: Победа в турнире">
+        
+        <label>Редактор текста</label>
+        <div class="editor-toolbar">
+            <button class="tool-btn" onclick="formatText('bold')" title="Жирный"><i class="fas fa-bold"></i></button>
+            <button class="tool-btn" onclick="formatText('italic')" title="Курсив"><i class="fas fa-italic"></i></button>
+            <button class="tool-btn" onclick="formatText('quote')" title="Цитата"><i class="fas fa-quote-right"></i></button>
+            <button class="tool-btn" onclick="formatText('code')" title="Моно-текст"><i class="fas fa-code"></i></button>
+            <div style="width: 1px; background: #444; margin: 0 5px;"></div>
+            <button class="tool-btn" onclick="addLink()" title="Добавить ссылку"><i class="fas fa-link"></i></button>
+            <button class="tool-btn" onclick="addImage()" title="Добавить фото"><i class="far fa-image"></i></button>
+        </div>
+        
+        <textarea id="newsText" rows="6" placeholder="Пишите текст здесь..." oninput="updatePreview()"></textarea>
+
+        <label style="margin-top: 10px; opacity: 0.5;">Предпросмотр (как будет на сайте):</label>
+        <div id="newsPreview">Начните вводить текст...</div>
+
+        <div class="row-inputs" style="margin-top: 15px;">
+            <div><label>Дата</label><input type="text" id="newsDate" placeholder="22.01.2026"></div>
+            <div>
+                <label>Тег</label>
+                <select id="newsTag">
+                    <option value="ВАЖНО">ВАЖНО</option>
+                    <option value="ТУРНИР">ТУРНИР</option>
+                    <option value="СОСТАВ">СОСТАВ</option>
+                    <option value="ОБНОВЛЕНИЕ">ОБНОВЛЕНИЕ</option>
+                </select>
+            </div>
+        </div>
+        <button class="action-btn" onclick="addNews()">ОПУБЛИКОВАТЬ</button>
+        <div class="data-list" id="newsList">Загрузка...</div>
     </div>
-    <button class="action-btn" onclick="addNews()">ОПУБЛИКОВАТЬ</button>
-    <div class="data-list" id="newsList">Загрузка...</div>
-</div>
 
     <div class="panel">
         <div class="panel-header">
@@ -362,22 +341,14 @@
         <div class="panel-header">
             <h2><i class="fas fa-crosshairs panel-icon"></i> УПРАВЛЕНИЕ ПРАКАМИ (SCRIMS)</h2>
         </div>
-        <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px;">
-    <h3 style="font-size: 12px; color: var(--accent);">СОЗДАТЬ СЛОТ</h3>
-    
-    <label>Дата и время игры</label>
-    <input type="datetime-local" id="pracDateInput">
-
-    <label>URL картинки для поста (необязательно)</label>
-    <input type="text" id="pracTgImg" placeholder="https://imgur.com/your-image.jpg">
-    <button class="action-btn" onclick="createPracSlot()">ОТКРЫТЬ НАБОР</button>
-        </div>
-
+        
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
             <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px;">
                 <h3 style="font-size: 12px; color: var(--accent);">СОЗДАТЬ СЛОТ</h3>
                 <label>Дата и время игры</label>
                 <input type="datetime-local" id="pracDateInput">
+                <label>URL картинки для поста (необязательно)</label>
+                <input type="text" id="pracTgImg" placeholder="https://imgur.com/your-image.jpg">
                 <button class="action-btn" onclick="createPracSlot()">ОТКРЫТЬ НАБОР</button>
             </div>
 
@@ -424,35 +395,12 @@
     import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-  // --- ТЕЛЕГРАМ КОНФИГ ---
-const TG_CONFIG = {
-    token: "8350126335:AAEGBd3ASBvZVVG9qeFseWlpdlZpznTEe1s",
-    channelId: "-1003511221408"
-};
-// Универсальная функция: умеет слать и фото, и текст
-async function sendToBot(message, photoUrl = null) {
-    const method = photoUrl ? 'sendPhoto' : 'sendMessage';
-    const payload = photoUrl 
-        ? { chat_id: TG_CONFIG.channelId, photo: photoUrl, caption: message, parse_mode: 'Markdown' }
-        : { chat_id: TG_CONFIG.channelId, text: message, parse_mode: 'Markdown' };
+    // --- CONFIG ---
+    const TG_CONFIG = {
+        token: "8350126335:AAEGBd3ASBvZVVG9qeFseWlpdlZpznTEe1s",
+        channelId: "-1003511221408"
+    };
 
-    try {
-        await fetch(`https://api.telegram.org/bot${TG_CONFIG.token}/${method}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-    } catch (e) {
-        console.error("Ошибка TG:", e);
-    }
-}
-        });
-    } catch (e) {
-        console.error("Ошибка TG:", e);
-    }
-}
-
-    // FIREBASE CONFIG
     const firebaseConfig = {
       apiKey: "AIzaSyDVFYaxAtzEi5zF8yi_ORJQYL66wQa-gpE", 
       authDomain: "airexsite.firebaseapp.com",
@@ -466,19 +414,59 @@ async function sendToBot(message, photoUrl = null) {
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // --- AUTH ---
+    // --- UTILS & NOTIFICATIONS ---
+    function showToast(msg, isError = false) {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `<i class="${isError ? 'fas fa-exclamation-circle' : 'fas fa-check-circle'}"></i> ${msg}`;
+        container.appendChild(toast);
+        
+        // Trigger reflow
+        void toast.offsetWidth;
+        toast.classList.add('show');
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // --- TELEGRAM LOGIC ---
+    async function sendToBot(message, photoUrl = null) {
+        const method = photoUrl ? 'sendPhoto' : 'sendMessage';
+        const payload = photoUrl 
+            ? { chat_id: TG_CONFIG.channelId, photo: photoUrl, caption: message, parse_mode: 'Markdown' }
+            : { chat_id: TG_CONFIG.channelId, text: message, parse_mode: 'Markdown' };
+
+        try {
+            const res = await fetch(`https://api.telegram.org/bot${TG_CONFIG.token}/${method}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (!res.ok) console.error("TG API Error:", await res.text());
+        } catch (e) {
+            console.error("Ошибка TG:", e);
+        }
+    }
+
+    // --- AUTHENTICATION ---
     window.sysLogin = async () => {
         const email = document.getElementById('adminEmail').value;
         const pass = document.getElementById('adminPass').value;
         const err = document.getElementById('loginError');
+        const btn = document.querySelector('#loginOverlay .action-btn');
         
         if(!email || !pass) { err.style.opacity = 1; err.innerText = "Введите данные"; return; }
 
         try {
+            btn.disabled = true; btn.innerText = "ПРОВЕРКА...";
             await signInWithEmailAndPassword(auth, email, pass);
         } catch (e) {
+            btn.disabled = false; btn.innerText = "AUTHENTICATE";
             err.style.opacity = 1;
-            err.innerText = "Ошибка входа. Проверьте консоль или данные.";
+            err.innerText = "Ошибка входа. Проверьте данные.";
             console.error(e);
         }
     };
@@ -491,6 +479,7 @@ async function sendToBot(message, photoUrl = null) {
             document.getElementById('mainUI').style.display = 'block';
             setTimeout(() => { document.getElementById('mainUI').style.opacity = 1; }, 100);
             initAdminListeners();
+            showToast("Добро пожаловать, Админ");
         } else {
             document.getElementById('loginOverlay').style.display = 'flex';
             document.getElementById('mainUI').style.opacity = 0;
@@ -507,7 +496,6 @@ async function sendToBot(message, photoUrl = null) {
     }
 
     function initAdminListeners() {
-
         // NEWS
         listenToDoc("siteData", "news", (data) => {
             const list = data.list || [];
@@ -574,7 +562,7 @@ async function sendToBot(message, photoUrl = null) {
             freeCont.innerHTML = "";
             bookedCont.innerHTML = "";
 
-            if(list.length === 0) freeCont.innerHTML = "<span class='item-sub'>Нет активных слотов</span>";
+            if(list.length === 0) freeCont.innerHTML = "<span class='item-sub' style='padding:10px;'>Нет активных слотов</span>";
 
             list.forEach(p => {
                 if (p.status === 'open') {
@@ -632,7 +620,7 @@ async function sendToBot(message, photoUrl = null) {
         });
     }
 
-    // --- UTILS ---
+    // --- ACTIONS ---
     async function updateArray(docName, arrayField, item) {
         try {
             const ref = doc(db, "siteData", docName);
@@ -642,7 +630,7 @@ async function sendToBot(message, photoUrl = null) {
             return true;
         } catch(e) {
             console.error(e);
-            alert("Ошибка записи! Проверь права доступа.");
+            showToast("Ошибка записи! Проверь права или консоль.", true);
             return false;
         }
     }
@@ -656,48 +644,50 @@ async function sendToBot(message, photoUrl = null) {
                 const currentList = snap.data()[arrayField] || [];
                 const data = currentList.filter(i => i.id !== id);
                 await setDoc(ref, { [arrayField]: data }, { merge: true });
+                showToast("Запись удалена");
             }
-        } catch(e) { alert("Ошибка удаления"); }
+        } catch(e) { showToast("Ошибка удаления", true); }
     };
 
-    // --- BUTTON ACTIONS ---
-        window.addNews = async () => {
+    window.addNews = async () => {
         const title = document.getElementById('newsTitle').value;
-        if(!title) return alert("Введите заголовок!");
+        if(!title) return showToast("Введите заголовок!", true);
         
-        // --- НАЧАЛО ИЗМЕНЕНИЙ ---
         let rawText = document.getElementById('newsText').value;
-        
-        // Превращаем переносы строк в тег <br>, чтобы текст не слипался
         let formattedText = rawText.replace(/\n/g, "<br>");
         
         const item = { 
             id: Date.now(), 
             title, 
-            text: formattedText, // Сохраняем уже обработанный текст
+            text: formattedText, 
             date: document.getElementById('newsDate').value || new Date().toLocaleDateString(), 
             tag: document.getElementById('newsTag').value 
         };
-        // --- КОНЕЦ ИЗМЕНЕНИЙ ---
 
         if(await updateArray("news", "list", item)) {
-            alert("Новость опубликована");
+            showToast("Новость опубликована");
             document.getElementById('newsTitle').value = '';
-            document.getElementById('newsText').value = ''; // Очищаем поле текста
-            document.getElementById('newsPreview').innerHTML = 'Начните вводить текст...'; // Сбрасываем превью
+            document.getElementById('newsText').value = '';
+            document.getElementById('newsPreview').innerHTML = 'Начните вводить текст...';
         }
     };
 
     window.updateMatch = async () => {
         const enemy = document.getElementById('tmEnemy').value;
         const date = document.getElementById('tmDate').value;
+        if(!enemy || !date) return showToast("Заполните все поля", true);
+
         await setDoc(doc(db, "siteData", "match"), { enemy, date });
-        alert("Таймер обновлен!");
+        showToast("Таймер обновлен!");
     };
 
+    // ROSTER LOGIC
     let currentRosterType = "roster_main";
     let rosterUnsub = null;
-    window.loadRoster = () => { currentRosterType = document.getElementById('rosterType').value; setupRosterListener(); };
+    window.loadRoster = () => { 
+        currentRosterType = document.getElementById('rosterType').value; 
+        setupRosterListener(); 
+    };
 
     function setupRosterListener() {
         if(rosterUnsub) rosterUnsub(); 
@@ -712,7 +702,7 @@ async function sendToBot(message, photoUrl = null) {
                 container.innerHTML += `
                 <div class="list-item" style="background: rgba(0,0,0,0.5); border: 1px solid #333;">
                     <div class="item-info"><b>${p.nick}</b><span class="item-sub">${p.role}</span></div>
-                    <button class="btn-del" onclick="window.deletePlayer('${p.nick}')">X</button>
+                    <button class="btn-del" onclick="window.deletePlayer('${p.nick}')"><i class="fas fa-times"></i></button>
                 </div>`;
             });
         });
@@ -720,18 +710,24 @@ async function sendToBot(message, photoUrl = null) {
 
     window.addPlayer = async () => {
         const nick = document.getElementById('pNick').value;
-        if(!nick) return alert("Введите ник!");
+        if(!nick) return showToast("Введите ник!", true);
         const p = { 
-            nick, role: document.getElementById('pRole').value, img: document.getElementById('pImg').value || "https://placehold.co/400x600/000/FFF?text=NO+IMAGE", quote: document.getElementById('pQuote').value, 
-            device: document.getElementById('pDevice').value, settings: document.getElementById('pSettings').value, weapon: document.getElementById('pWeapon').value, 
+            nick, 
+            role: document.getElementById('pRole').value, 
+            img: document.getElementById('pImg').value || "https://placehold.co/400x600/000/FFF?text=NO+IMAGE", 
+            quote: document.getElementById('pQuote').value, 
+            device: document.getElementById('pDevice').value, 
+            settings: document.getElementById('pSettings').value, 
+            weapon: document.getElementById('pWeapon').value, 
             stats: { kd: document.getElementById('pKd').value, rank: document.getElementById('pRank').value } 
         };
+        
         const ref = doc(db, "siteData", currentRosterType);
         const snap = await getDoc(ref);
         let list = snap.exists() ? (snap.data().list || []) : [];
         list.push(p);
         await setDoc(ref, { list });
-        alert(`Игрок ${nick} добавлен!`);
+        showToast(`Игрок ${nick} добавлен!`);
     };
 
     window.deletePlayer = async (nick) => {
@@ -741,87 +737,80 @@ async function sendToBot(message, photoUrl = null) {
         if(snap.exists()){
             let list = (snap.data().list || []).filter(p => p.nick !== nick);
             await setDoc(ref, { list });
+            showToast("Игрок удален");
         }
     };
 
     window.addRoadmap = async () => {
         const item = { id: Date.now(), date: document.getElementById('rmDate').value, title: document.getElementById('rmTitle').value, desc: document.getElementById('rmDesc').value };
-        if(item.title && await updateArray("about", "roadmap", item)) alert("Событие добавлено");
+        if(item.title && await updateArray("about", "roadmap", item)) showToast("Событие добавлено");
     };
 
     window.updateVideo = async () => {
         await setDoc(doc(db, "siteData", "media"), { videoId: document.getElementById('vidId').value }, { merge: true });
-        alert("Видео обновлено");
+        showToast("Видео обновлено");
     };
 
     window.addGallery = async () => {
         const src = document.getElementById('galUrl').value;
         if(src && await updateArray("media", "gallery", { id: Date.now(), src, cap: document.getElementById('galCap').value })) {
-            alert("Фото добавлено");
+            showToast("Фото добавлено");
             document.getElementById('galUrl').value = '';
         }
     };
 
-// Обновленная функция создания слота
-window.createPracSlot = async () => {
-    const dateInput = document.getElementById('pracDateInput').value;
-    const imgUrl = document.getElementById('pracTgImg').value; // Берем ссылку на картинку
-    
-    if (!dateInput) return alert("Выберите дату и время!");
+    // SCRIM LOGIC FIX
+    window.createPracSlot = async () => {
+        const dateInput = document.getElementById('pracDateInput').value;
+        const imgUrl = document.getElementById('pracTgImg').value;
+        
+        if (!dateInput) return showToast("Выберите дату и время!", true);
 
-    const dateObj = new Date(dateInput);
-    const displayTime = dateObj.toLocaleString('ru-RU', {
-        timeZone: 'Europe/Moscow',
-        month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
-    }) + " (МСК)";
+        const dateObj = new Date(dateInput);
+        const displayTime = dateObj.toLocaleString('ru-RU', {
+            timeZone: 'Europe/Moscow',
+            month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        }) + " (МСК)";
 
-    const newSlot = { 
-        id: Date.now(), 
-        isoDate: dateObj.toISOString(), 
-        displayTime: displayTime, 
-        status: 'open', 
-        team: null 
+        const newSlot = { 
+            id: Date.now(), 
+            isoDate: dateObj.toISOString(), 
+            displayTime: displayTime, 
+            status: 'open', 
+            team: null 
+        };
+
+        if(await updateArray("practices", "list", newSlot)) {
+            
+            const tgMsg = `🚀 *AIREX TEAM ИЩЕТ ПРАК!*\n\n` +
+                          `📅 *Дата:* ${dateObj.toLocaleDateString('ru-RU')}\n` +
+                          `⏰ *Время:* ${dateObj.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'})} МСК\n\n` +
+                          `✅ Слот открыт и доступен для бронирования на сайте.\n` +
+                          `🔗 [ЗАБРОНИРОВАТЬ СЛОТ](https://airex-team-esports.github.io)`;
+
+            await sendToBot(tgMsg, imgUrl);
+
+            showToast(`Слот создан! Уведомление в ТГ отправлено.`);
+            document.getElementById('pracDateInput').value = ''; 
+            document.getElementById('pracTgImg').value = ''; 
+        }
     };
 
-    if(await updateArray("practices", "list", newSlot)) {
-        
-        // Текст сообщения
-        const tgMsg = `🚀 *AIREX TEAM ИЩЕТ ПРАК!*\n\n` +
-                      `📅 *Дата:* ${dateObj.toLocaleDateString('ru-RU')}\n` +
-                      `⏰ *Время:* ${dateObj.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'})} МСК\n\n` +
-                      `✅ Слот открыт и доступен для бронирования на сайте.\n` +
-                      `🔗 [ЗАБРОНИРОВАТЬ СЛОТ](https://airex-team-esports.github.io)`;
-
-        // Отправляем (если imgUrl пустой, уйдет просто текст)
-        await sendToBot(tgMsg, imgUrl);
-
-        alert(`Слот создан! Сообщение ${imgUrl ? 'с фото' : ''} отправлено в ТГ.`);
-        
-        // Очистка полей
-        document.getElementById('pracDateInput').value = ''; 
-        document.getElementById('pracTgImg').value = ''; 
-    }
-};
-
-        alert(`Слот успешно создан и уведомление отправлено в ТГ!`);
-        document.getElementById('pracDateInput').value = ''; 
-    }
-};
-
-
+    // Added missing function
+    window.deletePracSlot = async (id) => {
+        await window.deleteItem("practices", id, "list");
+    };
 
     window.addHistory = async () => {
         const enemy = document.getElementById('hEnemy').value;
         const item = { id: Date.now(), enemy, tour: document.getElementById('hTour').value, our: document.getElementById('hOur').value || 0, their: document.getElementById('hTheir').value || 0 };
         if(enemy && await updateArray("history", "list", item)) {
-            alert("Результат сохранен");
+            showToast("Результат сохранен");
             document.getElementById('hEnemy').value = '';
         }
     };
 
-      // --- EDITOR LOGIC ---
-
-    // Функция вставки тегов (Жирный, Курсив, Код, Цитата)
+    // --- EDITOR LOGIC ---
     window.formatText = (cmd) => {
         const textarea = document.getElementById('newsText');
         const start = textarea.selectionStart;
@@ -830,62 +819,46 @@ window.createPracSlot = async () => {
         const selectedText = text.substring(start, end);
 
         let before = "", after = "";
-
         if (cmd === 'bold') { before = "<b>"; after = "</b>"; }
         if (cmd === 'italic') { before = "<i>"; after = "</i>"; }
         if (cmd === 'code') { before = "<span class='news-code'>"; after = "</span>"; }
         if (cmd === 'quote') { before = "<div class='news-quote'>"; after = "</div>"; }
 
-        // Вставляем текст
         const newText = text.substring(0, start) + before + selectedText + after + text.substring(end);
         textarea.value = newText;
-        
-        // Возвращаем фокус и обновляем превью
         textarea.focus();
         textarea.selectionEnd = end + before.length; 
         updatePreview();
     };
 
-    // Функция добавления ссылки
     window.addLink = () => {
         const url = prompt("Введите ссылку (https://...):");
         if (!url) return;
-
         const textarea = document.getElementById('newsText');
         const start = textarea.selectionStart;
         const end = textarea.selectionEnd;
         const selectedText = textarea.value.substring(start, end);
-
-        // Если текст был выделен — делаем его ссылкой. Если нет — вставляем ссылку текстом "ТУТ"
         const linkText = selectedText.length > 0 ? selectedText : "ССЫЛКА";
         const tag = `<a href="${url}" target="_blank">${linkText}</a>`;
-
         textarea.value = textarea.value.substring(0, start) + tag + textarea.value.substring(end);
         updatePreview();
     };
 
-    // Функция добавления картинки
     window.addImage = () => {
         const url = prompt("Введите прямой URL картинки (https://...jpg/png):");
         if (!url) return;
-
         const tag = `<img src="${url}" alt="image">`;
         const textarea = document.getElementById('newsText');
-        
-        // Вставляем в место курсора
         const start = textarea.selectionStart;
         textarea.value = textarea.value.substring(0, start) + "\n" + tag + "\n" + textarea.value.substring(start);
         updatePreview();
     };
 
-    // Функция Живого Предпросмотра
     window.updatePreview = () => {
         const raw = document.getElementById('newsText').value;
-        // Заменяем перенос строки на <br> для визуального отображения
         const formatted = raw.replace(/\n/g, "<br>");
         document.getElementById('newsPreview').innerHTML = formatted;
     };
-
 </script>
 </body>
 </html>
