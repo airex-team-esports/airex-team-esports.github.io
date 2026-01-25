@@ -241,150 +241,92 @@
     .cd-lbl { font-size: 9px; color: var(--accent); margin-top: 5px; text-align: center; }
 
 /* === НОВЫЙ ДИЗАЙН СОСТАВА (EVO CARDS) === */
+/* === УЛУЧШЕННЫЙ ДИЗАЙН КАРТОЧЕК (EVO) === */
 .roster-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Карточки пошире */
-    gap: 25px;
-    padding-bottom: 40px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
 }
 
 .evo-card {
     position: relative;
-    height: 400px; /* Высокие карточки */
+    height: 420px;
     background: #0a0a0a;
-    border: 1px solid #333;
+    border: 1px solid #222;
     border-radius: 4px;
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    /* Скошенный угол в стиле Tech */
-    clip-path: polygon(
-        0 0, 
-        100% 0, 
-        100% calc(100% - 20px), 
-        calc(100% - 20px) 100%, 
-        0 100%
-    );
+    transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
 }
 
 .evo-card:hover {
     transform: translateY(-5px);
     border-color: var(--accent);
-    box-shadow: 0 10px 30px rgba(255, 68, 68, 0.15); /* Цвет тени подстраивай под accent */
+    box-shadow: 0 10px 30px rgba(255, 0, 76, 0.2);
 }
 
-/* Фото игрока */
 .evo-avatar {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.6;
-    transition: 0.4s;
-    filter: grayscale(100%);
+    width: 100%; height: 100%; object-fit: cover;
+    opacity: 0.5; filter: grayscale(100%); transition: 0.5s;
 }
 
 .evo-card:hover .evo-avatar {
-    opacity: 1;
-    filter: grayscale(0%);
-    transform: scale(1.05);
+    opacity: 0.9; filter: grayscale(0%); transform: scale(1.05);
 }
 
-/* Градиент снизу, чтобы текст читался */
 .evo-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 80%;
-    background: linear-gradient(to top, #000 10%, rgba(0,0,0,0.8) 50%, transparent 100%);
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 80%;
+    background: linear-gradient(to top, #000 15%, rgba(0,0,0,0.7) 50%, transparent);
     pointer-events: none;
 }
 
-/* Информация (Ник, роль) */
 .evo-info {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    z-index: 2;
-    transition: 0.4s;
+    position: absolute; bottom: 25px; left: 20px; right: 20px;
+    z-index: 2; transition: 0.4s;
 }
 
-.evo-card:hover .evo-info {
-    bottom: 140px; /* Поднимаем ник вверх при наведении */
-}
+.evo-card:hover .evo-info { bottom: 165px; } /* Поднимаем выше, так как стат-панель стала больше */
 
 .evo-role {
-    font-size: 10px;
-    font-weight: 800;
-    color: var(--accent);
-    letter-spacing: 2px;
-    margin-bottom: 5px;
-    display: inline-block;
-    padding: 3px 6px;
-    background: rgba(255, 68, 68, 0.1);
-    border: 1px solid var(--accent);
+    font-size: 9px; font-weight: 800; color: var(--accent);
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 3px 8px; border: 1px solid var(--accent);
+    background: rgba(255, 0, 76, 0.1); margin-bottom: 8px; display: inline-block;
 }
 
 .evo-nick {
-    font-family: var(--font-tech);
-    font-size: 32px;
-    color: #fff;
-    line-height: 1;
-    text-transform: uppercase;
-    margin: 0;
-    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    font-family: var(--font-tech); font-size: 28px;
+    color: #fff; text-transform: uppercase; margin: 0;
 }
 
-/* Скрытая статистика (появляется при наведении) */
+.evo-quote {
+    font-size: 11px; color: #888; margin-top: 6px; font-style: italic;
+    border-left: 2px solid var(--accent); padding-left: 8px;
+}
+
+/* ОБНОВЛЕННАЯ ПАНЕЛЬ СТАТИСТИКИ (БОЛЬШЕ ДАННЫХ) */
 .evo-stats-panel {
-    position: absolute;
-    bottom: -120px; /* Спрятано внизу */
-    left: 0;
-    width: 100%;
-    height: 120px;
-    background: rgba(20, 20, 20, 0.95);
-    border-top: 1px solid var(--accent);
-    backdrop-filter: blur(10px);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 0 10px;
-    transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    z-index: 3;
+    position: absolute; bottom: -160px; left: 0; width: 100%;
+    height: 155px; background: rgba(10, 10, 10, 0.98);
+    border-top: 1px solid var(--accent); backdrop-filter: blur(15px);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 15px; transition: 0.4s var(--ease-smooth); z-index: 3;
 }
 
-.evo-card:hover .evo-stats-panel,
-.evo-card:active .evo-stats-panel { /* Для мобилок при тапе */
-    bottom: 0;
+.evo-card:hover .evo-stats-panel { bottom: 0; }
+
+.stats-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+    margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 10px;
 }
 
-.stat-box {
-    text-align: center;
-}
-.stat-val {
-    font-family: var(--font-tech);
-    font-size: 20px;
-    color: #fff;
-}
-.stat-lbl {
-    font-size: 9px;
-    color: #666;
-    margin-top: 2px;
+.extra-info {
+    display: flex; justify-content: space-between; font-size: 10px; color: #666;
 }
 
-/* Декоративная линия */
-.tech-line {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    border-top: 2px solid var(--accent);
-    border-right: 2px solid var(--accent);
-    opacity: 0;
-    transition: 0.4s;
-}
-.evo-card:hover .tech-line { opacity: 1; }
+.stat-box { text-align: center; }
+.stat-val { font-family: var(--font-tech); font-size: 16px; color: #fff; }
+.stat-lbl { font-size: 8px; color: #555; text-transform: uppercase; margin-top: 2px; }
 
     /* News */
     .news-card-home { 
@@ -1033,33 +975,65 @@ function startTimer(isoDate) {
 }
 
 // --- ROSTER (EVO CARDS) ---
+// --- ОБНОВЛЕННЫЙ РОСТЕР (СИНХРОНИЗАЦИЯ С АДМИНКОЙ) ---
 const renderRoster = (list, elementId) => {
     const el = document.getElementById(elementId);
     if(!el) return;
+    
     if(!list || !list.length) {
-        el.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #555;">ДАННЫЕ ЗАСЕКРЕЧЕНЫ</div>`;
+        el.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #444; padding: 40px; font-family: var(--font-tech);">DATA ENCRYPTED</div>`;
         return;
     }
-    el.innerHTML = list.map(p => `
-        <div class="evo-card" onclick="void(0)"> <div class="tech-line"></div>
-            <img src="${p.img || 'https://via.placeholder.com/400x600/111/333?text=AGENT'}" class="evo-avatar" onerror="this.src='https://via.placeholder.com/400x600/111/333?text=NO+IMG'">
+
+    el.innerHTML = list.map(p => {
+        // Безопасное получение вложенных данных
+        const kd = p.stats ? p.stats.kd : '0.0';
+        const rank = p.stats ? p.stats.rank : 'N/A';
+        
+        return `
+        <div class="evo-card">
+            <img src="${p.img || 'https://via.placeholder.com/400x600/111/333?text=AIREX+AGENT'}" 
+                 class="evo-avatar" 
+                 onerror="this.src='https://via.placeholder.com/400x600/111/333?text=ERROR'">
+            
             <div class="evo-overlay"></div>
+
             <div class="evo-info">
                 <div class="evo-role">${escapeHTML(p.role || 'MEMBER')}</div>
                 <h3 class="evo-nick">${escapeHTML(p.nick)}</h3>
-                <div style="font-size:11px; color:#ccc; margin-top:5px; font-style:italic;">"${escapeHTML(p.quote || 'No mercy.')}"</div>
+                <div class="evo-quote">"${escapeHTML(p.quote || 'No mercy.')}"</div>
             </div>
+
             <div class="evo-stats-panel">
-                <div class="stat-box"><div class="stat-val" style="color:var(--success)">${escapeHTML(String(p.stats.kd))}</div><div class="stat-lbl">K/D</div></div>
-                <div style="width:1px; height:30px; background:#333;"></div>
-                <div class="stat-box"><div class="stat-val">${escapeHTML(p.stats.rank)}</div><div class="stat-lbl">MM</div></div>
-                <div style="width:1px; height:30px; background:#333;"></div>
-                <div class="stat-box"><div class="stat-val" style="font-size:14px;">${escapeHTML(p.device || 'iPad')}</div><div class="stat-lbl">DEV</div></div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-val" style="color:var(--success)">${escapeHTML(String(kd))}</div>
+                        <div class="stat-lbl">K/D</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-val">${escapeHTML(rank)}</div>
+                        <div class="stat-lbl">RANK</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-val" style="font-size:12px;">${escapeHTML(p.device || 'Mobile')}</div>
+                        <div class="stat-lbl">DEVICE</div>
+                    </div>
+                </div>
+
+                <div class="extra-info" style="margin-bottom: 5px;">
+                    <span>SENSITIVITY:</span>
+                    <span style="color: #fff;">${escapeHTML(p.settings || 'Default')}</span>
+                </div>
+                <div class="extra-info">
+                    <span>FAVORITE WEAPON:</span>
+                    <span style="color: var(--accent);">${escapeHTML(p.weapon || 'Unknown')}</span>
+                </div>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 };
 
+// Подписка на обновления
 onSnapshot(doc(db, "siteData", "roster_main"), (s) => renderRoster(s.exists() ? s.data().list : [], 'dynamic-roster'));
 onSnapshot(doc(db, "siteData", "roster_reserve"), (s) => renderRoster(s.exists() ? s.data().list : [], 'dynamic-roster-reserve'));
 
