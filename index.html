@@ -702,6 +702,12 @@
 
 <div id="notify-container" style="position: fixed; top: 90px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none;"></div>
 <script type="module">
+  // Очистка URL от index.html
+if (window.location.pathname.endsWith('index.html')) {
+    const cleanPath = window.location.pathname.replace('index.html', '');
+    window.history.replaceState({}, document.title, cleanPath);
+}
+
     // --- ТЕЛЕГРАМ КОНФИГ (ЗАМЕНИ НА СВОИ ДАННЫЕ) ---
 const TG_CONFIG = {
     token: "8350126335:AAEGBd3ASBvZVVG9qeFseWlpdlZpznTEe1s", // Токен от @BotFather
