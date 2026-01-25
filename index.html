@@ -418,6 +418,43 @@
       transition: all 0.4s var(--ease-bounce);
     }
     .hud-toast.active { transform: translateX(0); opacity: 1; }
+/* Сетка для статистики (Win Rate) */
+.stats-row { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; /* Две колонки */
+    gap: 15px; 
+    margin-bottom: 25px; 
+}
+
+/* Карточка статистики */
+.stat-card {
+    background: rgba(255,255,255,0.02); 
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px; 
+    padding: 20px; 
+    text-align: center;
+    position: relative; 
+    overflow: hidden;
+}
+
+/* Большие цифры */
+.stat-val-big {
+    font-family: var(--font-tech); /* Шрифт Orbitron */
+    font-size: 32px; 
+    font-weight: 700; 
+    color: #fff;
+    text-shadow: 0 0 15px rgba(255,255,255,0.2);
+}
+
+/* Подписи под цифрами */
+.stat-label { 
+    font-size: 9px; 
+    text-transform: uppercase; 
+    color: #666; 
+    margin-top: 5px; 
+    letter-spacing: 1px; 
+    font-weight: 700;
+}
 
   </style>
 </head>
@@ -478,6 +515,21 @@
              ПОДАТЬ ЗАЯВКУ <i class="fas fa-angle-right" style="margin-left: 10px;"></i>
         </button>
       </div>
+
+      <div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-val-big" id="win-rate-display">0%</div>
+        <div class="stat-label">WIN RATE (СЕЗОН)</div>
+        <i class="fas fa-chart-line" style="position: absolute; top: 10px; right: 10px; color: var(--accent); opacity: 0.2;"></i>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-val-big" id="total-games-display">0</div>
+        <div class="stat-label">СЫГРАНО МАТЧЕЙ</div>
+        <i class="fas fa-trophy" style="position: absolute; top: 10px; right: 10px; color: #00ffa3; opacity: 0.2;"></i>
+    </div>
+</div>
+
       
       <div class="card match-card">
         <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; margin-bottom: 15px;">
@@ -638,9 +690,15 @@
     </section>
 
     <section id="history">
-        <div class="text-center" style="margin-bottom: 20px;"><h2 class="font-tech">MATCH RESULTS</h2></div>
-        <div id="full-history-container"></div>
-    </section>
+    <div style="text-align: center; margin-bottom: 25px;">
+        <h2 style="font-family: var(--font-tech); color: #fff;">MATCH HISTORY</h2>
+    </div>
+    
+    <div id="full-history-container">
+        <div style="text-align:center; padding:20px; color:#666;">Загрузка истории...</div>
+    </div>
+</section>
+
 
     <section id="reviews">
         <div class="card">
@@ -1243,6 +1301,71 @@ window.toggleAmbient = () => {
         status.style.color = "#888";
     }
 };
+  // --- ЛОГИКА WIN RATE И ИСТОРИИ ---
+// Слушаем базу данных (коллекция siteData, документ history)
+onSnapshot(doc(db, "siteData", "history"), (snap) => {
+    // Получаем массив матчей, или пустой массив если данных нет
+    const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+    
+    // 1. ПОДСЧЕТ СТАТИСТИКИ (WIN RATE)
+    let wins = 0;
+    
+    // Проходим по каждому матчу
+    list.forEach(m => { 
+        // Если наш счет больше их счета, то это победа
+        if(parseInt(m.our) > parseInt(m.their)) {
+            wins++;
+        }
+    });
+
+    const total = list.length; // Всего игр
+    // Считаем процент: (Победы / Всего) * 100. Если игр 0, то процент 0.
+    const rate = total > 0 ? Math.round((wins / total) * 100) : 0;
+    
+    // Обновляем цифры на Главной странице
+    const wrEl = document.getElementById('win-rate-display');
+    const totEl = document.getElementById('total-games-display');
+    
+    if(wrEl) wrEl.innerText = `${rate}%`; // Ставим процент
+    if(totEl) totEl.innerText = total;    // Ставим кол-во игр
+
+    // 2. ОТРИСОВКА СПИСКА ИСТОРИИ (В раздел Матчи)
+    const cont = document.getElementById('full-history-container');
+    
+    if(cont) {
+        if (list.length === 0) {
+            cont.innerHTML = '<div style="text-align:center; padding:20px; color:#555;">Игр пока не было</div>';
+        } else {
+            // slice().reverse() чтобы новые матчи были сверху
+            cont.innerHTML = list.slice().reverse().map(m => {
+                // Определяем, победа это или поражение
+                const isWin = parseInt(m.our) > parseInt(m.their);
+                // Цвет рамки и текста (Зеленый или Красный)
+                const color = isWin ? '#00ffa3' : '#ff004c'; 
+                const statusText = isWin ? 'VICTORY' : 'DEFEAT';
+
+                return `
+                <div class="card" style="padding: 15px; border-left: 3px solid ${color}; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                    <div>
+                        <div style="font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px;">
+                            ${m.tour || 'Match'} </div>
+                        <div style="font-family: var(--font-tech); font-size: 14px; font-weight: 700; color: #fff;">
+                            VS ${m.enemy} </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-family: var(--font-tech); font-size: 20px; font-weight: 700; color: ${color};">
+                            ${m.our} : ${m.their}
+                        </div>
+                        <div style="font-size: 9px; color: ${color}; font-weight: 700;">
+                            ${statusText}
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+    }
+});
+
 </script>
 
 
