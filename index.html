@@ -672,27 +672,45 @@
             <p style="font-size: 12px; color: #888;">Заявка будет отправлена в Telegram штаба.</p>
         </div>
         <form onsubmit="sendToTelegram(event)" autocomplete="off" style="margin-top: 20px;">
-          <div class="form-group"><input type="text" id="nick" class="form-input" placeholder="Nickname" required></div>
-          <div style="display:flex; gap:10px;">
-              <div class="form-group" style="flex:1;"><input type="number" id="age" class="form-input" placeholder="Age" required></div>
-              <div class="form-group" style="flex:1;"><input type="number" step="0.01" id="kd" class="form-input" placeholder="K/D" required></div>
-          </div>
+          
           <div class="form-group">
+            <label class="form-label">Ник</label>
+            <input type="text" id="nick" class="form-input" placeholder="Ваш никнейм" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Отыгранные часы</label>
+            <input type="number" id="hours" class="form-input" placeholder="Кол-во часов" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Ваша роль</label>
             <select id="role" class="form-input">
-                <option>Rifler</option>
-                <option>Sniper</option>
-                <option>Captain</option>
-                <option>Entry Fragger</option>
-                <option>Support</option>
-                <option>Open-Fragger</option>
-                <option>Lurker</option>
+                <option>Капитан</option>
+                <option>Люркер</option>
+                <option>Опен Фрагер</option>
+                <option>Энтри фрагер</option>
+                <option>Саппорт</option>
+                <option>Рифлер</option>
+                <option>Снайпер</option>
             </select>
           </div>
-          <div class="form-group"><input type="text" id="best_rank" class="form-input" placeholder="Current Rank" required></div>
-          <button type="submit" class="btn-glitch">ОТПРАВИТЬ ДАННЫЕ</button>
+
+          <div class="form-group">
+             <label class="form-label">Ваш наилучший ранг в ММ</label>
+             <input type="text" id="best_rank" class="form-input" placeholder="Например: Elite" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Ваш TG</label>
+            <input type="text" id="tg_username" class="form-input" placeholder="@username" required>
+          </div>
+
+          <button type="submit" class="btn-glitch">ОТПРАВИТЬ ЗАЯВКУ</button>
         </form>
       </div>
     </section>
+
 
     <footer style="text-align: center; color: #444; font-size: 9px; font-family: var(--font-tech); text-transform: uppercase; margin-top: 40px;">
         <p>&copy; 2026 AIREX TEAM - Оффициальный сайт команды</p>
@@ -1244,22 +1262,23 @@ window.sendToTelegram = async (e) => {
     btn.disabled = true;
     btn.innerText = "SENDING...";
 
+    // Сбор новых данных
     const data = {
         nick: document.getElementById('nick').value,
+        hours: document.getElementById('hours').value,
         role: document.getElementById('role').value,
         rank: document.getElementById('best_rank').value,
-        kd: document.getElementById('kd').value,
-        age: document.getElementById('age').value
+        tg: document.getElementById('tg_username').value
     };
 
     try {
         // --- ОТПРАВКА В ТЕЛЕГРАМ (ГРУППА) ---
         const tgMsg = `📝 *НОВАЯ ЗАЯВКА В CLAN*\n\n` +
                       `👤 *Ник:* ${data.nick}\n` +
+                      `⏳ *Часы:* ${data.hours}\n` +
                       `🎯 *Роль:* ${data.role}\n` +
-                      `🏆 *Ранг:* ${data.rank}\n` +
-                      `💀 *K/D:* ${data.kd}\n` +
-                      `🔞 *Возраст:* ${data.age}`;
+                      `🏆 *Пик Ранг:* ${data.rank}\n` +
+                      `✈️ *TG:* ${data.tg}`;
 
         await sendToBot(TG_CONFIG.groupId, tgMsg);
         // -------------------------------------
