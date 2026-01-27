@@ -759,22 +759,54 @@
         }
     };
 
-    // SCRIM LOGIC FIX
+        // SCRIM LOGIC FIX (TIMEZONE CORRECTION)
     window.createPracSlot = async () => {
         const dateInput = document.getElementById('pracDateInput').value;
         const imgUrl = document.getElementById('pracTgImg').value;
         
         if (!dateInput) return showToast("Выберите дату и время!", true);
 
-        const dateObj = new Date(dateInput);
-        const displayTime = dateObj.toLocaleString('ru-RU', {
+        // dateInput приходит в формате "YYYY-MM-DDTHH:mm" (локальное время браузера админа)
+        const localDate = new Date(dateInput);
+
+        // Нам нужно интерпретировать введенное время как МСК? 
+        // Или вы вводите свое время (Ош), а хотите чтобы оно конвертировалось в МСК?
+        // ВАРИАНТ 1 (Рекомендуемый): Вы вводите время так, как оно должно быть по МСК.
+        // То есть если прак в 18:00 по МСК, вы вводите 18:00, даже если у вас 21:00.
+        // Для этого мы создаем дату, игнорируя ваш часовой пояс, и "притворяемся", что это UTC/МСК.
+        
+        // Но проще всего работать с timestamp и жестко форматировать вывод.
+        
+        // Форматируем дату для отображения на Сайте и в ТГ (Жестко МСК)
+        // Используем Intl.DateTimeFormat для конвертации любого времени в МСК
+        const optionsDate = { timeZone: 'Europe/Moscow', day: 'numeric', month: 'long' };
+        const optionsTime = { timeZone: 'Europe/Moscow', hour: '2-digit', minute: '2-digit' };
+        
+        // ВАЖНО: input datetime-local возвращает время без часового пояса. 
+        // new Date(dateInput) считает его местным временем пользователя (Вашим, Ош).
+        // Если вы в Оше вводите 20:00, new Date создаст момент времени "20:00 GMT+6".
+        // В Москве это будет 17:00.
+        
+        // Если вы хотите вводить время Оша, а получать МСК:
+        // Ош (GMT+6) -> МСК (GMT+3). Разница 3 часа.
+        // Вы вводите 21:00 (Ош). Скрипт отправит: "Время МСК: 18:00".
+        
+        // Отображаемая строка для сайта (Всегда показывает время в МСК)
+        const displayTime = localDate.toLocaleString('ru-RU', {
             timeZone: 'Europe/Moscow',
-            month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+            month: 'long', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit'
         }) + " (МСК)";
+        
+        // Для Telegram сообщения (тоже конвертируем ваше время в МСК)
+        const tgDate = localDate.toLocaleDateString('ru-RU', optionsDate);
+        const tgTime = localDate.toLocaleTimeString('ru-RU', optionsTime);
 
         const newSlot = { 
             id: Date.now(), 
-            isoDate: dateObj.toISOString(), 
+            isoDate: localDate.toISOString(), // Сохраняем абсолютное время (UTC)
             displayTime: displayTime, 
             status: 'open', 
             team: null 
@@ -783,14 +815,14 @@
         if(await updateArray("practices", "list", newSlot)) {
             
             const tgMsg = `🚀 *AIREX TEAM ИЩЕТ ПРАК!*\n\n` +
-                          `📅 *Дата:* ${dateObj.toLocaleDateString('ru-RU')}\n` +
-                          `⏰ *Время:* ${dateObj.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'})} МСК\n\n` +
+                          `📅 *Дата:* ${tgDate}\n` +
+                          `⏰ *Время:* ${tgTime} МСК\n\n` +
                           `✅ Слот открыт и доступен для бронирования на сайте.\n` +
                           `🔗 [ЗАБРОНИРОВАТЬ СЛОТ](https://airex-team-esports.github.io)`;
 
             await sendToBot(tgMsg, imgUrl);
 
-            showToast(`Слот создан! Уведомление в ТГ отправлено.`);
+            showToast(`Слот создан! Время конвертировано в МСК.`);
             document.getElementById('pracDateInput').value = ''; 
             document.getElementById('pracTgImg').value = ''; 
         }
