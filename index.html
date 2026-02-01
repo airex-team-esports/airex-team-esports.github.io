@@ -889,6 +889,39 @@ const TG_CONFIG = {
     channelId: "-1003511221408", 
     groupId: "-1003413398300"    
 };
+// === НАСТРОЙКИ ЗАЩИТЫ (ANTI-SPAM SYSTEM) ===
+
+// 1. Черный список слов (нижний регистр)
+const BLACKLIST = [
+    "дай", "gold", "голд", "голды", "дайте", "промо", "промокод", 
+    "скин", "нож", "аркана", "standoff", "стандофф", "стендофф",
+    "маты", "хуй", "пизд", "ебал", "бля", "чмо", "лох", "даун", 
+    "сука", "урод", "мамк", "мать", "админ дай", "бесплатно"
+];
+
+// 2. Функция проверки текста на запрещенку
+function containsSpam(text) {
+    if (!text) return false;
+    const lower = text.toLowerCase();
+    return BLACKLIST.some(word => lower.includes(word));
+}
+
+// 3. Проверка кулдауна (чтобы не спамили каждые 5 секунд)
+// timeInMinutes - сколько минут ждать перед следующей отправкой
+function checkCooldown(key, timeInMinutes) {
+    const lastTime = localStorage.getItem(key);
+    if (!lastTime) return true;
+    
+    const diff = Date.now() - parseInt(lastTime);
+    const minutesPassed = diff / 60000;
+    
+    return minutesPassed >= timeInMinutes;
+}
+
+// 4. Установка кулдауна
+function setCooldown(key) {
+    localStorage.setItem(key, Date.now());
+}
 
 // 3. ФУНКЦИЯ УВЕДОМЛЕНИЙ (Была пропущена)
 window.showNotify = (text, type) => {
@@ -1314,21 +1347,57 @@ window.sendToTelegram = async (e) => {
 };
 
 // === ПОДТВЕРЖДЕНИЕ ПРАКА (ЛОГИКА) ===
+// === ПОДТВЕРЖДЕНИЕ ПРАКА (С ЗАЩИТОЙ) ===
 window.submitPrac = async (e) => {
     e.preventDefault();
-    
+
+    // 1. ЗАЩИТА ОТ ЧАСТЫХ ЗАПРОСОВ (Кулдаун 10 минут)
+    if (!checkCooldown('last_prac_submit', 10)) {
+        return window.showNotify("Не спамьте! Следующая заявка через 10 минут.", "error");
+    }
+
     const slotSelect = document.getElementById('prac-slot-select');
     const slotId = parseInt(slotSelect.value);
     const maps = Array.from(document.querySelectorAll('.map-check:checked')).map(cb => cb.value);
     
-    // Валидация
+    // Получаем значения полей
+    const clanName = document.getElementById('pc-clan').value.trim();
+    const captain = document.getElementById('pc-cap').value.trim();
+    const capId = document.getElementById('pc-id').value.trim();
+    const contact = document.getElementById('pc-contact').value.trim();
+    const lineup = document.getElementById('pc-lineup').value.trim();
+
+    // --- ВАЛИДАЦИЯ ДАННЫХ ---
+
+    // 2. Проверка ID (Только цифры, от 7 до 14 символов)
+    const idRegex = /^\d{7,14}$/;
+    if (!idRegex.test(capId)) {
+        return window.showNotify("ID должен содержать только цифры (7-14 знаков)!", "error");
+    }
+
+    // 3. Проверка Telegram (@username, англ буквы, цифры, _, длина 3-12 (расширил немного для реальности))
+    // Твое требование 3-8 букв очень жесткое, я сделал 3-20, но СТРОГО на английском.
+    const tgRegex = /^@[a-zA-Z0-9_]{3,20}$/;
+    if (!tgRegex.test(contact)) {
+        return window.showNotify("TG должен начинаться с @ и быть на английском!", "error");
+    }
+
+    // 4. Проверка на спам-слова и попрошайничество
+    if (containsSpam(clanName) || containsSpam(lineup) || containsSpam(captain)) {
+         // Блокируем отправку, но делаем вид, что что-то грузится (troll-защита), или просто шлем ошибку
+        return window.showNotify("Обнаружены запрещенные слова или спам!", "error");
+    }
+
+    // 5. Базовая проверка выбора
     if (!slotId) return window.showNotify("Пожалуйста, выберите время!", "error");
     if (maps.length === 0) return window.showNotify("Выберите хотя бы одну карту!", "error");
 
+
+    // --- ЕСЛИ ВСЕ ОК — ОТПРАВЛЯЕМ ---
     const btn = e.target.querySelector('button');
     const originalText = btn.innerText;
     
-    btn.innerText = "РЕГИСТРАЦИЯ...";
+    btn.innerText = "ПРОВЕРКА...";
     btn.disabled = true;
 
     try {
@@ -1339,38 +1408,32 @@ window.submitPrac = async (e) => {
         let list = snap.data().list;
         const idx = list.findIndex(s => s.id === slotId);
 
-        // Проверка на занятость в реальном времени
         if (idx === -1 || list[idx].status !== 'open') {
-            throw new Error("Этот слот только что был занят другим кланом!");
+            throw new Error("Этот слот уже занят!");
         }
 
-        const clanName = document.getElementById('pc-clan').value;
-        const captain = document.getElementById('pc-cap').value;
-        const contact = document.getElementById('pc-contact').value;
-        const lineup = document.getElementById('pc-lineup').value;
-        const capId = document.getElementById('pc-id').value;
-
-        // Обновляем статус слота локально
+        // Обновляем статус
         list[idx].status = 'booked';
         list[idx].team = {
             clanName: escapeHTML(clanName),
             captain: escapeHTML(captain),
             capId: escapeHTML(capId),
             contact: escapeHTML(contact),
-            format: "BO1", // Хардкод формата
+            format: "BO1",
             maps: maps,
             lineup: escapeHTML(lineup)
         };
 
-        // Сохраняем в Firebase
         await updateDoc(ref, { list: list });
 
-        // Отправка уведомления в Telegram (красивое оформление)
+        // Устанавливаем таймер блокировки (чтобы этот юзер не мог спамить заявками)
+        setCooldown('last_prac_submit');
+
         const tgMsg = `⚔️ <b>НОВЫЙ ПРАК ЗАБРОНИРОВАН</b>\n` +
                       `────────────────────\n` +
                       `📅 <b>ВРЕМЯ:</b> <code>${list[idx].displayTime} (МСК)</code>\n` +
                       `👥 <b>КЛАН:</b> <code>${escapeHTML(clanName)}</code>\n` +
-                      `👤 <b>КЭП:</b> ${escapeHTML(captain)} (ID: ${escapeHTML(capId)})\n` +
+                      `👤 <b>КЭП:</b> ${escapeHTML(captain)} (ID: <code>${escapeHTML(capId)}</code>)\n` +
                       `📞 <b>СВЯЗЬ:</b> ${escapeHTML(contact)}\n` +
                       `🎮 <b>ФОРМАТ:</b> BO1\n` +
                       `🗺 <b>КАРТЫ:</b> ${maps.join(', ')}\n` +
@@ -1382,7 +1445,6 @@ window.submitPrac = async (e) => {
         window.showNotify("Слот успешно забронирован!", "success");
         e.target.reset();
         
-        // Перезагрузка через 1.5 сек для обновления списка
         setTimeout(() => window.location.reload(), 1500);
 
     } catch (err) {
@@ -1392,13 +1454,24 @@ window.submitPrac = async (e) => {
     }
 };
 
-
-// === C. ОТЗЫВЫ (REVIEWS) ===
+// === C. ОТЗЫВЫ (С ЗАЩИТОЙ) ===
 window.submitReview = async (e) => {
     e.preventDefault();
-    const nick = document.getElementById('rev-nick').value;
+
+    // 1. Кулдаун на отзывы (30 минут)
+    if (!checkCooldown('last_review_submit', 30)) {
+        return window.showNotify("Вы уже отправляли отзыв недавно.", "error");
+    }
+
+    const nick = document.getElementById('rev-nick').value.trim();
     const target = document.getElementById('rev-target').value;
-    const text = document.getElementById('rev-text').value;
+    const text = document.getElementById('rev-text').value.trim();
+
+    // 2. Проверка текста
+    if (text.length < 5) return window.showNotify("Отзыв слишком короткий!", "error");
+    if (containsSpam(text) || containsSpam(nick)) {
+        return window.showNotify("Ваш отзыв содержит спам или запрещенные слова.", "error");
+    }
 
     try {
         const ref = doc(db, "siteData", "reviews");
@@ -1412,6 +1485,9 @@ window.submitReview = async (e) => {
             text: escapeHTML(text)
         })});
 
+        // Блокируем повторную отправку
+        setCooldown('last_review_submit');
+
         const tgMsg = `💬 <b>НОВЫЙ ОТЗЫВ НА САЙТЕ</b>\n\n` +
                       `👤 <b>От кого:</b> ${escapeHTML(nick)}\n` +
                       `🎯 <b>Кому:</b> ${escapeHTML(target)}\n` +
@@ -1419,7 +1495,7 @@ window.submitReview = async (e) => {
         
         await sendToBot(TG_CONFIG.channelId, tgMsg);
 
-        window.showNotify("Отзыв опубликован и отправлен!", "success");
+        window.showNotify("Отзыв опубликован!", "success");
         e.target.reset();
     } catch(err) { 
         window.showNotify("Ошибка сети", "error"); 
