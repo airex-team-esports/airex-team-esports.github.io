@@ -814,31 +814,12 @@
             <p style="font-size: 11px; color: #666; letter-spacing: 1px;">ОПЕРАТИВНОЕ РАСПИСАНИЕ КОМАНДЫ (МСК)</p>
         </div>
 
-        <div class="schedule-grid">
-            
-            <div class="day-card">
-                <div class="day-header">
-                    <span class="day-title">MON / ПН</span>
-                </div>
-                <div class="events-list">
-                    <div class="event-item type-train">
-                        <span class="event-time">16:00</span>
-                        <div class="event-info">
-                            <span class="event-name">TACTICAL BRIEF</span>
-                            <span class="event-desc">Разбор раскидок Sandstone</span>
-                        </div>
-                        <span class="tag-badge bg-train">TRAIN</span>
-                    </div>
-                    <div class="event-item type-pracc">
-                        <span class="event-time">19:00</span>
-                        <div class="event-info">
-                            <span class="event-name">CW vs NAVI JUNIOR</span>
-                            <span class="event-desc">BO3 / Captain Draft</span>
-                        </div>
-                        <span class="tag-badge bg-pracc">CW</span>
-                    </div>
-                </div>
-            </div>
+        <div class="schedule-grid" id="dynamic-schedule-grid">
+    <div class="text-center" style="grid-column: 1/-1; padding: 20px; color: #666; font-size: 11px;">
+        Загрузка расписания...
+    </div>
+</div>
+
 
             <div class="day-card">
                 <div class="day-header">
@@ -1630,6 +1611,94 @@ onSnapshot(doc(db, "siteData", "history"), (snap) => {
             }).join('');
         }
     }
+});
+  
+// --- SCHEDULE SYSTEM (РАСПИСАНИЕ) ---
+onSnapshot(doc(db, "siteData", "schedule"), (snap) => {
+    const grid = document.getElementById('dynamic-schedule-grid');
+    if (!grid) return;
+
+    const list = (snap.exists() && snap.data().list) ? snap.data().list : [];
+
+    if (list.length === 0) {
+        grid.innerHTML = '<div class="text-center" style="grid-column: 1/-1; padding: 20px; color: #666;">Расписание пусто</div>';
+        return;
+    }
+
+    // 1. Группируем события по Дню (чтобы события одного дня были в одной карточке)
+    // Мы используем название дня (например "MON / ПН") как ключ
+    const groupedData = {};
+    
+    // Сортируем список, чтобы события шли по порядку добавления (или по ID)
+    list.sort((a, b) => a.id - b.id);
+
+    list.forEach(item => {
+        // Если такой день еще не создавали в списке, создаем пустой массив
+        if (!groupedData[item.day]) {
+            groupedData[item.day] = [];
+        }
+        groupedData[item.day].push(item);
+    });
+
+    // 2. Очищаем сетку перед отрисовкой
+    grid.innerHTML = '';
+
+    // 3. Проходимся по каждому дню и рисуем карточку
+    // Object.keys(groupedData) дает нам список дней, которые мы собрали
+    Object.keys(groupedData).forEach(dayName => {
+        const events = groupedData[dayName];
+        
+        // Генерируем HTML для каждого события внутри дня
+        const eventsHtml = events.map(ev => {
+            // Определяем цвет полоски слева
+            let typeClass = 'type-rest'; // серый по умолчанию
+            let badgeHtml = '';
+            
+            const txt = ev.event.toLowerCase();
+            // Простая логика определения типа по тексту события
+            if(txt.includes('прак') || txt.includes('cw') || txt.includes('game')) {
+                typeClass = 'type-pracc';
+                badgeHtml = '<span class="tag-badge bg-pracc">CW</span>';
+            } else if(txt.includes('турнир') || txt.includes('cup') || txt.includes('tour')) {
+                typeClass = 'type-tour';
+                badgeHtml = '<span class="tag-badge bg-tour">CUP</span>';
+            } else if(txt.includes('трен') || txt.includes('train')) {
+                typeClass = 'type-train';
+                badgeHtml = '<span class="tag-badge bg-train">TRAIN</span>';
+            }
+
+            // Статусы (завершено/отмена)
+            let statusStyle = '';
+            if(ev.status === 'done') statusStyle = 'opacity: 0.5; filter: grayscale(1); text-decoration: line-through;';
+            if(ev.status === 'canceled') statusStyle = 'border-left-color: red; opacity: 0.7;';
+
+            return `
+            <div class="event-item ${typeClass}" style="${statusStyle}">
+                <span class="event-time">${escapeHTML(ev.time)}</span>
+                <div class="event-info">
+                    <span class="event-name">${escapeHTML(ev.event)}</span>
+                </div>
+                ${badgeHtml}
+            </div>
+            `;
+        }).join('');
+
+        // Проверяем, "Сегодня" ли это (просто по наличию слова Today в названии дня, если ты его напишешь)
+        // Или можно просто всегда рисовать стандартную карточку.
+        // Добавим проверку: если день называется так же, как текущий день недели (сложно реализовать универсально),
+        // поэтому просто рисуем карточку.
+        
+        grid.innerHTML += `
+        <div class="day-card">
+            <div class="day-header">
+                <span class="day-title">${escapeHTML(dayName)}</span>
+            </div>
+            <div class="events-list">
+                ${eventsHtml}
+            </div>
+        </div>
+        `;
+    });
 });
 
 </script>
